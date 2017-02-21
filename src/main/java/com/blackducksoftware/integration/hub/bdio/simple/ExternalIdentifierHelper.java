@@ -30,12 +30,16 @@ public class ExternalIdentifierHelper {
         this.bdioHelper = bdioHelper;
     }
 
-    public BdioExternalIdentifier createMavenExternalIdentifier(final String group, final String artifact, final String version) {
-        return bdioHelper.createExternalIdentifier("maven", String.format("%s:%s:%s", group, artifact, version));
+    public String createBdioId(final String group, final String artifact, final String version) {
+        return String.format("data:%s/%s/%s", group, artifact, version);
     }
 
-    public String createMavenBdioId(final String group, final String artifact, final String version) {
-        return String.format("maven:%s/%s/%s", group, artifact, version);
+    public String createBdioId(final String name, final String version) {
+        return String.format("data:%s/%s", name, version);
+    }
+
+    public BdioExternalIdentifier createMavenExternalIdentifier(final String group, final String artifact, final String version) {
+        return bdioHelper.createExternalIdentifier("maven", String.format("%s:%s:%s", group, artifact, version));
     }
 
     /**
@@ -45,32 +49,16 @@ public class ExternalIdentifierHelper {
         return bdioHelper.createExternalIdentifier("pypi", String.format("%s/%s", name, version));
     }
 
-    public String createPypiBdioId(final String name, final String version) {
-        return String.format("pypi:%s/%s", name, version);
-    }
-
     public BdioExternalIdentifier createNugetExternalIdentifier(final String name, final String version) {
         return bdioHelper.createExternalIdentifier("nuget", String.format("%s/%s", name, version));
-    }
-
-    public String createNugetBdioId(final String name, final String version) {
-        return String.format("nuget:%s/%s", name, version);
     }
 
     public BdioExternalIdentifier createNpmExternalIdentifier(final String name, final String version) {
         return bdioHelper.createExternalIdentifier("npm", String.format("%s@%s", name, version));
     }
 
-    public String createNpmBdioId(final String name, final String version) {
-        return String.format("npm:%s/%s", name, version);
-    }
-
     public BdioExternalIdentifier createRubygemsExternalIdentifier(final String name, final String version) {
         return bdioHelper.createExternalIdentifier("rubygems", String.format("%s=%s", name, version));
-    }
-
-    public String createRubygemsBdioId(final String name, final String version) {
-        return String.format("rubygems:%s/%s", name, version);
     }
 
 }
