@@ -48,13 +48,9 @@ public class BdioNodeFactory {
 
     public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge,
             final String externalId) {
-        final BdioProject project = new BdioProject();
-        project.id = bdioId;
-        project.name = projectName;
-        project.version = projectVersion;
-        project.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
+        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
-        return project;
+        return createProject(projectName, projectVersion, bdioId, externalIdentifier);
     }
 
     public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId,
@@ -70,13 +66,9 @@ public class BdioNodeFactory {
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge,
             final String externalId) {
-        final BdioComponent component = new BdioComponent();
-        component.id = bdioId;
-        component.name = componentName;
-        component.version = componentVersion;
-        component.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
+        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
-        return component;
+        return createComponent(componentName, componentVersion, bdioId, externalIdentifier);
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId,
