@@ -45,7 +45,6 @@ import org.skyscreamer.jsonassert.JSONParser;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
 import com.google.gson.Gson;
@@ -63,27 +62,27 @@ public class BdioNodeFactoryTest {
         final String projectGroup = "com.blackducksoftware.gradle.test";
         final String projectName = "gradleTestProject";
         final String projectVersion = "99.5-SNAPSHOT";
+        final String projectExternalId = bdioPropertyHelper.createMavenExternalId(projectGroup, projectName, projectVersion);
         final String projectBdioId = bdioPropertyHelper.createBdioId(projectGroup, projectName, projectVersion);
-        final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createMavenExternalIdentifier(projectGroup, projectName, projectVersion);
 
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials(projectName);
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
-        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, projectExternalIdentifier);
+        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, "maven", projectExternalId);
 
         final BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7",
                 bdioPropertyHelper.createBdioId("org.apache.cxf", "cxf-bundle", "2.7.7"),
-                bdioPropertyHelper.createMavenExternalIdentifier("org.apache.cxf", "cxf-bundle", "2.7.7"));
+                "maven", bdioPropertyHelper.createMavenExternalId("org.apache.cxf", "cxf-bundle", "2.7.7"));
         final BdioComponent velocity = bdioNodeFactory.createComponent("velocity", "1.7",
                 bdioPropertyHelper.createBdioId("org.apache.velocity", "velocity", "1.7"),
-                bdioPropertyHelper.createMavenExternalIdentifier("org.apache.velocity", "velocity", "1.7"));
+                "maven", bdioPropertyHelper.createMavenExternalId("org.apache.velocity", "velocity", "1.7"));
         final BdioComponent commonsCollections = bdioNodeFactory.createComponent("commons-collections", "3.2.1",
                 bdioPropertyHelper.createBdioId("commons-collections", "commons-collections", "3.2.1"),
-                bdioPropertyHelper.createMavenExternalIdentifier("commons-collections", "commons-collections", "3.2.1"));
+                "maven", bdioPropertyHelper.createMavenExternalId("commons-collections", "commons-collections", "3.2.1"));
         final BdioComponent commonsLang = bdioNodeFactory.createComponent("commons-lang", "2.6",
                 bdioPropertyHelper.createBdioId("commons-lang", "commons-lang", "2.6"),
-                bdioPropertyHelper.createMavenExternalIdentifier("commons-lang", "commons-lang", "2.6"));
+                "maven", bdioPropertyHelper.createMavenExternalId("commons-lang", "commons-lang", "2.6"));
 
         // we will now relate the constructed bdio nodes
 

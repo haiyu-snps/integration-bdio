@@ -59,26 +59,46 @@ public class BdioPropertyHelper {
     }
 
     public BdioExternalIdentifier createMavenExternalIdentifier(final String group, final String artifact, final String version) {
-        return createExternalIdentifier("maven", String.format("%s:%s:%s", group, artifact, version));
+        return createExternalIdentifier("maven", createMavenExternalId(group, artifact, version));
+    }
+
+    public String createMavenExternalId(final String group, final String artifact, final String version) {
+        return String.format("%s:%s:%s", group, artifact, version);
     }
 
     /**
      * Pypi is a forge for python
      */
     public BdioExternalIdentifier createPypiExternalIdentifier(final String name, final String version) {
-        return createExternalIdentifier("pypi", String.format("%s/%s", name, version));
+        return createExternalIdentifier("pypi", createPypiExternalId(name, version));
+    }
+
+    public String createPypiExternalId(final String name, final String version) {
+        return String.format("%s/%s", name, version);
     }
 
     public BdioExternalIdentifier createNugetExternalIdentifier(final String name, final String version) {
-        return createExternalIdentifier("nuget", String.format("%s/%s", name, version));
+        return createExternalIdentifier("nuget", createNugetExternalId(name, version));
+    }
+
+    public String createNugetExternalId(final String name, final String version) {
+        return String.format("%s/%s", name, version);
     }
 
     public BdioExternalIdentifier createNpmExternalIdentifier(final String name, final String version) {
-        return createExternalIdentifier("npm", String.format("%s@%s", name, version));
+        return createExternalIdentifier("npm", createNpmExternalId(name, version));
+    }
+
+    public String createNpmExternalId(final String name, final String version) {
+        return String.format("%s@%s", name, version);
     }
 
     public BdioExternalIdentifier createRubygemsExternalIdentifier(final String name, final String version) {
-        return createExternalIdentifier("rubygems", String.format("%s=%s", name, version));
+        return createExternalIdentifier("rubygems", createRubygemsExternalId(name, version));
+    }
+
+    public String createRubygemsExternalId(final String name, final String version) {
+        return String.format("%s=%s", name, version);
     }
 
 }
