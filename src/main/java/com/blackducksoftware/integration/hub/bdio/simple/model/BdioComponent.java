@@ -27,18 +27,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioComponent extends BdioNode {
     @SerializedName("revision")
-    private String revision;
+    private String version;
 
     public BdioComponent() {
         setType("Component");
     }
 
-    public String getRevision() {
-        return revision;
+    public String getVersion() {
+        return version;
     }
 
-    public void setRevision(final String revision) {
-        this.revision = revision;
+    public void setVersion(final String version) {
+        this.version = version;
     }
 
 }

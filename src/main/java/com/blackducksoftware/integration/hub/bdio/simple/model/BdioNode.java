@@ -42,7 +42,7 @@ public class BdioNode {
     private BdioExternalIdentifier bdioExternalIdentifier;
 
     @SerializedName("relationship")
-    List<BdioRelationship> relationship;
+    List<BdioRelationship> relationships;
 
     public String getId() {
         return id;
@@ -76,19 +76,19 @@ public class BdioNode {
         this.bdioExternalIdentifier = bdioExternalIdentifier;
     }
 
-    public List<BdioRelationship> getRelationship() {
-        return relationship;
+    public List<BdioRelationship> getRelationships() {
+        return relationships;
     }
 
-    public void setRelationship(final List<BdioRelationship> relationship) {
-        this.relationship = relationship;
+    public void setRelationships(final List<BdioRelationship> relationships) {
+        this.relationships = relationships;
     }
 
-    public void addRelationship(final BdioRelationship singleRelationship) {
-        if (relationship == null) {
-            relationship = new ArrayList<>();
+    public void addRelationship(final BdioRelationship relationship) {
+        if (relationships == null) {
+            relationships = new ArrayList<>();
         }
-        relationship.add(singleRelationship);
+        relationships.add(relationship);
     }
 
 }

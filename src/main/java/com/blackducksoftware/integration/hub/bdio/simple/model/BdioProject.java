@@ -23,22 +23,9 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import com.google.gson.annotations.SerializedName;
-
-public class BdioProject extends BdioNode {
-    @SerializedName("revision")
-    private String revision;
-
+public class BdioProject extends BdioComponent {
     public BdioProject() {
         setType("Project");
-    }
-
-    public String getRevision() {
-        return revision;
-    }
-
-    public void setRevision(final String revision) {
-        this.revision = revision;
     }
 
 }

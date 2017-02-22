@@ -41,7 +41,7 @@ public class BdioNodeFactory {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.setId(String.format("uuid:%s", UUID.randomUUID()));
         billOfMaterials.setName(String.format("%s Black Duck I/O Export", projectName));
-        billOfMaterials.setSpecVersion("1.1.0");
+        billOfMaterials.setBdioSpecificationVersion("1.1.0");
 
         return billOfMaterials;
     }
@@ -51,7 +51,7 @@ public class BdioNodeFactory {
         final BdioProject project = new BdioProject();
         project.setId(id);
         project.setName(projectName);
-        project.setRevision(projectVersion);
+        project.setVersion(projectVersion);
         project.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
 
         return project;
@@ -61,7 +61,7 @@ public class BdioNodeFactory {
         final BdioProject project = new BdioProject();
         project.setId(id);
         project.setName(projectName);
-        project.setRevision(projectVersion);
+        project.setVersion(projectVersion);
         project.setBdioExternalIdentifier(externalIdentifier);
 
         return project;
@@ -72,7 +72,7 @@ public class BdioNodeFactory {
         final BdioComponent component = new BdioComponent();
         component.setId(id);
         component.setName(componentName);
-        component.setRevision(componentVersion);
+        component.setVersion(componentVersion);
         component.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
 
         return component;
@@ -83,7 +83,7 @@ public class BdioNodeFactory {
         final BdioComponent component = new BdioComponent();
         component.setId(id);
         component.setName(componentName);
-        component.setRevision(componentVersion);
+        component.setVersion(componentVersion);
         component.setBdioExternalIdentifier(externalIdentifier);
 
         return component;

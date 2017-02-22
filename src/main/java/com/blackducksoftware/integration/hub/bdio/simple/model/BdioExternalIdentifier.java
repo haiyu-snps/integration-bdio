@@ -27,17 +27,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioExternalIdentifier {
     @SerializedName("externalSystemTypeId")
-    private String externalSystemTypeId;
+    private String forge;
 
     @SerializedName("externalId")
     private String externalId;
 
-    public String getExternalSystemTypeId() {
-        return externalSystemTypeId;
+    public String getForge() {
+        return forge;
     }
 
-    public void setExternalSystemTypeId(final String externalSystemTypeId) {
-        this.externalSystemTypeId = externalSystemTypeId;
+    public void setForge(final String forge) {
+        this.forge = forge;
     }
 
     public String getExternalId() {

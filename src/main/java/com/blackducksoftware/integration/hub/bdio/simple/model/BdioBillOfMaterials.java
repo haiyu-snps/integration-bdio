@@ -27,18 +27,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioBillOfMaterials extends BdioNode {
     @SerializedName("specVersion")
-    private String specVersion;
+    private String bdioSpecificationVersion;
 
     public BdioBillOfMaterials() {
         setType("BillOfMaterials");
     }
 
-    public String getSpecVersion() {
-        return specVersion;
+    public String getBdioSpecificationVersion() {
+        return bdioSpecificationVersion;
     }
 
-    public void setSpecVersion(final String specVersion) {
-        this.specVersion = specVersion;
+    public void setBdioSpecificationVersion(final String bdioSpecificationVersion) {
+        this.bdioSpecificationVersion = bdioSpecificationVersion;
     }
 
 }

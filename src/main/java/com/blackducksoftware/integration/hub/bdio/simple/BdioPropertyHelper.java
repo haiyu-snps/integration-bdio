@@ -46,7 +46,7 @@ public class BdioPropertyHelper {
     public BdioExternalIdentifier createExternalIdentifier(final String externalSystemTypeId, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
         externalIdentifier.setExternalId(externalId);
-        externalIdentifier.setExternalSystemTypeId(externalSystemTypeId);
+        externalIdentifier.setForge(externalSystemTypeId);
         return externalIdentifier;
     }
 
