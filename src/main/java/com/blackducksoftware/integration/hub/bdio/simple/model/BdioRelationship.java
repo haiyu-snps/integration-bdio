@@ -21,31 +21,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple;
+package com.blackducksoftware.integration.hub.bdio.simple.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class BdioExternalIdentifier {
-    @SerializedName("externalSystemTypeId")
-    private String externalSystemTypeId;
+public class BdioRelationship {
+    @SerializedName("related")
+    private String related;
 
-    @SerializedName("externalId")
-    private String externalId;
+    @SerializedName("relationshipType")
+    private String relationshipType;
 
-    public String getExternalSystemTypeId() {
-        return externalSystemTypeId;
+    public String getRelated() {
+        return related;
     }
 
-    public void setExternalSystemTypeId(final String externalSystemTypeId) {
-        this.externalSystemTypeId = externalSystemTypeId;
+    public void setRelated(final String related) {
+        this.related = related;
     }
 
-    public String getExternalId() {
-        return externalId;
+    public String getRelationshipType() {
+        return relationshipType;
     }
 
-    public void setExternalId(final String externalId) {
-        this.externalId = externalId;
+    public void setRelationshipType(final String relationshipType) {
+        this.relationshipType = relationshipType;
     }
 
 }

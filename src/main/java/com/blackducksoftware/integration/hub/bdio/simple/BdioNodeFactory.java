@@ -23,10 +23,20 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.List;
 import java.util.UUID;
 
-public class BdioHelper {
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
+
+public class BdioNodeFactory {
+    private final BdioPropertyHelper bdioPropertyHelper;
+
+    public BdioNodeFactory(final BdioPropertyHelper bdioPropertyHelper) {
+        this.bdioPropertyHelper = bdioPropertyHelper;
+    }
+
     public BdioBillOfMaterials createBillOfMaterials(final String projectName) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.setId(String.format("uuid:%s", UUID.randomUUID()));
@@ -42,7 +52,7 @@ public class BdioHelper {
         project.setId(id);
         project.setName(projectName);
         project.setRevision(projectVersion);
-        project.setBdioExternalIdentifier(createExternalIdentifier(externalSystemTypeId, externalId));
+        project.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
 
         return project;
     }
@@ -63,7 +73,7 @@ public class BdioHelper {
         component.setId(id);
         component.setName(componentName);
         component.setRevision(componentVersion);
-        component.setBdioExternalIdentifier(createExternalIdentifier(externalSystemTypeId, externalId));
+        component.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
 
         return component;
     }
@@ -77,26 +87,6 @@ public class BdioHelper {
         component.setBdioExternalIdentifier(externalIdentifier);
 
         return component;
-    }
-
-    public void addRelationships(final BdioNode node, final List<BdioNode> children) {
-        for (final BdioNode child : children) {
-            addRelationship(node, child);
-        }
-    }
-
-    public void addRelationship(final BdioNode node, final BdioNode child) {
-        final BdioRelationship singleRelationship = new BdioRelationship();
-        singleRelationship.setRelated(child.getId());
-        singleRelationship.setRelationshipType("DYNAMIC_LINK");
-        node.addRelationship(singleRelationship);
-    }
-
-    public BdioExternalIdentifier createExternalIdentifier(final String externalSystemTypeId, final String externalId) {
-        final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
-        externalIdentifier.setExternalId(externalId);
-        externalIdentifier.setExternalSystemTypeId(externalSystemTypeId);
-        return externalIdentifier;
     }
 
 }

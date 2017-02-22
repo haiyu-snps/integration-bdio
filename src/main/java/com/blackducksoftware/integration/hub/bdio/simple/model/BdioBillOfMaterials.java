@@ -21,31 +21,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple;
+package com.blackducksoftware.integration.hub.bdio.simple.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class BdioRelationship {
-    @SerializedName("related")
-    private String related;
+public class BdioBillOfMaterials extends BdioNode {
+    @SerializedName("specVersion")
+    private String specVersion;
 
-    @SerializedName("relationshipType")
-    private String relationshipType;
-
-    public String getRelated() {
-        return related;
+    public BdioBillOfMaterials() {
+        setType("BillOfMaterials");
     }
 
-    public void setRelated(final String related) {
-        this.related = related;
+    public String getSpecVersion() {
+        return specVersion;
     }
 
-    public String getRelationshipType() {
-        return relationshipType;
-    }
-
-    public void setRelationshipType(final String relationshipType) {
-        this.relationshipType = relationshipType;
+    public void setSpecVersion(final String specVersion) {
+        this.specVersion = specVersion;
     }
 
 }

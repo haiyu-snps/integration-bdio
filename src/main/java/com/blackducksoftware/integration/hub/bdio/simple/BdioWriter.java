@@ -32,6 +32,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
