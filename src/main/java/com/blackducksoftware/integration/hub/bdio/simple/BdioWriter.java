@@ -57,7 +57,7 @@ public class BdioWriter implements Closeable, Flushable {
 
     public void writeBdioNodes(final List<BdioNode> bdioNodes) {
         for (final BdioNode bdioNode : bdioNodes) {
-            gson.toJson(bdioNode, bdioNode.getClass(), jsonWriter);
+            writeBdioNode(bdioNode);
         }
     }
 

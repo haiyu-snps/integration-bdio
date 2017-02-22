@@ -25,10 +25,12 @@ package com.blackducksoftware.integration.hub.bdio.simple;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -51,11 +53,36 @@ import com.google.gson.Gson;
 
 public class BdioNodeFactoryTest {
     @Test
-    public void testFactory() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
-        final URL url = Thread.currentThread().getContextClassLoader().getResource("sample.jsonld");
-        final File file = new File(url.toURI().getPath());
-        final String expectedJson = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+    public void testWriterOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
+        final String expectedJson = getExpectedJson();
 
+        // we simply write the final structure out through a StringWriter so we can compare what is generated to a stock
+        // file
+        final Writer writer = new StringWriter();
+        try (BdioWriter bdioWriter = new BdioWriter(new Gson(), writer)) {
+            bdioWriter.writeBdioNodes(getBdioNodes());
+        }
+
+        final String actualJson = writer.toString();
+        verifyJsonArraysEqual(expectedJson, actualJson);
+    }
+
+    @Test
+    public void testOutputStreamOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
+        final String expectedJson = getExpectedJson();
+
+        // we simply write the final structure out through a ByteArrayOutputStream so we can compare what is generated
+        // to a stock file
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (BdioWriter bdioWriter = new BdioWriter(new Gson(), outputStream)) {
+            bdioWriter.writeBdioNodes(getBdioNodes());
+        }
+
+        final String actualJson = outputStream.toString(StandardCharsets.UTF_8.name());
+        verifyJsonArraysEqual(expectedJson, actualJson);
+    }
+
+    private List<BdioNode> getBdioNodes() {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
@@ -105,16 +132,21 @@ public class BdioNodeFactoryTest {
         bdioNodes.add(commonsCollections);
         bdioNodes.add(commonsLang);
 
-        // we simply write the final structure out to a String so we can compare what is generated to a stock file
-        final StringWriter writer = new StringWriter();
-        try (BdioWriter bdioWriter = new BdioWriter(new Gson(), writer)) {
-            bdioWriter.writeBdioNodes(bdioNodes);
-        }
+        return bdioNodes;
+    }
 
+    private void verifyJsonArraysEqual(final String expectedJson, final String actualJson) throws JSONException {
         final JSONArray expected = (JSONArray) JSONParser.parseJSON(expectedJson);
-        final JSONArray actual = (JSONArray) JSONParser.parseJSON(writer.toString());
+        final JSONArray actual = (JSONArray) JSONParser.parseJSON(actualJson);
         assertEquals(expected.length(), actual.length());
         JSONAssert.assertEquals(expected, actual, false);
+    }
+
+    private String getExpectedJson() throws URISyntaxException, IOException {
+        final URL url = Thread.currentThread().getContextClassLoader().getResource("sample.jsonld");
+        final File file = new File(url.toURI().getPath());
+        final String expectedJson = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+        return expectedJson;
     }
 
 }
