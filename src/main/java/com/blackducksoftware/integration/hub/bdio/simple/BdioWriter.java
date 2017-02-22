@@ -24,7 +24,6 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import java.io.Closeable;
-import java.io.Flushable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -36,7 +35,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
-public class BdioWriter implements Closeable, Flushable {
+public class BdioWriter implements Closeable {
     private final Gson gson;
 
     private final JsonWriter jsonWriter;
@@ -63,11 +62,6 @@ public class BdioWriter implements Closeable, Flushable {
 
     public void writeBdioNode(final BdioNode bdioNode) {
         gson.toJson(bdioNode, bdioNode.getClass(), jsonWriter);
-    }
-
-    @Override
-    public void flush() throws IOException {
-        jsonWriter.flush();
     }
 
     @Override
