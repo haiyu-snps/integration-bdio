@@ -30,7 +30,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
 
 public class BdioPropertyHelper {
-    public void addRelationships(final BdioNode node, final List<BdioNode> children) {
+    public void addRelationships(final BdioNode node, final List<? extends BdioNode> children) {
         for (final BdioNode child : children) {
             addRelationship(node, child);
         }

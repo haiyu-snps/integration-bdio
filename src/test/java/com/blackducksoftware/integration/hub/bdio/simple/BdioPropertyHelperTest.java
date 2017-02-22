@@ -10,6 +10,12 @@ public class BdioPropertyHelperTest {
     private final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
 
     @Test
+    public void testCreatingBdioId() {
+        assertEquals("data:name/version", bdioPropertyHelper.createBdioId("name", "version"));
+        assertEquals("data:group/artifact/version", bdioPropertyHelper.createBdioId("group", "artifact", "version"));
+    }
+
+    @Test
     public void testCreatingMavenExternalIds() {
         final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createMavenExternalIdentifier("group", "artifact", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("maven", "group:artifact:version");

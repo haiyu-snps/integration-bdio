@@ -34,6 +34,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -91,13 +92,11 @@ public class BdioNodeFactoryTest {
 
         // now, the cxfBundle component itself has two dependencies, which will appear in the final BOM as they are
         // transitive dependencies of the project
-        bdioPropertyHelper.addRelationship(cxfBundle, velocity);
-        bdioPropertyHelper.addRelationship(cxfBundle, commonsLang);
+        bdioPropertyHelper.addRelationships(cxfBundle, Arrays.asList(velocity, commonsLang));
 
         // and the velocity component also has two dependencies - it will only add one additional entry to our final BOM
         // as the commonsLang component was already included from the cxfBundle component above
-        bdioPropertyHelper.addRelationship(velocity, commonsCollections);
-        bdioPropertyHelper.addRelationship(velocity, commonsLang);
+        bdioPropertyHelper.addRelationships(velocity, Arrays.asList(commonsCollections, commonsLang));
 
         final List<BdioNode> bdioNodes = new ArrayList<>();
         bdioNodes.add(bdioBillOfMaterials);
