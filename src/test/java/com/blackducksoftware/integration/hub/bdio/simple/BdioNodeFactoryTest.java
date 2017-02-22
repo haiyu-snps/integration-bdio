@@ -62,14 +62,14 @@ public class BdioNodeFactoryTest {
         final String projectGroup = "com.blackducksoftware.gradle.test";
         final String projectName = "gradleTestProject";
         final String projectVersion = "99.5-SNAPSHOT";
-        final String projectId = bdioPropertyHelper.createBdioId(projectGroup, projectName, projectVersion);
+        final String projectBdioId = bdioPropertyHelper.createBdioId(projectGroup, projectName, projectVersion);
         final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createMavenExternalIdentifier(projectGroup, projectName, projectVersion);
 
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials(projectName);
         // we are overriding the default value of a new uuid just to pass the json comparison
-        bdioBillOfMaterials.setId("uuid:45772d33-5353-44f1-8681-3d8a15540646");
+        bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
-        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectId, projectExternalIdentifier);
+        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, projectExternalIdentifier);
 
         final BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7",
                 bdioPropertyHelper.createBdioId("org.apache.cxf", "cxf-bundle", "2.7.7"),
@@ -84,13 +84,20 @@ public class BdioNodeFactoryTest {
                 bdioPropertyHelper.createBdioId("commons-lang", "commons-lang", "2.6"),
                 bdioPropertyHelper.createMavenExternalIdentifier("commons-lang", "commons-lang", "2.6"));
 
+        // we will now relate the constructed bdio nodes
+
+        // first, add the cxfBundle component as a child of the project - this project has a single direct dependency
         bdioPropertyHelper.addRelationship(bdioProject, cxfBundle);
 
-        bdioPropertyHelper.addRelationship(velocity, commonsCollections);
-        bdioPropertyHelper.addRelationship(velocity, commonsLang);
-
+        // now, the cxfBundle component itself has two dependencies, which will appear in the final BOM as they are
+        // transitive dependencies of the project
         bdioPropertyHelper.addRelationship(cxfBundle, velocity);
         bdioPropertyHelper.addRelationship(cxfBundle, commonsLang);
+
+        // and the velocity component also has two dependencies - it will only add one additional entry to our final BOM
+        // as the commonsLang component was already included from the cxfBundle component above
+        bdioPropertyHelper.addRelationship(velocity, commonsCollections);
+        bdioPropertyHelper.addRelationship(velocity, commonsLang);
 
         final List<BdioNode> bdioNodes = new ArrayList<>();
         bdioNodes.add(bdioBillOfMaterials);
@@ -100,6 +107,7 @@ public class BdioNodeFactoryTest {
         bdioNodes.add(commonsCollections);
         bdioNodes.add(commonsLang);
 
+        // we simply write the final structure out to a String so we can compare what is generated to a stock file
         final StringWriter writer = new StringWriter();
         try (BdioWriter bdioWriter = new BdioWriter(new Gson(), writer)) {
             bdioWriter.writeBdioNodes(bdioNodes);

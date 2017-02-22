@@ -25,7 +25,7 @@ package com.blackducksoftware.integration.hub.bdio.simple.model;
 
 public class BdioProject extends BdioComponent {
     public BdioProject() {
-        setType("Project");
+        type = "Project";
     }
 
 }

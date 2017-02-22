@@ -30,65 +30,18 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioNode {
     @SerializedName("@id")
-    private String id;
+    public String id;
 
     @SerializedName("@type")
-    private String type;
+    public String type;
 
     @SerializedName("name")
-    private String name;
+    public String name;
 
     @SerializedName("externalIdentifier")
-    private BdioExternalIdentifier bdioExternalIdentifier;
+    public BdioExternalIdentifier bdioExternalIdentifier;
 
     @SerializedName("relationship")
-    List<BdioRelationship> relationships;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public BdioExternalIdentifier getBdioExternalIdentifier() {
-        return bdioExternalIdentifier;
-    }
-
-    public void setBdioExternalIdentifier(final BdioExternalIdentifier bdioExternalIdentifier) {
-        this.bdioExternalIdentifier = bdioExternalIdentifier;
-    }
-
-    public List<BdioRelationship> getRelationships() {
-        return relationships;
-    }
-
-    public void setRelationships(final List<BdioRelationship> relationships) {
-        this.relationships = relationships;
-    }
-
-    public void addRelationship(final BdioRelationship relationship) {
-        if (relationships == null) {
-            relationships = new ArrayList<>();
-        }
-        relationships.add(relationship);
-    }
+    public List<BdioRelationship> relationships = new ArrayList<>();
 
 }

@@ -37,16 +37,16 @@ public class BdioPropertyHelper {
     }
 
     public void addRelationship(final BdioNode node, final BdioNode child) {
-        final BdioRelationship singleRelationship = new BdioRelationship();
-        singleRelationship.setRelated(child.getId());
-        singleRelationship.setRelationshipType("DYNAMIC_LINK");
-        node.addRelationship(singleRelationship);
+        final BdioRelationship relationship = new BdioRelationship();
+        relationship.related = child.id;
+        relationship.relationshipType = "DYNAMIC_LINK";
+        node.relationships.add(relationship);
     }
 
-    public BdioExternalIdentifier createExternalIdentifier(final String externalSystemTypeId, final String externalId) {
+    public BdioExternalIdentifier createExternalIdentifier(final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
-        externalIdentifier.setExternalId(externalId);
-        externalIdentifier.setForge(externalSystemTypeId);
+        externalIdentifier.externalId = externalId;
+        externalIdentifier.forge = forge;
         return externalIdentifier;
     }
 

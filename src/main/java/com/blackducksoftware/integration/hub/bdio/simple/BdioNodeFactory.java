@@ -39,52 +39,53 @@ public class BdioNodeFactory {
 
     public BdioBillOfMaterials createBillOfMaterials(final String projectName) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
-        billOfMaterials.setId(String.format("uuid:%s", UUID.randomUUID()));
-        billOfMaterials.setName(String.format("%s Black Duck I/O Export", projectName));
-        billOfMaterials.setBdioSpecificationVersion("1.1.0");
+        billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
+        billOfMaterials.name = String.format("%s Black Duck I/O Export", projectName);
+        billOfMaterials.bdioSpecificationVersion = "1.1.0";
 
         return billOfMaterials;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String id, final String externalSystemTypeId,
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge,
             final String externalId) {
         final BdioProject project = new BdioProject();
-        project.setId(id);
-        project.setName(projectName);
-        project.setVersion(projectVersion);
-        project.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
+        project.id = bdioId;
+        project.name = projectName;
+        project.version = projectVersion;
+        project.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return project;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String id, final BdioExternalIdentifier externalIdentifier) {
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId,
+            final BdioExternalIdentifier externalIdentifier) {
         final BdioProject project = new BdioProject();
-        project.setId(id);
-        project.setName(projectName);
-        project.setVersion(projectVersion);
-        project.setBdioExternalIdentifier(externalIdentifier);
+        project.id = bdioId;
+        project.name = projectName;
+        project.version = projectVersion;
+        project.bdioExternalIdentifier = externalIdentifier;
 
         return project;
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String id, final String externalSystemTypeId,
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge,
             final String externalId) {
         final BdioComponent component = new BdioComponent();
-        component.setId(id);
-        component.setName(componentName);
-        component.setVersion(componentVersion);
-        component.setBdioExternalIdentifier(bdioPropertyHelper.createExternalIdentifier(externalSystemTypeId, externalId));
+        component.id = bdioId;
+        component.name = componentName;
+        component.version = componentVersion;
+        component.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return component;
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String id,
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId,
             final BdioExternalIdentifier externalIdentifier) {
         final BdioComponent component = new BdioComponent();
-        component.setId(id);
-        component.setName(componentName);
-        component.setVersion(componentVersion);
-        component.setBdioExternalIdentifier(externalIdentifier);
+        component.id = bdioId;
+        component.name = componentName;
+        component.version = componentVersion;
+        component.bdioExternalIdentifier = externalIdentifier;
 
         return component;
     }

@@ -27,25 +27,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioExternalIdentifier {
     @SerializedName("externalSystemTypeId")
-    private String forge;
+    public String forge;
 
     @SerializedName("externalId")
-    private String externalId;
-
-    public String getForge() {
-        return forge;
-    }
-
-    public void setForge(final String forge) {
-        this.forge = forge;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(final String externalId) {
-        this.externalId = externalId;
-    }
+    public String externalId;
 
 }

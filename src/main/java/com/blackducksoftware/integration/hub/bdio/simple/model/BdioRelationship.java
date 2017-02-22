@@ -27,25 +27,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioRelationship {
     @SerializedName("related")
-    private String related;
+    public String related;
 
     @SerializedName("relationshipType")
-    private String relationshipType;
-
-    public String getRelated() {
-        return related;
-    }
-
-    public void setRelated(final String related) {
-        this.related = related;
-    }
-
-    public String getRelationshipType() {
-        return relationshipType;
-    }
-
-    public void setRelationshipType(final String relationshipType) {
-        this.relationshipType = relationshipType;
-    }
+    public String relationshipType;
 
 }
