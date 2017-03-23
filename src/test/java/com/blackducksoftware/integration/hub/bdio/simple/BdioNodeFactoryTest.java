@@ -82,6 +82,17 @@ public class BdioNodeFactoryTest {
         verifyJsonArraysEqual(expectedJson, actualJson);
     }
 
+    @Test
+    public void testCodeLocationOverride() {
+        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", "name", "version");
+        assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.name);
+
+        bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("override", "name", "version");
+        assertEquals("override", bdioBillOfMaterials.name);
+    }
+
     private List<BdioNode> getBdioNodes() {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
@@ -92,7 +103,7 @@ public class BdioNodeFactoryTest {
         final String projectExternalId = bdioPropertyHelper.createMavenExternalId(projectGroup, projectName, projectVersion);
         final String projectBdioId = bdioPropertyHelper.createBdioId(projectGroup, projectName, projectVersion);
 
-        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials(projectName, projectVersion);
+        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
