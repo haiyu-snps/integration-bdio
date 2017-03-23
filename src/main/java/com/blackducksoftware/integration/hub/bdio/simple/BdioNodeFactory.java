@@ -37,10 +37,14 @@ public class BdioNodeFactory {
         this.bdioPropertyHelper = bdioPropertyHelper;
     }
 
-    public BdioBillOfMaterials createBillOfMaterials(final String projectName, final String projectVersion) {
+    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
-        billOfMaterials.name = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
+        if (codeLocationName != null && !codeLocationName.trim().equals("")) {
+            billOfMaterials.name = codeLocationName;
+        } else {
+            billOfMaterials.name = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
+        }
         billOfMaterials.bdioSpecificationVersion = "1.1.0";
 
         return billOfMaterials;
