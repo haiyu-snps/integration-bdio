@@ -87,10 +87,10 @@ public class BdioNodeFactoryTest {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", "name", "version");
-        assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.name);
+        assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.spdxName);
 
         bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("override", "name", "version");
-        assertEquals("override", bdioBillOfMaterials.name);
+        assertEquals("override", bdioBillOfMaterials.spdxName);
     }
 
     private List<BdioNode> getBdioNodes() {

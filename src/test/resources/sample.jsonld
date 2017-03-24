@@ -3,7 +3,7 @@
   "specVersion": "1.1.0",
   "@id": "uuid:45772d33-5353-44f1-8681-3d8a15540646",
   "@type": "BillOfMaterials",
-  "name": "gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export"
+  "spdx:name": "gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export"
 },
 {
   "revision": "99.5-SNAPSHOT",

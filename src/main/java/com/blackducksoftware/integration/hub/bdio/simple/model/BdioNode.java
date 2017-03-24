@@ -35,9 +35,6 @@ public class BdioNode {
     @SerializedName("@type")
     public String type;
 
-    @SerializedName("name")
-    public String name;
-
     @SerializedName("externalIdentifier")
     public BdioExternalIdentifier bdioExternalIdentifier;
 

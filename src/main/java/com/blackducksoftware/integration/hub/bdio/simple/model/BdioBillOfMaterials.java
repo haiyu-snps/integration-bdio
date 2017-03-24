@@ -29,6 +29,9 @@ public class BdioBillOfMaterials extends BdioNode {
     @SerializedName("specVersion")
     public String bdioSpecificationVersion;
 
+    @SerializedName("spdx:name")
+    public String spdxName;
+
     public BdioBillOfMaterials() {
         type = "BillOfMaterials";
     }

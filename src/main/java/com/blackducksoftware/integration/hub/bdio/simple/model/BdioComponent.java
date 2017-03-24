@@ -26,6 +26,9 @@ package com.blackducksoftware.integration.hub.bdio.simple.model;
 import com.google.gson.annotations.SerializedName;
 
 public class BdioComponent extends BdioNode {
+    @SerializedName("name")
+    public String name;
+
     @SerializedName("revision")
     public String version;
 

@@ -41,9 +41,9 @@ public class BdioNodeFactory {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
         if (codeLocationName != null && !codeLocationName.trim().equals("")) {
-            billOfMaterials.name = codeLocationName;
+            billOfMaterials.spdxName = codeLocationName;
         } else {
-            billOfMaterials.name = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
+            billOfMaterials.spdxName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
         }
         billOfMaterials.bdioSpecificationVersion = "1.1.0";
 
