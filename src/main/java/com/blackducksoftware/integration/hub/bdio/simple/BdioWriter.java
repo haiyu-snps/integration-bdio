@@ -29,9 +29,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
+import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
 
@@ -52,6 +54,15 @@ public class BdioWriter implements Closeable {
         this.jsonWriter = new JsonWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
         jsonWriter.setIndent("  ");
         jsonWriter.beginArray();
+    }
+
+    public void writeSimpleBdioDocument(final SimpleBdioDocument simpleBdioDocument) {
+        final List<BdioNode> bdioNodes = new ArrayList<>();
+        bdioNodes.add(simpleBdioDocument.billOfMaterials);
+        bdioNodes.add(simpleBdioDocument.project);
+        bdioNodes.addAll(simpleBdioDocument.components);
+
+        writeBdioNodes(bdioNodes);
     }
 
     public void writeBdioNodes(final List<BdioNode> bdioNodes) {
