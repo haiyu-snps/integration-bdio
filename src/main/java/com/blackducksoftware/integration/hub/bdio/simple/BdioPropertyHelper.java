@@ -101,4 +101,8 @@ public class BdioPropertyHelper {
         return String.format("%s=%s", name, version);
     }
 
+    public String createCocoapodsExternalId(final String name, final String version) {
+        return String.format("cocoapods:%s:%s", name, version);
+    }
+
 }
