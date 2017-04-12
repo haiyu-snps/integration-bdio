@@ -78,4 +78,12 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
+    @Test
+    public void testCreatingCocoapodsExternalIds() {
+        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createCocoapodsExternalIdentifier("name", "version");
+        final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("cocoapods", "name:version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+    }
+
 }
