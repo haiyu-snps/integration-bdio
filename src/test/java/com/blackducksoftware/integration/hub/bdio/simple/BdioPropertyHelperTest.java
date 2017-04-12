@@ -28,6 +28,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
+import com.blackducksoftware.integration.hub.bdio.simple.model.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.simple.model.MavenExternalId;
 
 public class BdioPropertyHelperTest {
     private final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
@@ -40,48 +43,84 @@ public class BdioPropertyHelperTest {
 
     @Test
     public void testCreatingMavenExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createMavenExternalIdentifier("group", "artifact", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("maven", "group:artifact:version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createMavenExternalIdentifier("group", "artifact", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final MavenExternalId mavenExternalId = new MavenExternalId("group", "artifact", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.maven, mavenExternalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
     @Test
     public void testCreatingNpmExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createNpmExternalIdentifier("name", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("npm", "name@version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createNpmExternalIdentifier("name", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final ExternalId externalId = new ExternalId("name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.npm, externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
     @Test
     public void testCreatingNugetExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createNugetExternalIdentifier("name", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("nuget", "name/version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createNugetExternalIdentifier("name", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final ExternalId externalId = new ExternalId("name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.nuget, externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
     @Test
     public void testCreatingPypiExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createPypiExternalIdentifier("name", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("pypi", "name/version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createPypiExternalIdentifier("name", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final ExternalId externalId = new ExternalId("name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.pypi, externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
     @Test
     public void testCreatingRubygemsExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createRubygemsExternalIdentifier("name", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("rubygems", "name=version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createRubygemsExternalIdentifier("name", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final ExternalId externalId = new ExternalId("name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.rubygems, externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
 
     @Test
     public void testCreatingCocoapodsExternalIds() {
-        final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createCocoapodsExternalIdentifier("name", "version");
         final BdioExternalIdentifier expectedExternalIdentifier = bdioPropertyHelper.createExternalIdentifier("cocoapods", "name:version");
+
+        BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createCocoapodsExternalIdentifier("name", "version");
+        assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
+        assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
+
+        final ExternalId externalId = new ExternalId("name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.cocoapods, externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }

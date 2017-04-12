@@ -28,6 +28,8 @@ import java.util.List;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
+import com.blackducksoftware.integration.hub.bdio.simple.model.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 
 public class BdioPropertyHelper {
     public void addRelationships(final BdioNode node, final List<? extends BdioNode> children) {
@@ -107,6 +109,10 @@ public class BdioPropertyHelper {
 
     public String createCocoapodsExternalId(final String name, final String version) {
         return String.format("%s:%s", name, version);
+    }
+
+    public BdioExternalIdentifier createExternalIdentifier(final Forge forge, final ExternalId externalId) {
+        return createExternalIdentifier(forge.toString(), externalId.createExternalId(forge));
     }
 
 }
