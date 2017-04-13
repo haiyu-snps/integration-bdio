@@ -24,6 +24,7 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,11 +48,19 @@ import org.skyscreamer.jsonassert.JSONParser;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.google.gson.Gson;
 
 public class BdioNodeFactoryTest {
+    @Test
+    public void testToCoverForge() {
+        // in order to maintain 100% coverage, we have to invoke the values() and the valueOf() methods
+        assertTrue(Forge.pypi == Forge.valueOf("pypi"));
+        assertTrue(Forge.values().length > 0);
+    }
+
     @Test
     public void testWriterOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
         final String expectedJson = getExpectedJson();
@@ -60,7 +69,7 @@ public class BdioNodeFactoryTest {
         // file
         final Writer writer = new StringWriter();
         try (BdioWriter bdioWriter = new BdioWriter(new Gson(), writer)) {
-            bdioWriter.writeBdioNodes(getBdioNodes());
+            bdioWriter.writeSimpleBdioDocument(getSimpleBdioDocument());
         }
 
         final String actualJson = writer.toString();
@@ -75,7 +84,7 @@ public class BdioNodeFactoryTest {
         // to a stock file
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (BdioWriter bdioWriter = new BdioWriter(new Gson(), outputStream)) {
-            bdioWriter.writeBdioNodes(getBdioNodes());
+            bdioWriter.writeSimpleBdioDocument(getSimpleBdioDocument());
         }
 
         final String actualJson = outputStream.toString(StandardCharsets.UTF_8.name());
@@ -93,7 +102,9 @@ public class BdioNodeFactoryTest {
         assertEquals("override", bdioBillOfMaterials.spdxName);
     }
 
-    private List<BdioNode> getBdioNodes() {
+    private SimpleBdioDocument getSimpleBdioDocument() {
+        final SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
+
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
@@ -135,15 +146,17 @@ public class BdioNodeFactoryTest {
         // as the commonsLang component was already included from the cxfBundle component above
         bdioPropertyHelper.addRelationships(velocity, Arrays.asList(commonsCollections, commonsLang));
 
-        final List<BdioNode> bdioNodes = new ArrayList<>();
-        bdioNodes.add(bdioBillOfMaterials);
-        bdioNodes.add(bdioProject);
-        bdioNodes.add(cxfBundle);
-        bdioNodes.add(velocity);
-        bdioNodes.add(commonsCollections);
-        bdioNodes.add(commonsLang);
+        final List<BdioComponent> bdioComponents = new ArrayList<>();
+        bdioComponents.add(cxfBundle);
+        bdioComponents.add(velocity);
+        bdioComponents.add(commonsCollections);
+        bdioComponents.add(commonsLang);
 
-        return bdioNodes;
+        simpleBdioDocument.billOfMaterials = bdioBillOfMaterials;
+        simpleBdioDocument.project = bdioProject;
+        simpleBdioDocument.components = bdioComponents;
+
+        return simpleBdioDocument;
     }
 
     private void verifyJsonArraysEqual(final String expectedJson, final String actualJson) throws JSONException {
