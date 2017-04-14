@@ -32,12 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
@@ -68,29 +63,6 @@ public class BdioWriter implements Closeable {
         bdioNodes.addAll(simpleBdioDocument.components);
 
         writeBdioNodes(bdioNodes);
-    }
-
-    public void writeProject(final String hubCodeLocationName, final DependencyNode root)
-            throws IOException {
-        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
-
-        final String projectId = idFromGav(root.getGav());
-        final BdioExternalIdentifier projectExternalIdentifier = externalIdentifierFromGav(root.getGav());
-        final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
-
-        for (final DependencyNode child : root.getChildren()) {
-            final BdioComponent component = componentFromDependencyNode(child);
-            bdioPropertyHelper.addRelationship(project, component);
-        }
-
-        try (BdioWriter bdioWriter = new BdioWriter(new Gson(), outputStream)) {
-            bdioWriter.writeBdioNode(billOfMaterials);
-            bdioWriter.writeBdioNode(project);
-
-            for (final DependencyNode child : root.getChildren()) {
-                writeDependencyGraph(bdioWriter, child);
-            }
-        }
     }
 
     public void writeBdioNodes(final List<BdioNode> bdioNodes) {
