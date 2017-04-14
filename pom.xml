@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>integration-bdio</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>1.6.0-SNAPSHOT</version>
 
   <name>Integration Bdio</name>
   <description>A light-weight bdio construction library</description>
@@ -23,6 +23,11 @@
   </scm>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.5</version>
+    </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>

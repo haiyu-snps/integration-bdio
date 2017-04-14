@@ -25,6 +25,8 @@ package com.blackducksoftware.integration.hub.bdio.simple;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
@@ -40,7 +42,7 @@ public class BdioNodeFactory {
     public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
-        if (codeLocationName != null && !codeLocationName.trim().equals("")) {
+        if (StringUtils.isNotBlank(codeLocationName)) {
             billOfMaterials.spdxName = codeLocationName;
         } else {
             billOfMaterials.spdxName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);

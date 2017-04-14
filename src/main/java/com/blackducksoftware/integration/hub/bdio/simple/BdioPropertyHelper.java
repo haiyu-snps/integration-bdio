@@ -28,8 +28,8 @@ import java.util.List;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
-import com.blackducksoftware.integration.hub.bdio.simple.model.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 public class BdioPropertyHelper {
     public void addRelationships(final BdioNode node, final List<? extends BdioNode> children) {

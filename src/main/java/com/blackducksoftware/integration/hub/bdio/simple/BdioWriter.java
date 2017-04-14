@@ -32,7 +32,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
@@ -63,6 +68,64 @@ public class BdioWriter implements Closeable {
         bdioNodes.addAll(simpleBdioDocument.components);
 
         writeBdioNodes(bdioNodes);
+    }
+
+    public void writeProject(final String hubCodeLocationName, final DependencyNode root)
+            throws IOException {
+        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
+
+        final String projectId = idFromGav(root.getGav());
+        final BdioExternalIdentifier projectExternalIdentifier = externalIdentifierFromGav(root.getGav());
+        final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
+
+        for (final DependencyNode child : root.getChildren()) {
+            final BdioComponent component = componentFromDependencyNode(child);
+            bdioPropertyHelper.addRelationship(project, component);
+        }
+
+        try (BdioWriter bdioWriter = new BdioWriter(new Gson(), outputStream)) {
+            bdioWriter.writeBdioNode(billOfMaterials);
+            bdioWriter.writeBdioNode(project);
+
+            for (final DependencyNode child : root.getChildren()) {
+                writeDependencyGraph(bdioWriter, child);
+            }
+        }
+    }
+
+    private void writeDependencyGraph(final BdioWriter writer, final DependencyNode dependencyNode) throws IOException {
+        writeDependencyNode(writer, dependencyNode);
+
+        for (final DependencyNode child : dependencyNode.getChildren()) {
+            writeDependencyGraph(writer, child);
+        }
+    }
+
+    private void writeDependencyNode(final BdioWriter writer, final DependencyNode dependencyNode) throws IOException {
+        final BdioComponent bdioComponent = componentFromDependencyNode(dependencyNode);
+        final BdioExternalIdentifier externalIdentifier = bdioComponent.bdioExternalIdentifier;
+        boolean alreadyAdded = false;
+        if (!externalIds.add(externalIdentifier.externalId)) {
+            alreadyAdded = true;
+        }
+
+        if (!alreadyAdded) {
+            for (final DependencyNode child : dependencyNode.getChildren()) {
+                final BdioComponent childComponent = componentFromDependencyNode(child);
+                bdioPropertyHelper.addRelationship(bdioComponent, childComponent);
+            }
+            writer.writeBdioNode(bdioComponent);
+        }
+    }
+
+    private BdioComponent componentFromDependencyNode(final DependencyNode dependencyNode) {
+        final String componentName = dependencyNode.getGav().getArtifactId();
+        final String componentVersion = dependencyNode.getGav().getVersion();
+        final String componentId = idFromGav(dependencyNode.getGav());
+        final BdioExternalIdentifier componentExternalIdentifier = externalIdentifierFromGav(dependencyNode.getGav());
+
+        final BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);
+        return component;
     }
 
     public void writeBdioNodes(final List<BdioNode> bdioNodes) {

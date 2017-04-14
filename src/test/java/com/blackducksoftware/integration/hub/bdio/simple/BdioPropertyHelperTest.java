@@ -28,9 +28,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
-import com.blackducksoftware.integration.hub.bdio.simple.model.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
-import com.blackducksoftware.integration.hub.bdio.simple.model.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
 
 public class BdioPropertyHelperTest {
     private final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();

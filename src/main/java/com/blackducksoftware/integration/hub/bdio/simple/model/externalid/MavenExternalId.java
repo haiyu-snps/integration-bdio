@@ -1,6 +1,8 @@
-package com.blackducksoftware.integration.hub.bdio.simple.model;
+package com.blackducksoftware.integration.hub.bdio.simple.model.externalid;
 
-public class MavenExternalId extends ExternalId {
+import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+
+public class MavenExternalId extends NameVersionExternalId {
     public String group;
 
     public MavenExternalId(final String group, final String name, final String version) {
