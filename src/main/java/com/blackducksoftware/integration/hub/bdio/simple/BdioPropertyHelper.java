@@ -28,7 +28,6 @@ import java.util.List;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 public class BdioPropertyHelper {
@@ -111,8 +110,8 @@ public class BdioPropertyHelper {
         return String.format("%s:%s", name, version);
     }
 
-    public BdioExternalIdentifier createExternalIdentifier(final Forge forge, final ExternalId externalId) {
-        return createExternalIdentifier(forge.toString(), externalId.createExternalId(forge));
+    public BdioExternalIdentifier createExternalIdentifier(final ExternalId externalId) {
+        return createExternalIdentifier(externalId.forge.toString(), externalId.createExternalId());
     }
 
 }

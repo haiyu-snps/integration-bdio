@@ -93,41 +93,6 @@ public class BdioWriter implements Closeable {
         }
     }
 
-    private void writeDependencyGraph(final BdioWriter writer, final DependencyNode dependencyNode) throws IOException {
-        writeDependencyNode(writer, dependencyNode);
-
-        for (final DependencyNode child : dependencyNode.getChildren()) {
-            writeDependencyGraph(writer, child);
-        }
-    }
-
-    private void writeDependencyNode(final BdioWriter writer, final DependencyNode dependencyNode) throws IOException {
-        final BdioComponent bdioComponent = componentFromDependencyNode(dependencyNode);
-        final BdioExternalIdentifier externalIdentifier = bdioComponent.bdioExternalIdentifier;
-        boolean alreadyAdded = false;
-        if (!externalIds.add(externalIdentifier.externalId)) {
-            alreadyAdded = true;
-        }
-
-        if (!alreadyAdded) {
-            for (final DependencyNode child : dependencyNode.getChildren()) {
-                final BdioComponent childComponent = componentFromDependencyNode(child);
-                bdioPropertyHelper.addRelationship(bdioComponent, childComponent);
-            }
-            writer.writeBdioNode(bdioComponent);
-        }
-    }
-
-    private BdioComponent componentFromDependencyNode(final DependencyNode dependencyNode) {
-        final String componentName = dependencyNode.getGav().getArtifactId();
-        final String componentVersion = dependencyNode.getGav().getVersion();
-        final String componentId = idFromGav(dependencyNode.getGav());
-        final BdioExternalIdentifier componentExternalIdentifier = externalIdentifierFromGav(dependencyNode.getGav());
-
-        final BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);
-        return component;
-    }
-
     public void writeBdioNodes(final List<BdioNode> bdioNodes) {
         for (final BdioNode bdioNode : bdioNodes) {
             writeBdioNode(bdioNode);

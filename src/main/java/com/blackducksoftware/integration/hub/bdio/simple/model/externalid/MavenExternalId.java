@@ -5,14 +5,14 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 public class MavenExternalId extends NameVersionExternalId {
     public String group;
 
-    public MavenExternalId(final String group, final String name, final String version) {
-        super(name, version);
+    public MavenExternalId(final Forge forge, final String group, final String artifact, final String version) {
+        super(forge, artifact, version);
         this.group = group;
     }
 
     @Override
-    public String createExternalId(final Forge forge) {
-        return group + forge.separator + name + forge.separator + version;
+    public String[] getExternalIdPieces() {
+        return new String[] { group, name, version };
     }
 
 }

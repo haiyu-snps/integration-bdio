@@ -2,16 +2,17 @@ package com.blackducksoftware.integration.hub.bdio.simple.model.externalid;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 
-public class PathExternalId implements ExternalId {
+public class PathExternalId extends ExternalId {
     public String path;
 
-    public PathExternalId(final String path) {
+    public PathExternalId(final Forge forge, final String path) {
+        super(forge);
         this.path = path;
     }
 
     @Override
-    public String createExternalId(final Forge forge) {
-        return path;
+    public String[] getExternalIdPieces() {
+        return new String[] { path };
     }
 
 }

@@ -31,6 +31,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdent
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
 
 public class BdioPropertyHelperTest {
     private final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
@@ -49,8 +50,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final MavenExternalId mavenExternalId = new MavenExternalId("group", "artifact", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.maven, mavenExternalId);
+        final MavenExternalId externalId = new MavenExternalId(Forge.maven, "group", "artifact", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
@@ -63,8 +64,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final ExternalId externalId = new ExternalId("name", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.npm, externalId);
+        final ExternalId externalId = new NameVersionExternalId(Forge.npm, "name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
@@ -77,8 +78,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final ExternalId externalId = new ExternalId("name", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.nuget, externalId);
+        final ExternalId externalId = new NameVersionExternalId(Forge.nuget, "name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
@@ -91,8 +92,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final ExternalId externalId = new ExternalId("name", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.pypi, externalId);
+        final ExternalId externalId = new NameVersionExternalId(Forge.pypi, "name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
@@ -105,8 +106,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final ExternalId externalId = new ExternalId("name", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.rubygems, externalId);
+        final ExternalId externalId = new NameVersionExternalId(Forge.rubygems, "name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
@@ -119,8 +120,8 @@ public class BdioPropertyHelperTest {
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
 
-        final ExternalId externalId = new ExternalId("name", "version");
-        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(Forge.cocoapods, externalId);
+        final ExternalId externalId = new NameVersionExternalId(Forge.cocoapods, "name", "version");
+        actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals(expectedExternalIdentifier.forge, actualExternalIdentifier.forge);
         assertEquals(expectedExternalIdentifier.externalId, actualExternalIdentifier.externalId);
     }
