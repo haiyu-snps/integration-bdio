@@ -39,13 +39,6 @@ public class BdioNode {
     public BdioExternalIdentifier bdioExternalIdentifier;
 
     @SerializedName("relationship")
-    public List<BdioRelationship> relationships;
-
-    public void addRelationship(final BdioRelationship relationship) {
-        if (relationships == null) {
-            relationships = new ArrayList<>();
-        }
-        relationships.add(relationship);
-    }
+    public List<BdioRelationship> relationships = new ArrayList<>();
 
 }

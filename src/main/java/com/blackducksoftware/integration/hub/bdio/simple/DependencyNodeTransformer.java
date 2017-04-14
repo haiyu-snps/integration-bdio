@@ -71,18 +71,16 @@ public class DependencyNodeTransformer {
         simpleBdioDocument.billOfMaterials = billOfMaterials;
         simpleBdioDocument.project = project;
 
-        if (root.children != null) {
-            for (final DependencyNode child : root.children) {
-                final BdioComponent component = componentFromDependencyNode(child);
-                bdioPropertyHelper.addRelationship(project, component);
-            }
-
-            final List<BdioComponent> bdioComponents = new ArrayList<>();
-            for (final DependencyNode child : root.children) {
-                transformDependencyGraph(bdioComponents, child, new HashSet<String>());
-            }
-            simpleBdioDocument.components = bdioComponents;
+        for (final DependencyNode child : root.children) {
+            final BdioComponent component = componentFromDependencyNode(child);
+            bdioPropertyHelper.addRelationship(project, component);
         }
+
+        final List<BdioComponent> bdioComponents = new ArrayList<>();
+        for (final DependencyNode child : root.children) {
+            transformDependencyGraph(bdioComponents, child, new HashSet<String>());
+        }
+        simpleBdioDocument.components = bdioComponents;
 
         return simpleBdioDocument;
     }
@@ -90,10 +88,8 @@ public class DependencyNodeTransformer {
     private void transformDependencyGraph(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
         transformDependencyNode(bdioComponents, dependencyNode, alreadyAddedIds);
 
-        if (dependencyNode.children != null) {
-            for (final DependencyNode child : dependencyNode.children) {
-                transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
-            }
+        for (final DependencyNode child : dependencyNode.children) {
+            transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
         }
     }
 
@@ -104,11 +100,9 @@ public class DependencyNodeTransformer {
         final boolean newId = alreadyAddedIds.add(dataId);
         if (newId) {
             bdioComponents.add(bdioComponent);
-            if (dependencyNode.children != null) {
-                for (final DependencyNode child : dependencyNode.children) {
-                    final BdioComponent childComponent = componentFromDependencyNode(child);
-                    bdioPropertyHelper.addRelationship(bdioComponent, childComponent);
-                }
+            for (final DependencyNode child : dependencyNode.children) {
+                final BdioComponent childComponent = componentFromDependencyNode(child);
+                bdioPropertyHelper.addRelationship(bdioComponent, childComponent);
             }
         }
     }

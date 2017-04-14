@@ -55,7 +55,7 @@ public class DependencyNodeTransformerTest {
         projectDependencies.add(child);
 
         final ExternalId transitiveExternalId = new MavenExternalId(Forge.maven, "transitiveGroup", "transitiveArtifact", "2.1.0");
-        final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId, null);
+        final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
         child.children = Arrays.asList(new DependencyNode[] { transitive });
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();

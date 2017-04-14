@@ -41,7 +41,7 @@ public class BdioPropertyHelper {
         final BdioRelationship relationship = new BdioRelationship();
         relationship.related = child.id;
         relationship.relationshipType = "DYNAMIC_LINK";
-        node.addRelationship(relationship);
+        node.relationships.add(relationship);
     }
 
     public BdioExternalIdentifier createExternalIdentifier(final String forge, final String externalId) {

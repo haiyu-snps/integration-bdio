@@ -23,6 +23,7 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleBdioDocument {
@@ -30,5 +31,5 @@ public class SimpleBdioDocument {
 
     public BdioProject project;
 
-    public List<BdioComponent> components;
+    public List<BdioComponent> components = new ArrayList<>();
 }
