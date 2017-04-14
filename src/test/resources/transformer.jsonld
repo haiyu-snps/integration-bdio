@@ -1,0 +1,50 @@
+[
+{
+  "specVersion": "1.1.0",
+  "@id": "uuid:123",
+  "@type": "BillOfMaterials",
+  "spdx:name": "projectName/projectVersion Black Duck I/O Export"
+},
+{
+  "revision": "projectVersion",
+  "@id": "data:maven/projectGroup/projectName/projectVersion",
+  "@type": "Project",
+  "name": "projectName",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "projectGroup:projectName:projectVersion"
+  },
+  "relationship": [
+    {
+      "related": "data:maven/componentGroup1/componentArtifact1/1.0.0",
+      "relationshipType": "DYNAMIC_LINK"
+    }
+  ]
+},
+{
+  "revision": "1.0.0",
+  "@id": "data:maven/componentGroup1/componentArtifact1/1.0.0",
+  "@type": "Component",
+  "name": "componentArtifact1",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "componentGroup1:componentArtifact1:1.0.0"
+  },
+  "relationship": [
+    {
+      "related": "data:maven/transitiveGroup/transitiveArtifact/2.1.0",
+      "relationshipType": "DYNAMIC_LINK"
+    }
+  ]
+},
+{
+  "revision": "2.1.0",
+  "@id": "data:maven/transitiveGroup/transitiveArtifact/2.1.0",
+  "@type": "Component",
+  "name": "transitiveArtifact",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "transitiveGroup:transitiveArtifact:2.1.0"
+  }
+}
+]

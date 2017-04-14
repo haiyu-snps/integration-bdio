@@ -31,6 +31,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMateria
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 public class BdioNodeFactory {
     private final BdioPropertyHelper bdioPropertyHelper;
@@ -68,6 +69,10 @@ public class BdioNodeFactory {
         project.bdioExternalIdentifier = externalIdentifier;
 
         return project;
+    }
+
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final ExternalId externalId) {
+        return createComponent(componentName, componentVersion, externalId.createDataId(), externalId.forge.toString(), externalId.createExternalId());
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge,

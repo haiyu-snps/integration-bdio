@@ -23,12 +23,21 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
-public class SimpleBdioDocument {
-    public BdioBillOfMaterials billOfMaterials;
+import org.junit.Test;
 
-    public BdioProject project;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
 
-    public List<BdioComponent> components;
+public class DependencyNodeTest {
+    @Test
+    public void testConstructingDependencyNode() {
+        final ExternalId externalId = new NameVersionExternalId(Forge.npm, "name", "version");
+        final DependencyNode dependencyNode = new DependencyNode(externalId);
+        assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
+        assertEquals("data:npm/name/version", dependencyNode.externalId.createDataId());
+        assertEquals("name@version", dependencyNode.externalId.createExternalId());
+    }
+
 }
