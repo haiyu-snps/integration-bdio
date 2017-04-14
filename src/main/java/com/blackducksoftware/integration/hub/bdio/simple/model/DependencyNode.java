@@ -38,7 +38,7 @@ public class DependencyNode {
 
     public ExternalId externalId;
 
-    public List<DependencyNode> children;
+    public List<DependencyNode> children = new ArrayList<>();
 
     public DependencyNode(final String name, final String version, final ExternalId externalId, final List<DependencyNode> children) {
         this.name = name;
