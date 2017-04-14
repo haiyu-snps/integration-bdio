@@ -67,7 +67,7 @@ public class BdioWriter implements Closeable {
         writeBdioNodes(bdioNodes);
     }
 
-    public void writeBdioNodes(final List<BdioNode> bdioNodes) {
+    public void writeBdioNodes(final List<? extends BdioNode> bdioNodes) {
         for (final BdioNode bdioNode : bdioNodes) {
             writeBdioNode(bdioNode);
         }
