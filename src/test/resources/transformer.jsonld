@@ -3,7 +3,8 @@
   "specVersion": "1.1.0",
   "@id": "uuid:123",
   "@type": "BillOfMaterials",
-  "spdx:name": "projectName/projectVersion Black Duck I/O Export"
+  "spdx:name": "projectName/projectVersion Black Duck I/O Export",
+  "relationship": []
 },
 {
   "revision": "projectVersion",
@@ -45,6 +46,7 @@
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
     "externalId": "transitiveGroup:transitiveArtifact:2.1.0"
-  }
+  },
+  "relationship": []
 }
 ]

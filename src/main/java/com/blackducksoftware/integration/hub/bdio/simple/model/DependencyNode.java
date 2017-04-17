@@ -29,7 +29,8 @@ import java.util.List;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 /**
- * The externalId is required, but name, version, and children are all optional.
+ * The externalId is required, but name, version, and children are all optional. However, most usage assumes the project
+ * name/version are set on the root DependencyNode.
  */
 public class DependencyNode {
     public String name;

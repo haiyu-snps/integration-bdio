@@ -42,7 +42,7 @@ public class JsonTestUtils {
         final JSONArray expected = (JSONArray) JSONParser.parseJSON(expectedJson);
         final JSONArray actual = (JSONArray) JSONParser.parseJSON(actualJson);
         assertEquals(expected.length(), actual.length());
-        JSONAssert.assertEquals(expected, actual, false);
+        JSONAssert.assertEquals(expected, actual, true);
     }
 
     public String getExpectedJson(final String filename) throws URISyntaxException, IOException {
