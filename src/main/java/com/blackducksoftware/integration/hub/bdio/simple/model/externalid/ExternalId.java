@@ -45,13 +45,27 @@ public abstract class ExternalId {
     public String createDataId() {
         final List<String> dataIdPieces = new ArrayList<>();
         dataIdPieces.add(forge.toString());
-        dataIdPieces.addAll(Arrays.asList(getExternalIdPieces()));
+        dataIdPieces.addAll(escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
 
         return "data:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
     }
 
     public String createExternalId() {
         return StringUtils.join(getExternalIdPieces(), forge.separator);
+    }
+
+    /**
+     * Do a poor man's URI escaping. We aren't terribly interested in precision here, or introducing a library that
+     * would do it better.
+     */
+    private List<String> escapePiecesForUri(final List<String> pieces) {
+        final List<String> escapedPieces = new ArrayList<>(pieces.size());
+        for (final String piece : pieces) {
+            final String escaped = piece.replaceAll("[^A-Za-z0-9]", "_");
+            escapedPieces.add(escaped);
+        }
+
+        return escapedPieces;
     }
 
 }

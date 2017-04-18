@@ -1,5 +1,5 @@
 /**
- * Hub Common
+ * Integration Bdio
  *
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/

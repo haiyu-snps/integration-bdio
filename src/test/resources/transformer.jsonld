@@ -17,14 +17,14 @@
   },
   "relationship": [
     {
-      "related": "data:maven/componentGroup1/componentArtifact1/1.0.0",
+      "related": "data:maven/componentGroup1/componentArtifact1/1_0_0",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "1.0.0",
-  "@id": "data:maven/componentGroup1/componentArtifact1/1.0.0",
+  "@id": "data:maven/componentGroup1/componentArtifact1/1_0_0",
   "@type": "Component",
   "name": "componentArtifact1",
   "externalIdentifier": {
@@ -33,14 +33,14 @@
   },
   "relationship": [
     {
-      "related": "data:maven/transitiveGroup/transitiveArtifact/2.1.0",
+      "related": "data:maven/transitiveGroup/transitiveArtifact/2_1_0",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "2.1.0",
-  "@id": "data:maven/transitiveGroup/transitiveArtifact/2.1.0",
+  "@id": "data:maven/transitiveGroup/transitiveArtifact/2_1_0",
   "@type": "Component",
   "name": "transitiveArtifact",
   "externalIdentifier": {

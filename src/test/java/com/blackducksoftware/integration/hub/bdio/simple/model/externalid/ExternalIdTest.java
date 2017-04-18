@@ -52,4 +52,13 @@ public class ExternalIdTest {
         assertEquals("data:goget/name", pathExternalId.createDataId());
         assertEquals("name", pathExternalId.createExternalId());
     }
+
+    @Test
+    public void testEscapingBadUriCharacters() {
+        final ExternalId nameVersionExternalId = new NameVersionExternalId(Forge.npm, "name with spaces", "version with a - and a # and spaces");
+        assertEquals("data:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createDataId());
+        assertEquals("name with spaces@version with a - and a # and spaces", nameVersionExternalId.createExternalId());
+
+    }
+
 }
