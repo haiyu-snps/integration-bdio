@@ -77,8 +77,9 @@ public class DependencyNodeTransformer {
         }
 
         final List<BdioComponent> bdioComponents = new ArrayList<>();
+        final Set<String> alreadyAddedIds = new HashSet<>();
         for (final DependencyNode child : root.children) {
-            transformDependencyGraph(bdioComponents, child, new HashSet<String>());
+            transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
         }
         simpleBdioDocument.components = bdioComponents;
 
