@@ -40,4 +40,13 @@ public class DependencyNodeTest {
         assertEquals("name@version", dependencyNode.externalId.createExternalId());
     }
 
+    @Test
+    public void testBoilerplateCode() {
+        final DependencyNode nodeA = new DependencyNode((String) null, (String) null, (ExternalId) null);
+        final DependencyNode nodeB = new DependencyNode((String) null, (String) null, (ExternalId) null);
+        assertEquals(nodeA, nodeB);
+        assertEquals(nodeA.hashCode(), nodeB.hashCode());
+        assertEquals(nodeA.toString(), nodeB.toString());
+    }
+
 }

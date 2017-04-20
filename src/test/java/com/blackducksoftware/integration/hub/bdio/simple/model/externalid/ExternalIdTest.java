@@ -61,4 +61,13 @@ public class ExternalIdTest {
 
     }
 
+    @Test
+    public void testBoilerplateCode() {
+        final ExternalId externalIdA = new MavenExternalId(Forge.maven, null, null, null);
+        final ExternalId externalIdB = new MavenExternalId(Forge.maven, null, null, null);
+        assertEquals(externalIdA, externalIdB);
+        assertEquals(externalIdA.hashCode(), externalIdB.hashCode());
+        assertEquals(externalIdA.toString(), externalIdB.toString());
+    }
+
 }
