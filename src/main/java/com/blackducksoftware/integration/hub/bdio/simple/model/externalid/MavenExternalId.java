@@ -33,6 +33,14 @@ public class MavenExternalId extends NameVersionExternalId {
         this.group = group;
     }
 
+    /**
+     * A MavenExternalId should always use the maven Forge.
+     */
+    public MavenExternalId(final String group, final String artifact, final String version) {
+        super(Forge.maven, artifact, version);
+        this.group = group;
+    }
+
     @Override
     public String[] getExternalIdPieces() {
         return new String[] { group, name, version };
