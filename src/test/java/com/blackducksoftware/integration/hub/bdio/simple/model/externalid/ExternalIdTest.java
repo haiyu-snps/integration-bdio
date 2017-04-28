@@ -36,7 +36,7 @@ public class ExternalIdTest {
         assertEquals("data:centos/name/version/architecture", architectureExternalId.createDataId());
         assertEquals("name/version/architecture", architectureExternalId.createExternalId());
 
-        final ExternalId mavenExternalId = new ArchitectureExternalId(Forge.maven, "group", "artifact", "version");
+        final ExternalId mavenExternalId = new MavenExternalId("group", "artifact", "version");
         assertEquals("data:maven/group/artifact/version", mavenExternalId.createDataId());
         assertEquals("group:artifact:version", mavenExternalId.createExternalId());
 
