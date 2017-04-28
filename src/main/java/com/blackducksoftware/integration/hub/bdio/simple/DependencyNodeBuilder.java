@@ -24,8 +24,8 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
 
@@ -39,7 +39,7 @@ public class DependencyNodeBuilder {
         nodes.put(root.externalId.createDataId(), root);
     }
 
-    public void addParentNodeWithChildren(final DependencyNode parent, final List<DependencyNode> children) {
+    public void addParentNodeWithChildren(final DependencyNode parent, final Set<DependencyNode> children) {
         if (!nodes.containsKey(parent.externalId.createDataId())) {
             nodes.put(parent.externalId.createDataId(), parent);
         }
@@ -55,7 +55,7 @@ public class DependencyNodeBuilder {
         }
     }
 
-    public void addChildNodeWithParents(final DependencyNode child, final List<DependencyNode> parents) {
+    public void addChildNodeWithParents(final DependencyNode child, final Set<DependencyNode> parents) {
         if (!nodes.containsKey(child.externalId.createDataId())) {
             nodes.put(child.externalId.createDataId(), child);
         }

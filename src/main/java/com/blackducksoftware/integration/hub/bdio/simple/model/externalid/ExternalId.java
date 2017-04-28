@@ -59,7 +59,7 @@ public abstract class ExternalId {
     }
 
     /**
-     * Do a poor man's URI escaping. We aren't terribly interested in precision here, or introducing a library that
+     * Do a poor man's URI escaping. We aren't terribly interested in precision here, or in introducing a library that
      * would do it better.
      */
     private List<String> escapePiecesForUri(final List<String> pieces) {

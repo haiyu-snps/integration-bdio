@@ -23,9 +23,9 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class DependencyNodeBuilderTest {
 
     private DependencyNode getRootNodeToCompareWith() {
         // Constructing the root node in a specific structure
-        final List<DependencyNode> children = new ArrayList<>();
+        final Set<DependencyNode> children = new HashSet<>();
         firstChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild));
         secondChild.children.add(subThirdChild);
         fourthChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild, subThirdChild));
@@ -74,11 +74,11 @@ public class DependencyNodeBuilderTest {
 
         // Adding the relationships randomly
         final DependencyNodeBuilder builder = new DependencyNodeBuilder(root);
-        builder.addParentNodeWithChildren(secondChild, Arrays.asList(subThirdChild));
-        builder.addChildNodeWithParents(subSecondChild, Arrays.asList(fourthChild, firstChild));
-        builder.addChildNodeWithParents(subFirstChild, Arrays.asList(fourthChild, firstChild));
-        builder.addParentNodeWithChildren(root, Arrays.asList(firstChild, secondChild, thirdChild, fourthChild));
-        builder.addChildNodeWithParents(subThirdChild, Arrays.asList(fourthChild));
+        builder.addParentNodeWithChildren(secondChild, new HashSet<>(Arrays.asList(subThirdChild)));
+        builder.addChildNodeWithParents(subSecondChild, new HashSet<>(Arrays.asList(fourthChild, firstChild)));
+        builder.addChildNodeWithParents(subFirstChild, new HashSet<>(Arrays.asList(fourthChild, firstChild)));
+        builder.addParentNodeWithChildren(root, new HashSet<>(Arrays.asList(firstChild, secondChild, thirdChild, fourthChild)));
+        builder.addChildNodeWithParents(subThirdChild, new HashSet<>(Arrays.asList(fourthChild)));
 
         final DependencyNode rootNode = builder.buildRootNode();
         compareNode(rootToCompareTo, rootNode);

@@ -23,8 +23,8 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -44,9 +44,9 @@ public class DependencyNode {
 
     public ExternalId externalId;
 
-    public List<DependencyNode> children = new ArrayList<>();
+    public Set<DependencyNode> children = new HashSet<>();
 
-    public DependencyNode(final String name, final String version, final ExternalId externalId, final List<DependencyNode> children) {
+    public DependencyNode(final String name, final String version, final ExternalId externalId, final Set<DependencyNode> children) {
         this.name = name;
         this.version = version;
         this.externalId = externalId;
@@ -54,29 +54,29 @@ public class DependencyNode {
     }
 
     public DependencyNode(final String name, final String version, final ExternalId externalId) {
-        this(name, version, externalId, new ArrayList<DependencyNode>());
+        this(name, version, externalId, new HashSet<DependencyNode>());
     }
 
-    public DependencyNode(final String name, final ExternalId externalId, final List<DependencyNode> children) {
+    public DependencyNode(final String name, final ExternalId externalId, final Set<DependencyNode> children) {
         this(name, null, externalId, children);
     }
 
-    public DependencyNode(final ExternalId externalId, final List<DependencyNode> children) {
+    public DependencyNode(final ExternalId externalId, final Set<DependencyNode> children) {
         this(null, externalId, children);
     }
 
     public DependencyNode(final ExternalId externalId) {
-        this(externalId, new ArrayList<DependencyNode>());
+        this(externalId, new HashSet<DependencyNode>());
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return HashCodeBuilder.reflectionHashCode(this, "children");
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
+        return EqualsBuilder.reflectionEquals(this, obj, "children");
     }
 
     @Override

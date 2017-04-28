@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.json.JSONException;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class DependencyNodeTransformerTest {
 
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
-        final List<DependencyNode> projectDependencies = new ArrayList<>();
+        final Set<DependencyNode> projectDependencies = new HashSet<>();
         final ExternalId projectExternalId = new MavenExternalId(Forge.maven, "projectGroup", "projectName", "projectVersion");
         final DependencyNode root = new DependencyNode("projectName", "projectVersion", projectExternalId, projectDependencies);
 
@@ -56,7 +56,7 @@ public class DependencyNodeTransformerTest {
 
         final ExternalId transitiveExternalId = new MavenExternalId(Forge.maven, "transitiveGroup", "transitiveArtifact", "2.1.0");
         final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
-        child.children = Arrays.asList(new DependencyNode[] { transitive });
+        child.children = new HashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
