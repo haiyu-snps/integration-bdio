@@ -24,6 +24,8 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,6 +39,14 @@ public class DependencyNodeBuilder {
     public DependencyNodeBuilder(final DependencyNode root) {
         this.root = root;
         nodes.put(root.externalId.createDataId(), root);
+    }
+
+    public void addParentNodeWithChildren(final DependencyNode parent, final List<DependencyNode> children) {
+        addParentNodeWithChildren(parent, new HashSet<>(children));
+    }
+
+    public void addChildNodeWithParents(final DependencyNode child, final List<DependencyNode> parents) {
+        addChildNodeWithParents(child, new HashSet<>(parents));
     }
 
     public void addParentNodeWithChildren(final DependencyNode parent, final Set<DependencyNode> children) {
