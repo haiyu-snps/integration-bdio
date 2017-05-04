@@ -80,8 +80,7 @@ public class DependencyNodeBuilderTest {
         builder.addParentNodeWithChildren(root, Arrays.asList(firstChild, secondChild, thirdChild, fourthChild));
         builder.addChildNodeWithParents(subThirdChild, Arrays.asList(fourthChild));
 
-        final DependencyNode rootNode = builder.buildRootNode();
-        compareNode(rootToCompareTo, rootNode);
+        compareNode(rootToCompareTo, root);
     }
 
     private void compareNode(final DependencyNode expected, final DependencyNode actual) {

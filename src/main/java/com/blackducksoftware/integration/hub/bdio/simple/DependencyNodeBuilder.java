@@ -81,8 +81,4 @@ public class DependencyNodeBuilder {
         }
     }
 
-    public DependencyNode buildRootNode() {
-        return root;
-    }
-
 }
