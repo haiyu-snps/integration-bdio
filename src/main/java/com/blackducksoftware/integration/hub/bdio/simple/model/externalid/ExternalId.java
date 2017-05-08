@@ -34,11 +34,14 @@ import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.util.IntegrationEscapeUtil;
 
 public abstract class ExternalId {
     public static final String DATA_ID_SEPARATOR = "/";
 
     public final Forge forge;
+
+    private static final IntegrationEscapeUtil integrationEscapeUtil = new IntegrationEscapeUtil();
 
     public ExternalId(final Forge forge) {
         this.forge = forge;
@@ -49,27 +52,13 @@ public abstract class ExternalId {
     public String createDataId() {
         final List<String> dataIdPieces = new ArrayList<>();
         dataIdPieces.add(forge.toString());
-        dataIdPieces.addAll(escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
+        dataIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
 
         return "data:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
     }
 
     public String createExternalId() {
         return StringUtils.join(getExternalIdPieces(), forge.separator);
-    }
-
-    /**
-     * Do a poor man's URI escaping. We aren't terribly interested in precision here, or in introducing a library that
-     * would do it better.
-     */
-    private List<String> escapePiecesForUri(final List<String> pieces) {
-        final List<String> escapedPieces = new ArrayList<>(pieces.size());
-        for (final String piece : pieces) {
-            final String escaped = piece.replaceAll("[^A-Za-z0-9]", "_");
-            escapedPieces.add(escaped);
-        }
-
-        return escapedPieces;
     }
 
     @Override
