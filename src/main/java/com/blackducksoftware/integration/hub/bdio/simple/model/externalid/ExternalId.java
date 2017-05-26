@@ -58,7 +58,7 @@ public abstract class ExternalId {
     }
 
     public String createExternalId() {
-        return StringUtils.join(getExternalIdPieces(), forge.separator);
+        return StringUtils.join(getExternalIdPieces(), forge.getSeparator());
     }
 
     @Override

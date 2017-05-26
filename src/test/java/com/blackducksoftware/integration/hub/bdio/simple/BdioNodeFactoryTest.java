@@ -24,7 +24,6 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -51,13 +50,6 @@ import com.google.gson.Gson;
 
 public class BdioNodeFactoryTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
-
-    @Test
-    public void testToCoverForge() {
-        // in order to maintain 100% coverage, we have to invoke the values() and the valueOf() methods
-        assertTrue(Forge.pypi == Forge.valueOf("pypi"));
-        assertTrue(Forge.values().length > 0);
-    }
 
     @Test
     public void testWriterOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
@@ -109,7 +101,7 @@ public class BdioNodeFactoryTest {
         final String projectGroup = "com.blackducksoftware.gradle.test";
         final String projectName = "gradleTestProject";
         final String projectVersion = "99.5-SNAPSHOT";
-        final ExternalId mavenExternalId = new MavenExternalId(Forge.maven, projectGroup, projectName, projectVersion);
+        final ExternalId mavenExternalId = new MavenExternalId(Forge.MAVEN, projectGroup, projectName, projectVersion);
         final String projectExternalId = mavenExternalId.createExternalId();
         final String projectBdioId = mavenExternalId.createDataId();
 
@@ -119,16 +111,16 @@ public class BdioNodeFactoryTest {
 
         final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, "maven", projectExternalId);
 
-        final ExternalId cxfBundleExternalId = new MavenExternalId(Forge.maven, "org.apache.cxf", "cxf-bundle", "2.7.7");
+        final ExternalId cxfBundleExternalId = new MavenExternalId(Forge.MAVEN, "org.apache.cxf", "cxf-bundle", "2.7.7");
         final BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7", cxfBundleExternalId);
 
-        final ExternalId velocityExternalId = new MavenExternalId(Forge.maven, "org.apache.velocity", "velocity", "1.7");
+        final ExternalId velocityExternalId = new MavenExternalId(Forge.MAVEN, "org.apache.velocity", "velocity", "1.7");
         final BdioComponent velocity = bdioNodeFactory.createComponent("velocity", "1.7", velocityExternalId);
 
-        final ExternalId commonsCollectionsExternalId = new MavenExternalId(Forge.maven, "commons-collections", "commons-collections", "3.2.1");
+        final ExternalId commonsCollectionsExternalId = new MavenExternalId(Forge.MAVEN, "commons-collections", "commons-collections", "3.2.1");
         final BdioComponent commonsCollections = bdioNodeFactory.createComponent("commons-collections", "3.2.1", commonsCollectionsExternalId);
 
-        final ExternalId commonsLangExternalId = new MavenExternalId(Forge.maven, "commons-lang", "commons-lang", "2.6");
+        final ExternalId commonsLangExternalId = new MavenExternalId(Forge.MAVEN, "commons-lang", "commons-lang", "2.6");
         final BdioComponent commonsLang = bdioNodeFactory.createComponent("commons-lang", "2.6", commonsLangExternalId);
 
         // we will now relate the constructed bdio nodes

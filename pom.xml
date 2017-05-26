@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>integration-bdio</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>3.0.0</version>
   <packaging>bundle</packaging>
 
   <name>Integration Bdio</name>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>com.blackducksoftware.integration</groupId>
       <artifactId>integration-common</artifactId>
-      <version>5.7.1</version>
+      <version>5.7.5</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

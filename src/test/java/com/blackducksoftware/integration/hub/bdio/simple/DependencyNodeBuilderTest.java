@@ -35,21 +35,21 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
 
 public class DependencyNodeBuilderTest {
-    DependencyNode root = new DependencyNode("root", "1.0", new MavenExternalId(Forge.maven, "testRoot", "root", "1.0"));
+    DependencyNode root = new DependencyNode("root", "1.0", new MavenExternalId(Forge.MAVEN, "testRoot", "root", "1.0"));
 
-    DependencyNode firstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.maven, "children", "first", "1.0"));
+    DependencyNode firstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.MAVEN, "children", "first", "1.0"));
 
-    DependencyNode secondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.maven, "children", "second", "2.0"));
+    DependencyNode secondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.MAVEN, "children", "second", "2.0"));
 
-    DependencyNode thirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.maven, "children", "third", "3.0"));
+    DependencyNode thirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.MAVEN, "children", "third", "3.0"));
 
-    DependencyNode fourthChild = new DependencyNode("fourth", "4.0", new MavenExternalId(Forge.maven, "children", "fourth", "4.0"));
+    DependencyNode fourthChild = new DependencyNode("fourth", "4.0", new MavenExternalId(Forge.MAVEN, "children", "fourth", "4.0"));
 
-    DependencyNode subFirstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.maven, "subChild", "first", "1.0"));
+    DependencyNode subFirstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.MAVEN, "subChild", "first", "1.0"));
 
-    DependencyNode subSecondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.maven, "subChild", "second", "2.0"));
+    DependencyNode subSecondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.MAVEN, "subChild", "second", "2.0"));
 
-    DependencyNode subThirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.maven, "subChild", "third", "3.0"));
+    DependencyNode subThirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.MAVEN, "subChild", "third", "3.0"));
 
     private DependencyNode getRootNodeToCompareWith() {
         // Constructing the root node in a specific structure

@@ -23,33 +23,62 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ArchitectureExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ModuleNamesExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.PathExternalId;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public enum Forge {
-    anaconda("=", NameVersionExternalId.class),
-    bower("#", NameVersionExternalId.class),
-    centos("/", ArchitectureExternalId.class),
-    cocoapods(":", NameVersionExternalId.class),
-    cpan("::", ModuleNamesExternalId.class),
-    goget("", PathExternalId.class),
-    maven(":", MavenExternalId.class),
-    npm("@", NameVersionExternalId.class),
-    nuget("/", NameVersionExternalId.class),
-    pypi("/", NameVersionExternalId.class),
-    rubygems("=", NameVersionExternalId.class);
+public class Forge {
+    public static final Forge ANACONDA = new Forge("anaconda", "=");
 
-    public final String separator;
+    public static final Forge BOWER = new Forge("bower", "#");
 
-    public final Class<? extends ExternalId> externalIdClass;
+    public static final Forge CENTOS = new Forge("centos", "/");
 
-    private Forge(final String separator, final Class<? extends ExternalId> externalIdClass) {
+    public static final Forge COCOAPODS = new Forge("cocoapods", ":");
+
+    public static final Forge CPAN = new Forge("cpan", "::");
+
+    public static final Forge GOGET = new Forge("goget", "");
+
+    public static final Forge MAVEN = new Forge("maven", ":");
+
+    public static final Forge NPM = new Forge("npm", "@");
+
+    public static final Forge NUGET = new Forge("nuget", "/");
+
+    public static final Forge PYPI = new Forge("pypi", "/");
+
+    public static final Forge RUBYGEMS = new Forge("rubygems", "=");
+
+    private final String name;
+
+    private final String separator;
+
+    public Forge(final String name, final String separator) {
+        this.name = name;
         this.separator = separator;
-        this.externalIdClass = externalIdClass;
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSeparator() {
+        return separator;
     }
 
 }

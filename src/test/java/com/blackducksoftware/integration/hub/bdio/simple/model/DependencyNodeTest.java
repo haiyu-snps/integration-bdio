@@ -33,7 +33,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVe
 public class DependencyNodeTest {
     @Test
     public void testConstructingDependencyNode() {
-        final ExternalId externalId = new NameVersionExternalId(Forge.npm, "name", "version");
+        final ExternalId externalId = new NameVersionExternalId(Forge.NPM, "name", "version");
         final DependencyNode dependencyNode = new DependencyNode(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
         assertEquals("data:npm/name/version", dependencyNode.externalId.createDataId());

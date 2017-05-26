@@ -47,14 +47,14 @@ public class DependencyNodeTransformerTest {
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
         final Set<DependencyNode> projectDependencies = new HashSet<>();
-        final ExternalId projectExternalId = new MavenExternalId(Forge.maven, "projectGroup", "projectName", "projectVersion");
+        final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, "projectGroup", "projectName", "projectVersion");
         final DependencyNode root = new DependencyNode("projectName", "projectVersion", projectExternalId, projectDependencies);
 
-        final ExternalId childExternalId = new MavenExternalId(Forge.maven, "componentGroup1", "componentArtifact1", "1.0.0");
+        final ExternalId childExternalId = new MavenExternalId(Forge.MAVEN, "componentGroup1", "componentArtifact1", "1.0.0");
         final DependencyNode child = new DependencyNode("componentArtifact1", "1.0.0", childExternalId, null);
         projectDependencies.add(child);
 
-        final ExternalId transitiveExternalId = new MavenExternalId(Forge.maven, "transitiveGroup", "transitiveArtifact", "2.1.0");
+        final ExternalId transitiveExternalId = new MavenExternalId(Forge.MAVEN, "transitiveGroup", "transitiveArtifact", "2.1.0");
         final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
         child.children = new HashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
 
