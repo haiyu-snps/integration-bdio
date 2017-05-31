@@ -10,7 +10,6 @@
 
   <artifactId>integration-bdio</artifactId>
   <version>4.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
 
   <name>Integration Bdio</name>
   <description>A light-weight bdio construction library</description>
