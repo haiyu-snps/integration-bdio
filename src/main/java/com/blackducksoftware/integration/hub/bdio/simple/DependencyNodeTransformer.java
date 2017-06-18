@@ -71,15 +71,19 @@ public class DependencyNodeTransformer {
         simpleBdioDocument.billOfMaterials = billOfMaterials;
         simpleBdioDocument.project = project;
 
-        for (final DependencyNode child : root.children) {
-            final BdioComponent component = componentFromDependencyNode(child);
-            bdioPropertyHelper.addRelationship(project, component);
+        if (root.children != null && root.children.size() > 0) {
+            for (final DependencyNode child : root.children) {
+                final BdioComponent component = componentFromDependencyNode(child);
+                bdioPropertyHelper.addRelationship(project, component);
+            }
         }
 
         final List<BdioComponent> bdioComponents = new ArrayList<>();
         final Set<String> alreadyAddedIds = new HashSet<>();
-        for (final DependencyNode child : root.children) {
-            transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
+        if (root.children != null && root.children.size() > 0) {
+            for (final DependencyNode child : root.children) {
+                transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
+            }
         }
         simpleBdioDocument.components = bdioComponents;
 
