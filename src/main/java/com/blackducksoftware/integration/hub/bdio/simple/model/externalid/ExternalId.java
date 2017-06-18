@@ -39,7 +39,7 @@ import com.blackducksoftware.integration.util.IntegrationEscapeUtil;
 public abstract class ExternalId {
     public static final String DATA_ID_SEPARATOR = "/";
 
-    public Forge forge;
+    public final Forge forge;
 
     private static final IntegrationEscapeUtil integrationEscapeUtil = new IntegrationEscapeUtil();
 
