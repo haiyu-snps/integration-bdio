@@ -31,6 +31,7 @@ import java.util.Set;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
+import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
 import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
@@ -71,23 +72,29 @@ public class DependencyNodeTransformer {
         simpleBdioDocument.billOfMaterials = billOfMaterials;
         simpleBdioDocument.project = project;
 
-        if (root.children != null && root.children.size() > 0) {
-            for (final DependencyNode child : root.children) {
+        final List<BdioComponent> bdioComponents = addComponentsGraph(project, root.children);
+        simpleBdioDocument.components = bdioComponents;
+
+        return simpleBdioDocument;
+    }
+
+    public List<BdioComponent> addComponentsGraph(final BdioNode bdioNode, final Set<DependencyNode> children) {
+        if (children != null && children.size() > 0) {
+            for (final DependencyNode child : children) {
                 final BdioComponent component = componentFromDependencyNode(child);
-                bdioPropertyHelper.addRelationship(project, component);
+                bdioPropertyHelper.addRelationship(bdioNode, component);
             }
         }
 
         final List<BdioComponent> bdioComponents = new ArrayList<>();
         final Set<String> alreadyAddedIds = new HashSet<>();
-        if (root.children != null && root.children.size() > 0) {
-            for (final DependencyNode child : root.children) {
+        if (children != null && children.size() > 0) {
+            for (final DependencyNode child : children) {
                 transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
             }
         }
-        simpleBdioDocument.components = bdioComponents;
 
-        return simpleBdioDocument;
+        return bdioComponents;
     }
 
     private void transformDependencyGraph(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
