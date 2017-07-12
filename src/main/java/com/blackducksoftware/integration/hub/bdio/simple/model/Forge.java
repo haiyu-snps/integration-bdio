@@ -51,6 +51,8 @@ public class Forge {
 
     public static final Forge CRAN = new Forge("cran", "/");
 
+    public static final Forge PEAR = new Forge("pear", "/");
+
     private final String name;
 
     private final String separator;
