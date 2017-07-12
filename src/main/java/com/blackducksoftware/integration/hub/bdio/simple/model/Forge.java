@@ -53,6 +53,8 @@ public class Forge {
 
     public static final Forge PEAR = new Forge("pear", "/");
 
+    public static final Forge PACKAGIST = new Forge("packagist", ":");
+
     private final String name;
 
     private final String separator;
