@@ -35,7 +35,7 @@ public class Forge {
 
     public static final Forge COCOAPODS = new Forge("cocoapods", ":");
 
-    public static final Forge CPAN = new Forge("cpan", "-");
+    public static final Forge CPAN = new Forge("cpan", "/");
 
     public static final Forge GOGET = new Forge("goget", "");
 
