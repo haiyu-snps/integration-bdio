@@ -101,4 +101,42 @@ public class DependencyNodeBuilderTest {
             Assert.assertTrue(foundMatch);
         }
     }
+
+    @Test
+    public void testDependencyNodeBuilderCorrectsOnRebuild() {
+        // in the case of a tree where the left and right side have different nodes with different children
+        // rebuild should reconcile that and both nodes should get both children.
+        // note this doesn't 'fix' both nodes - it fixes the tree
+        // so in the case below sharedright will be removed from the tree
+        // and sharedleft will occur twice with 2 kids
+        // this is because shared left is encountered first so it becomes the accumulator.
+        final DependencyNode root = makeNode("root", "root", "root");
+        final DependencyNode left = makeNode("left", "left", "left");
+        final DependencyNode right = makeNode("right", "right", "right");
+        final DependencyNode sharedright = makeNode("shared", "shared", "shared");
+        final DependencyNode sharedleft = makeNode("shared", "shared", "shared");
+        final DependencyNode sharedleftkid = makeNode("kidleft", "kidleft", "kidleft");
+        final DependencyNode sharedrightkid = makeNode("kidright", "kidright", "kidright");
+
+        left.children.add(sharedleft);
+        sharedleft.children.add(sharedleftkid);
+
+        right.children.add(sharedright);
+        sharedright.children.add(sharedrightkid);
+
+        root.children.add(right);
+        root.children.add(left);
+
+        final DependencyNodeBuilder builder = new DependencyNodeBuilder(root);
+
+        builder.rebuild();
+
+        Assert.assertEquals(2, sharedleft.children.size());
+    }
+
+    DependencyNode makeNode(final String org, final String mod, final String rev) {
+        final MavenExternalId id = new MavenExternalId(org, mod, rev);
+        final DependencyNode node = new DependencyNode(mod, rev, id);
+        return node;
+    }
 }
