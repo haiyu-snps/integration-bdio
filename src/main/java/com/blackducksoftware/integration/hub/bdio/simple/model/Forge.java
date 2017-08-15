@@ -49,6 +49,12 @@ public class Forge {
 
     public static final Forge RUBYGEMS = new Forge("rubygems", "=");
 
+    public static final Forge CRAN = new Forge("cran", "/");
+
+    public static final Forge PEAR = new Forge("pear", "/");
+
+    public static final Forge PACKAGIST = new Forge("packagist", ":");
+
     private final String name;
 
     private final String separator;

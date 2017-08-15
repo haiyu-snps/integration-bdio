@@ -81,4 +81,15 @@ public class DependencyNodeBuilder {
         }
     }
 
+    public void rebuild() {
+        rebuild(root);
+    }
+
+    public void rebuild(final DependencyNode node) {
+        addParentNodeWithChildren(node, node.children);
+        for (final DependencyNode child : node.children) {
+            rebuild(child);
+        }
+    }
+
 }
