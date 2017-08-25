@@ -47,16 +47,14 @@ public class DependencyNodeTransformer {
     }
 
     /**
-     * The root DependencyNode should be the project, and its children would be its direct dependencies. This is
-     * equivalent to calling transformDependencyNode(null, root).
+     * The root DependencyNode should be the project, and its children would be its direct dependencies. This is equivalent to calling transformDependencyNode(null, root).
      */
     public SimpleBdioDocument transformDependencyNode(final DependencyNode root) {
         return transformDependencyNode(null, root);
     }
 
     /**
-     * The root DependencyNode should be the project, and its children would be its direct dependencies. The
-     * hubCodeLocationName is optional and will likely be null for most cases.
+     * The root DependencyNode should be the project, and its children would be its direct dependencies. The hubCodeLocationName is optional and will likely be null for most cases.
      */
     public SimpleBdioDocument transformDependencyNode(final String hubCodeLocationName, final DependencyNode root) {
         final String projectName = root.name;
@@ -98,14 +96,14 @@ public class DependencyNodeTransformer {
     }
 
     private void transformDependencyGraph(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
-        transformDependencyNode(bdioComponents, dependencyNode, alreadyAddedIds);
-
-        for (final DependencyNode child : dependencyNode.children) {
-            transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
+        if (transformDependencyNode(bdioComponents, dependencyNode, alreadyAddedIds)) {
+            for (final DependencyNode child : dependencyNode.children) {
+                transformDependencyGraph(bdioComponents, child, alreadyAddedIds);
+            }
         }
     }
 
-    private void transformDependencyNode(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
+    private boolean transformDependencyNode(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
         final BdioComponent bdioComponent = componentFromDependencyNode(dependencyNode);
         final String dataId = dependencyNode.externalId.createDataId();
 
@@ -117,6 +115,8 @@ public class DependencyNodeTransformer {
                 bdioPropertyHelper.addRelationship(bdioComponent, childComponent);
             }
         }
+
+        return newId;
     }
 
     private BdioComponent componentFromDependencyNode(final DependencyNode dependencyNode) {
