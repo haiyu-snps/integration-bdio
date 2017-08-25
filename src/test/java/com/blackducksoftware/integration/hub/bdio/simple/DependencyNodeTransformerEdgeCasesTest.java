@@ -66,7 +66,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
     }
 
     @Test(timeout = 30000)
-    public void testTransformingExpensiveResursive() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingExpensiveRecursiveTree() throws URISyntaxException, IOException, JSONException {
         // Here we generate a broad tree - for each new node, it becomes a child of all previous nodes
         // lets do it for [A,B,C,D]
         // after B we have A->B
@@ -103,6 +103,20 @@ public class DependencyNodeTransformerEdgeCasesTest {
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyNode(root);
         simpleBdioDocument.billOfMaterials.id = "uuid:123";
 
+        int found = 0;
+        for (final BdioComponent component : simpleBdioDocument.components) {
+            DependencyNode node = null;
+            for (final DependencyNode candidate : generated) {
+                if (component.name == candidate.name) {
+                    assertEquals(null, node);
+                    node = candidate;
+                    found++;
+                }
+            }
+
+            assertEquals(node.children.size(), component.relationships.size());
+        }
+        assertEquals(generated.size() - 1, found);// exclude root
     }
 
     @Ignore // Currently fails as it does not reconcile a broken tree TODO: Reconcile broken tree!
