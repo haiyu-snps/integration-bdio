@@ -23,9 +23,6 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
@@ -34,49 +31,37 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 /**
- * The externalId is required, but name, version, and children are all optional. However, most usage assumes the project
- * name/version are set on the root DependencyNode.
+ * The externalId is required, but name, version, and children are all optional. However, most usage assumes the project name/version are set on the root DependencyNode.
  */
-public class DependencyNode {
+public class Dependency {
     public String name;
 
     public String version;
 
     public ExternalId externalId;
 
-    public Set<DependencyNode> children = new HashSet<>();
-
-    public DependencyNode(final String name, final String version, final ExternalId externalId, final Set<DependencyNode> children) {
+    public Dependency(final String name, final String version, final ExternalId externalId) {
         this.name = name;
         this.version = version;
         this.externalId = externalId;
-        this.children = children;
     }
 
-    public DependencyNode(final String name, final String version, final ExternalId externalId) {
-        this(name, version, externalId, new HashSet<DependencyNode>());
+    public Dependency(final String name, final ExternalId externalId) {
+        this(name, null, externalId);
     }
 
-    public DependencyNode(final String name, final ExternalId externalId, final Set<DependencyNode> children) {
-        this(name, null, externalId, children);
-    }
-
-    public DependencyNode(final ExternalId externalId, final Set<DependencyNode> children) {
-        this(null, externalId, children);
-    }
-
-    public DependencyNode(final ExternalId externalId) {
-        this(externalId, new HashSet<DependencyNode>());
+    public Dependency(final ExternalId externalId) {
+        this(null, externalId);
     }
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, "children");
+        return HashCodeBuilder.reflectionHashCode(this);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj, "children");
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
     @Override

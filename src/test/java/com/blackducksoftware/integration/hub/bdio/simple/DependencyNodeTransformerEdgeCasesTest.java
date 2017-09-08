@@ -27,36 +27,33 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.json.JSONException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
 
 public class DependencyNodeTransformerEdgeCasesTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
-    private DependencyNode node(final String name, final String version, final String group, Set<DependencyNode> dependencies) {
-        if (dependencies == null) {
-            dependencies = new HashSet<>();
-        }
+    private Dependency node(final String name, final String version, final String group) {
         final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, group, name, version);
-        final DependencyNode root = new DependencyNode(name, version, projectExternalId, dependencies);
+        final Dependency root = new Dependency(name, version, projectExternalId);
         return root;
     }
 
-    private HashSet<DependencyNode> set(final DependencyNode... nodes) {
-        final HashSet<DependencyNode> set = new HashSet<>();
+    private HashSet<Dependency> set(final Dependency... nodes) {
+        final HashSet<Dependency> set = new HashSet<>();
         if (nodes != null) {
-            for (final DependencyNode node : nodes) {
+            for (final Dependency node : nodes) {
                 if (node != null) {
                     set.add(node);
                 }
@@ -82,31 +79,37 @@ public class DependencyNodeTransformerEdgeCasesTest {
         // ...............D
         // And it only gets wider from there.
 
-        final HashSet<DependencyNode> generated = new HashSet<>();
-        DependencyNode root = null;
+        final HashSet<Dependency> generated = new HashSet<>();
+        final HashMap<Dependency, Integer> counts = new HashMap<>();
+
+        final MutableDependencyGraph graph = new MapDependencyGraph();
         for (int i = 0; i < 200; i++) {
             final String name = "node" + i;
-            final DependencyNode next = node(name, name, name, null);
-            for (final DependencyNode parent : generated) {
-                parent.children.add(next);
+            final Dependency next = node(name, name, name);
+            for (final Dependency parent : generated) {
+                counts.put(parent, counts.get(parent) + 1);
+                graph.addParentWithChild(parent, next);
             }
             generated.add(next);
+            counts.put(next, 0);
             if (i == 0) {
-                root = next;
+                graph.addChildToRoot(next);
             }
         }
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyNodeTransformer dependencyNodeTransformer = new DependencyNodeTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyNode(root);
+        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
         simpleBdioDocument.billOfMaterials.id = "uuid:123";
 
         int found = 0;
         for (final BdioComponent component : simpleBdioDocument.components) {
-            DependencyNode node = null;
-            for (final DependencyNode candidate : generated) {
+            Dependency node = null;
+            for (final Dependency candidate : generated) {
                 if (component.name == candidate.name) {
                     assertEquals(null, node);
                     node = candidate;
@@ -114,29 +117,40 @@ public class DependencyNodeTransformerEdgeCasesTest {
                 }
             }
 
-            assertEquals(node.children.size(), component.relationships.size());
+            assertEquals(counts.get(node).intValue(), component.relationships.size());
         }
-        assertEquals(generated.size() - 1, found);// exclude root
+        assertEquals(generated.size(), found);
     }
 
-    @Ignore // Currently fails as it does not reconcile a broken tree TODO: Reconcile broken tree!
+    // @Ignore // Currently fails as it does not reconcile a broken tree TODO: Reconcile broken tree!
     @Test
     public void testTransformingBrokenTree() throws URISyntaxException, IOException, JSONException {
-        final DependencyNode childOne = node("one", "one", "one", null);
-        final DependencyNode childTwo = node("two", "two", "two", null);
 
-        final DependencyNode sharedLeft = node("shared", "shared", "shared", set(childOne));
-        final DependencyNode sharedRight = node("shared", "shared", "shared", set(childTwo));
+        final MutableDependencyGraph graph = new MapDependencyGraph();
 
-        final DependencyNode parentLeft = node("parentLeft", "parentLeft", "parentLeft", set(sharedLeft));
-        final DependencyNode parentRight = node("parentRight", "parentRight", "parentRight", set(sharedRight));
+        final Dependency childOne = node("one", "one", "one");
+        final Dependency childTwo = node("two", "two", "two");
 
-        final DependencyNode root = node("root", "root", "root", set(parentLeft, parentRight));
+        final Dependency sharedLeft = node("shared", "shared", "shared");
+        final Dependency sharedRight = node("shared", "shared", "shared");
+
+        graph.addParentWithChild(sharedLeft, childOne);
+        graph.addParentWithChild(sharedRight, childTwo);
+
+        final Dependency parentLeft = node("parentLeft", "parentLeft", "parentLeft");
+        final Dependency parentRight = node("parentRight", "parentRight", "parentRight");
+
+        graph.addParentWithChild(parentLeft, sharedLeft);
+        graph.addParentWithChild(parentRight, sharedRight);
+
+        graph.addChildrenToRoot(parentLeft, parentRight);
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyNodeTransformer dependencyNodeTransformer = new DependencyNodeTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyNode(root);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+
+        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.billOfMaterials.id = "uuid:123";
@@ -147,6 +161,116 @@ public class DependencyNodeTransformerEdgeCasesTest {
             }
         }
 
+    }
+
+    @Test
+    public void testTransformingBrokenTreeLeftHasNodeRightEmpty() throws URISyntaxException, IOException, JSONException {
+
+        final MutableDependencyGraph graph = new MapDependencyGraph();
+
+        final Dependency childOne = node("one", "one", "one");
+
+        final Dependency sharedLeft = node("shared", "shared", "shared");
+        final Dependency sharedRight = node("shared", "shared", "shared");
+
+        graph.addParentWithChild(sharedLeft, childOne);
+
+        final Dependency parentLeft = node("parentLeft", "parentLeft", "parentLeft");
+        final Dependency parentRight = node("parentRight", "parentRight", "parentRight");
+
+        graph.addParentWithChild(parentLeft, sharedLeft);
+        graph.addParentWithChild(parentRight, sharedRight);
+
+        graph.addChildrenToRoot(parentLeft, parentRight);
+
+        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+
+        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
+
+        // we are overriding the default value of a new uuid just to pass the json comparison
+        simpleBdioDocument.billOfMaterials.id = "uuid:123";
+
+        boolean found = false;
+        for (final BdioComponent component : simpleBdioDocument.components) {
+            if (component.name == "shared") {
+                assertEquals(1, component.relationships.size());
+            } else if (component.name == "one") {
+                found = true;
+            }
+        }
+        assertEquals(true, found);
+    }
+
+    @Test
+    public void testTransformingBrokenTreeLeftEmpty() throws URISyntaxException, IOException, JSONException {
+
+        final MutableDependencyGraph graph = new MapDependencyGraph();
+
+        final Dependency childOne = node("one", "one", "one");
+
+        final Dependency sharedLeft = node("shared", "shared", "shared");
+        final Dependency sharedRight = node("shared", "shared", "shared");
+
+        graph.addParentWithChild(sharedRight, childOne);
+
+        final Dependency parentLeft = node("parentLeft", "parentLeft", "parentLeft");
+        final Dependency parentRight = node("parentRight", "parentRight", "parentRight");
+
+        graph.addParentWithChild(parentLeft, sharedLeft);
+        graph.addParentWithChild(parentRight, sharedRight);
+
+        graph.addChildrenToRoot(parentLeft, parentRight);
+
+        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+
+        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
+
+        // we are overriding the default value of a new uuid just to pass the json comparison
+        simpleBdioDocument.billOfMaterials.id = "uuid:123";
+
+        boolean found = false;
+        for (final BdioComponent component : simpleBdioDocument.components) {
+            if (component.name == "shared") {
+                assertEquals(1, component.relationships.size());
+            } else if (component.name == "one") {
+                found = true;
+            }
+        }
+        assertEquals(true, found);
+    }
+
+    @Test
+    public void testCyclic() throws URISyntaxException, IOException, JSONException {
+
+        final MutableDependencyGraph graph = new MapDependencyGraph();
+
+        final Dependency one = node("one", "one", "one");
+        final Dependency two = node("two", "two", "two");
+        final Dependency three = node("three", "three", "three");
+
+        graph.addParentWithChild(one, three);
+        graph.addParentWithChild(two, one);
+        graph.addParentWithChild(three, two);
+
+        graph.addChildrenToRoot(one);
+
+        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+
+        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
+
+        // we are overriding the default value of a new uuid just to pass the json comparison
+        simpleBdioDocument.billOfMaterials.id = "uuid:123";
+
+        assertEquals(simpleBdioDocument.components.size(), 3);
     }
 
 }

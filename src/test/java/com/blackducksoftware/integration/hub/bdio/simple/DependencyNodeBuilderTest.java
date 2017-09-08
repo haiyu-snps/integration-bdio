@@ -23,120 +23,146 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
 
 public class DependencyNodeBuilderTest {
-    DependencyNode root = new DependencyNode("root", "1.0", new MavenExternalId(Forge.MAVEN, "testRoot", "root", "1.0"));
+    // Dependency root = new Dependency("root", "1.0", new MavenExternalId(Forge.MAVEN, "testRoot", "root", "1.0"));
 
-    DependencyNode firstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.MAVEN, "children", "first", "1.0"));
+    Dependency firstChild = new Dependency("first", "1.0", new MavenExternalId(Forge.MAVEN, "children", "first", "1.0"));
 
-    DependencyNode secondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.MAVEN, "children", "second", "2.0"));
+    Dependency secondChild = new Dependency("second", "2.0", new MavenExternalId(Forge.MAVEN, "children", "second", "2.0"));
 
-    DependencyNode thirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.MAVEN, "children", "third", "3.0"));
+    Dependency thirdChild = new Dependency("third", "3.0", new MavenExternalId(Forge.MAVEN, "children", "third", "3.0"));
 
-    DependencyNode fourthChild = new DependencyNode("fourth", "4.0", new MavenExternalId(Forge.MAVEN, "children", "fourth", "4.0"));
+    Dependency fourthChild = new Dependency("fourth", "4.0", new MavenExternalId(Forge.MAVEN, "children", "fourth", "4.0"));
 
-    DependencyNode subFirstChild = new DependencyNode("first", "1.0", new MavenExternalId(Forge.MAVEN, "subChild", "first", "1.0"));
+    Dependency subFirstChild = new Dependency("first", "1.0", new MavenExternalId(Forge.MAVEN, "subChild", "first", "1.0"));
 
-    DependencyNode subSecondChild = new DependencyNode("second", "2.0", new MavenExternalId(Forge.MAVEN, "subChild", "second", "2.0"));
+    Dependency subSecondChild = new Dependency("second", "2.0", new MavenExternalId(Forge.MAVEN, "subChild", "second", "2.0"));
 
-    DependencyNode subThirdChild = new DependencyNode("third", "3.0", new MavenExternalId(Forge.MAVEN, "subChild", "third", "3.0"));
+    Dependency subThirdChild = new Dependency("third", "3.0", new MavenExternalId(Forge.MAVEN, "subChild", "third", "3.0"));
 
-    private DependencyNode getRootNodeToCompareWith() {
-        // Constructing the root node in a specific structure
-        final Set<DependencyNode> children = new HashSet<>();
-        firstChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild));
-        secondChild.children.add(subThirdChild);
-        fourthChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild, subThirdChild));
+    private List<ExpectedDependencyTree> getExpected() {
+        final List<ExpectedDependencyTree> trees = new ArrayList<>();
 
-        children.add(firstChild);
-        children.add(secondChild);
-        children.add(thirdChild);
-        children.add(fourthChild);
+        final ExpectedDependencyTree firstChildTree = new ExpectedDependencyTree(firstChild.externalId);
+        final ExpectedDependencyTree secondChildTree = new ExpectedDependencyTree(secondChild.externalId);
+        final ExpectedDependencyTree thirdChildTree = new ExpectedDependencyTree(thirdChild.externalId);
+        final ExpectedDependencyTree fourthChildTree = new ExpectedDependencyTree(fourthChild.externalId);
+        final ExpectedDependencyTree subFirstChildTree = new ExpectedDependencyTree(subFirstChild.externalId);
+        final ExpectedDependencyTree subSecondChildTree = new ExpectedDependencyTree(subSecondChild.externalId);
+        final ExpectedDependencyTree subThirdChildTree = new ExpectedDependencyTree(subThirdChild.externalId);
 
-        root.children = children;
+        firstChildTree.addChildren(subFirstChildTree, subSecondChildTree);
+        secondChildTree.addChildren(subThirdChildTree);
+        fourthChildTree.addChildren(subFirstChildTree, subSecondChildTree, subThirdChildTree);
 
-        return root;
+        trees.add(firstChildTree);
+        trees.add(secondChildTree);
+        trees.add(thirdChildTree);
+        trees.add(fourthChildTree);
+
+        return trees;
     }
 
     @Test
     public void testDependencyNodeBuilder() {
-        final DependencyNode rootToCompareTo = getRootNodeToCompareWith();
 
         // Adding the relationships randomly
-        final DependencyNodeBuilder builder = new DependencyNodeBuilder(root);
-        builder.addParentNodeWithChildren(secondChild, Arrays.asList(subThirdChild));
-        builder.addChildNodeWithParents(subSecondChild, Arrays.asList(fourthChild, firstChild));
-        builder.addChildNodeWithParents(subFirstChild, Arrays.asList(fourthChild, firstChild));
-        builder.addParentNodeWithChildren(root, Arrays.asList(firstChild, secondChild, thirdChild, fourthChild));
-        builder.addChildNodeWithParents(subThirdChild, Arrays.asList(fourthChild));
+        final MutableDependencyGraph graph = new MapDependencyGraph();
+        graph.addParentWithChildren(secondChild, subThirdChild);
+        // builder.addParentNodeWithChildren(secondChild, Arrays.asList(subThirdChild));
+        graph.addChildWithParents(subSecondChild, fourthChild, firstChild);
+        // builder.addChildNodeWithParents(subSecondChild, Arrays.asList(fourthChild, firstChild));
+        graph.addChildWithParents(subFirstChild, fourthChild, firstChild);
+        // builder.addChildNodeWithParents(subFirstChild, Arrays.asList(fourthChild, firstChild));
+        graph.addChildrenToRoot(firstChild, secondChild, thirdChild, fourthChild);
+        // builder.addParentNodeWithChildren(root, Arrays.asList(firstChild, secondChild, thirdChild, fourthChild));
+        graph.addChildWithParents(subThirdChild, fourthChild);
+        // builder.addChildNodeWithParents(subThirdChild, Arrays.asList(fourthChild));
 
-        compareNode(rootToCompareTo, root);
+        assertGraphMatches(graph, getExpected());
     }
 
-    private void compareNode(final DependencyNode expected, final DependencyNode actual) {
-        Assert.assertEquals(expected.name, actual.name);
-        Assert.assertEquals(expected.version, actual.version);
-        Assert.assertEquals(expected.externalId.createDataId(), actual.externalId.createDataId());
-        Assert.assertEquals(expected.children.size(), actual.children.size());
+    Dependency makeNode(final String org, final String mod, final String rev) {
+        final MavenExternalId id = new MavenExternalId(org, mod, rev);
+        final Dependency node = new Dependency(mod, rev, id);
+        return node;
+    }
 
-        for (final DependencyNode expectedChild : expected.children) {
-            final String expectedDataId = expectedChild.externalId.createDataId();
-            boolean foundMatch = false;
-            for (final DependencyNode actualChild : actual.children) {
-                if (expectedDataId.equals(actualChild.externalId.createDataId())) {
-                    foundMatch = true;
-                    compareNode(expectedChild, actualChild);
-                }
+    public class ExpectedDependencyTree {
+        public ExternalId id;
+        public List<ExpectedDependencyTree> children = new ArrayList<>();
+
+        public ExpectedDependencyTree(final ExternalId id) {
+            this.id = id;
+        }
+
+        public void addChildren(final ExpectedDependencyTree... children) {
+            for (final ExpectedDependencyTree child : children) {
+                this.children.add(child);
             }
-            Assert.assertTrue(foundMatch);
         }
     }
 
-    @Test
-    public void testDependencyNodeBuilderCorrectsOnRebuild() {
-        // in the case of a tree where the left and right side have different nodes with different children
-        // rebuild should reconcile that and both nodes should get both children.
-        // note this doesn't 'fix' both nodes - it fixes the tree
-        // so in the case below sharedright will be removed from the tree
-        // and sharedleft will occur twice with 2 kids
-        // this is because shared left is encountered first so it becomes the accumulator.
-        final DependencyNode root = makeNode("root", "root", "root");
-        final DependencyNode left = makeNode("left", "left", "left");
-        final DependencyNode right = makeNode("right", "right", "right");
-        final DependencyNode sharedright = makeNode("shared", "shared", "shared");
-        final DependencyNode sharedleft = makeNode("shared", "shared", "shared");
-        final DependencyNode sharedleftkid = makeNode("kidleft", "kidleft", "kidleft");
-        final DependencyNode sharedrightkid = makeNode("kidright", "kidright", "kidright");
-
-        left.children.add(sharedleft);
-        sharedleft.children.add(sharedleftkid);
-
-        right.children.add(sharedright);
-        sharedright.children.add(sharedrightkid);
-
-        root.children.add(right);
-        root.children.add(left);
-
-        final DependencyNodeBuilder builder = new DependencyNodeBuilder(root);
-
-        builder.rebuild();
-
-        Assert.assertEquals(2, sharedleft.children.size());
+    public void assertGraphMatches(final DependencyGraph graph, final ExpectedDependencyTree tree) {
+        // assertEquals(tree.id, graph.getRoot().externalId);
+        assertGraphHas(graph, tree);
     }
 
-    DependencyNode makeNode(final String org, final String mod, final String rev) {
-        final MavenExternalId id = new MavenExternalId(org, mod, rev);
-        final DependencyNode node = new DependencyNode(mod, rev, id);
-        return node;
+    public void assertGraphMatches(final DependencyGraph graph, final List<ExpectedDependencyTree> trees) {
+        assertEquals(graph.getRootDependencies().size(), trees.size());
+        for (final ExpectedDependencyTree tree : trees) {
+            assertGraphHas(graph, tree);
+        }
+    }
+
+    public void assertGraphHas(final DependencyGraph graph, final ExpectedDependencyTree tree) {
+
+        assertEquals(tree.id, graph.getDependency(tree.id).externalId);
+
+        final List<ExternalId> children = new ArrayList<>();
+        children.addAll(graph.getChildrenExternalIdsForParent(tree.id));
+
+        tree.children.sort(new ExpectedDependencyTreeComparator());
+        children.sort(new ExternalIdComparator());
+
+        assertEquals(tree.children.size(), children.size());
+        for (int i = 0; i < tree.children.size(); i++) {
+            assertEquals(tree.children.get(i).id, children.get(i));
+            assertGraphHas(graph, tree.children.get(i));
+        }
+
+    }
+
+    public static int sortExternalId(final ExternalId id1, final ExternalId id2) {
+        return id1.createDataId().compareTo(id2.createDataId());
+    }
+
+    public class ExternalIdComparator implements Comparator<ExternalId> {
+        @Override
+        public int compare(final ExternalId id1, final ExternalId id2) {
+
+            return id1.createDataId().compareTo(id2.createDataId());
+        }
+    }
+
+    public class ExpectedDependencyTreeComparator implements Comparator<ExpectedDependencyTree> {
+        @Override
+        public int compare(final ExpectedDependencyTree id1, final ExpectedDependencyTree id2) {
+
+            return id1.id.createDataId().compareTo(id2.id.createDataId());
+        }
     }
 }

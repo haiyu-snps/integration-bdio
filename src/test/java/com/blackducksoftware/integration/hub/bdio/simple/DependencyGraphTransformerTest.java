@@ -27,41 +27,41 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
+import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
 import com.google.gson.Gson;
 
-public class DependencyNodeTransformerTest {
+public class DependencyGraphTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
-        final Set<DependencyNode> projectDependencies = new HashSet<>();
+
+        final Set<Dependency> projectDependencies = new HashSet<>();
         final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, "projectGroup", "projectName", "projectVersion");
-        final DependencyNode root = new DependencyNode("projectName", "projectVersion", projectExternalId, projectDependencies);
+        final MutableDependencyGraph dependencyGraph = new MapDependencyGraph();
 
         final ExternalId childExternalId = new MavenExternalId(Forge.MAVEN, "componentGroup1", "componentArtifact1", "1.0.0");
-        final DependencyNode child = new DependencyNode("componentArtifact1", "1.0.0", childExternalId, null);
-        projectDependencies.add(child);
+        final Dependency child = new Dependency("componentArtifact1", "1.0.0", childExternalId);
+        dependencyGraph.addChildrenToRoot(child);
 
         final ExternalId transitiveExternalId = new MavenExternalId(Forge.MAVEN, "transitiveGroup", "transitiveArtifact", "2.1.0");
-        final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
-        child.children = new HashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
+        final Dependency transitive = new Dependency("transitiveArtifact", "2.1.0", transitiveExternalId);
+        dependencyGraph.addParentWithChild(child, transitive);
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyNodeTransformer dependencyNodeTransformer = new DependencyNodeTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyNode(root);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.billOfMaterials.id = "uuid:123";

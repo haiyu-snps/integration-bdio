@@ -30,11 +30,11 @@ import org.junit.Test;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
 
-public class DependencyNodeTest {
+public class DependencyTest {
     @Test
     public void testConstructingDependencyNode() {
         final ExternalId externalId = new NameVersionExternalId(Forge.NPM, "name", "version");
-        final DependencyNode dependencyNode = new DependencyNode(externalId);
+        final Dependency dependencyNode = new Dependency(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
         assertEquals("data:npm/name/version", dependencyNode.externalId.createDataId());
         assertEquals("name@version", dependencyNode.externalId.createExternalId());
@@ -42,8 +42,8 @@ public class DependencyNodeTest {
 
     @Test
     public void testBoilerplateCode() {
-        final DependencyNode nodeA = new DependencyNode((String) null, (String) null, (ExternalId) null);
-        final DependencyNode nodeB = new DependencyNode((String) null, (String) null, (ExternalId) null);
+        final Dependency nodeA = new Dependency((String) null, (String) null, (ExternalId) null);
+        final Dependency nodeB = new Dependency((String) null, (String) null, (ExternalId) null);
         assertEquals(nodeA, nodeB);
         assertEquals(nodeA.hashCode(), nodeB.hashCode());
         assertEquals(nodeA.toString(), nodeB.toString());
