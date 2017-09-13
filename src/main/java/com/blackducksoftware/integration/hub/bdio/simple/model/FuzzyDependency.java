@@ -30,26 +30,25 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
-public class Dependency {
+public class FuzzyDependency extends Dependency {
 
-    public String name;
+    public String id;
 
-    public String version;
-
-    public ExternalId externalId;
-
-    public Dependency(final String name, final String version, final ExternalId externalId) {
-        this.name = name;
-        this.version = version;
-        this.externalId = externalId;
+    public FuzzyDependency(final String id, final String name, final String version, final ExternalId externalId) {
+        super(name, version, externalId);
+        this.id = id;
     }
 
-    public Dependency(final String name, final ExternalId externalId) {
-        this(name, null, externalId);
+    public FuzzyDependency(final String id, final String name, final String version) {
+        this(id, name, version, null);
     }
 
-    public Dependency(final ExternalId externalId) {
-        this(null, externalId);
+    public FuzzyDependency(final String id, final String name) {
+        this(id, name, null);
+    }
+
+    public FuzzyDependency(final String id) {
+        this(id, null);
     }
 
     @Override

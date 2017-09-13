@@ -23,40 +23,24 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
-public class MapDependencyGraph implements MutableDependencyGraph {
+public class MapDependencyGraph implements DependencyGraph {
 
-    final Set<ExternalId> rootDependencies = new HashSet<>();
-    final Map<ExternalId, Dependency> dependencies = new HashMap<>();
-    final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
+    Set<ExternalId> rootDependencies = new HashSet<>();
+    Map<ExternalId, Dependency> dependencies = new HashMap<>();
+    Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
 
-    public MapDependencyGraph() {
-    }
-
-    private void ensureDependencyExists(final Dependency dependency) {
-        if (!dependencies.containsKey(dependency.externalId)) {
-            dependencies.put(dependency.externalId, dependency);
-        }
-    }
-
-    private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
-        ensureDependencyExists(dependency);
-        if (!relationships.containsKey(dependency.externalId)) {
-            relationships.put(dependency.externalId, new HashSet<ExternalId>());
-        }
-    }
-
-    private void addRelationship(final Dependency parent, final Dependency child) {
-        relationships.get(parent.externalId).add(child.externalId);
+    public MapDependencyGraph(final Set<ExternalId> rootDependencies, final Map<ExternalId, Dependency> dependencies, final Map<ExternalId, Set<ExternalId>> relationships) {
+        this.rootDependencies = rootDependencies;
+        this.dependencies = dependencies;
+        this.relationships = relationships;
     }
 
     private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
@@ -70,8 +54,8 @@ public class MapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public boolean hasDependency(final ExternalId dependency) {
-        return dependencies.containsKey(dependency);
+    public boolean hasDependency(final ExternalId id) {
+        return dependencies.containsKey(id);
     }
 
     @Override
@@ -80,9 +64,9 @@ public class MapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Dependency getDependency(final ExternalId dependency) {
-        if (dependencies.containsKey(dependency)) {
-            return dependencies.get(dependency);
+    public Dependency getDependency(final ExternalId id) {
+        if (dependencies.containsKey(id)) {
+            return dependencies.get(id);
         }
         return null;
     }
@@ -144,65 +128,6 @@ public class MapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public void addParentWithChild(final Dependency parent, final Dependency child) {
-        ensureDependencyAndRelationshipExists(parent);
-        ensureDependencyExists(child);
-        addRelationship(parent, child);
-    }
-
-    @Override
-    public void addChildWithParent(final Dependency child, final Dependency parent) {
-        addParentWithChild(child, parent);
-    }
-
-    @Override
-    public void addParentWithChildren(final Dependency parent, final List<Dependency> children) {
-        ensureDependencyAndRelationshipExists(parent);
-        for (final Dependency child : children) {
-            ensureDependencyExists(child);
-            addRelationship(parent, child);
-        }
-    }
-
-    @Override
-    public void addChildWithParents(final Dependency child, final List<Dependency> parents) {
-        ensureDependencyExists(child);
-        for (final Dependency parent : parents) {
-            ensureDependencyAndRelationshipExists(parent);
-            addRelationship(parent, child);
-        }
-
-    }
-
-    @Override
-    public void addParentWithChildren(final Dependency parent, final Set<Dependency> children) {
-        ensureDependencyAndRelationshipExists(parent);
-        for (final Dependency child : children) {
-            ensureDependencyExists(child);
-            addRelationship(parent, child);
-        }
-    }
-
-    @Override
-    public void addChildWithParents(final Dependency child, final Set<Dependency> parents) {
-        ensureDependencyExists(child);
-        for (final Dependency parent : parents) {
-            ensureDependencyAndRelationshipExists(parent);
-            addRelationship(parent, child);
-        }
-    }
-
-    @Override
-    public void addParentWithChildren(final Dependency parent, final Dependency... children) {
-        addParentWithChildren(parent, Arrays.asList(children));
-    }
-
-    @Override
-    public void addChildWithParents(final Dependency child, final Dependency... parents) {
-        addChildWithParents(child, Arrays.asList(parents));
-    }
-
-    @Override
     public Set<ExternalId> getRootDependencyExternalIds() {
         final HashSet<ExternalId> copy = new HashSet<>();
         copy.addAll(rootDependencies);
@@ -212,33 +137,6 @@ public class MapDependencyGraph implements MutableDependencyGraph {
     @Override
     public Set<Dependency> getRootDependencies() {
         return dependenciesFromExternalIds(getRootDependencyExternalIds());
-    }
-
-    @Override
-    public void addChildToRoot(final Dependency child) {
-        ensureDependencyExists(child);
-        rootDependencies.add(child.externalId);
-    }
-
-    @Override
-    public void addChildrenToRoot(final List<Dependency> children) {
-        for (final Dependency child : children) {
-            addChildToRoot(child);
-        }
-    }
-
-    @Override
-    public void addChildrenToRoot(final Set<Dependency> children) {
-        for (final Dependency child : children) {
-            addChildToRoot(child);
-        }
-    }
-
-    @Override
-    public void addChildrenToRoot(final Dependency... children) {
-        for (final Dependency child : children) {
-            addChildToRoot(child);
-        }
     }
 
 }

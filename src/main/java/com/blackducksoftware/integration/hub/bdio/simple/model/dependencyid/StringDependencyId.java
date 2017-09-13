@@ -21,35 +21,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple.model;
+package com.blackducksoftware.integration.hub.bdio.simple.model.dependencyid;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
+public class StringDependencyId extends DependencyId {
 
-public class Dependency {
+    public String value;
 
-    public String name;
-
-    public String version;
-
-    public ExternalId externalId;
-
-    public Dependency(final String name, final String version, final ExternalId externalId) {
-        this.name = name;
-        this.version = version;
-        this.externalId = externalId;
-    }
-
-    public Dependency(final String name, final ExternalId externalId) {
-        this(name, null, externalId);
-    }
-
-    public Dependency(final ExternalId externalId) {
-        this(null, externalId);
+    public StringDependencyId(final String value) {
+        this.value = value;
     }
 
     @Override

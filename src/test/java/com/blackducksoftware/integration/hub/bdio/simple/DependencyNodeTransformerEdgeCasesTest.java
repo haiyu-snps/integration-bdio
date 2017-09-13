@@ -82,7 +82,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
         final HashSet<Dependency> generated = new HashSet<>();
         final HashMap<Dependency, Integer> counts = new HashMap<>();
 
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
         for (int i = 0; i < 200; i++) {
             final String name = "node" + i;
             final Dependency next = node(name, name, name);
@@ -99,7 +99,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
 
@@ -126,7 +126,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
     @Test
     public void testTransformingBrokenTree() throws URISyntaxException, IOException, JSONException {
 
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         final Dependency childOne = node("one", "one", "one");
         final Dependency childTwo = node("two", "two", "two");
@@ -147,7 +147,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -166,7 +166,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
     @Test
     public void testTransformingBrokenTreeLeftHasNodeRightEmpty() throws URISyntaxException, IOException, JSONException {
 
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         final Dependency childOne = node("one", "one", "one");
 
@@ -185,7 +185,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -207,7 +207,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
     @Test
     public void testTransformingBrokenTreeLeftEmpty() throws URISyntaxException, IOException, JSONException {
 
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         final Dependency childOne = node("one", "one", "one");
 
@@ -226,7 +226,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -248,7 +248,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
     @Test
     public void testCyclic() throws URISyntaxException, IOException, JSONException {
 
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         final Dependency one = node("one", "one", "one");
         final Dependency two = node("two", "two", "two");
@@ -262,7 +262,7 @@ public class DependencyNodeTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);

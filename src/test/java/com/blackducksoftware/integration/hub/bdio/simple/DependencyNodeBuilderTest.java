@@ -80,7 +80,7 @@ public class DependencyNodeBuilderTest {
     public void testDependencyNodeBuilder() {
 
         // Adding the relationships randomly
-        final MutableDependencyGraph graph = new MapDependencyGraph();
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addParentWithChildren(secondChild, subThirdChild);
         // builder.addParentNodeWithChildren(secondChild, Arrays.asList(subThirdChild));
         graph.addChildWithParents(subSecondChild, fourthChild, firstChild);

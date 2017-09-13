@@ -29,50 +29,98 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
-public class NodeDependencyGraph implements MutableDependencyGraph {
-
-    private class GraphNode {
-        public Dependency dependency;
-
-        public final Set<ExternalId> relationships = new TreeSet<>();
-    }
+public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     final Set<ExternalId> rootDependencies = new HashSet<>();
-    final Map<ExternalId, GraphNode> nodes = new HashMap<>();
+    final Map<ExternalId, Dependency> dependencies = new HashMap<>();
+    final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
 
-    public NodeDependencyGraph() {
+    public MutableMapDependencyGraph() {
     }
 
-    private GraphNode getOrCreateNode(final Dependency dependency) {
-        ensureNodeExists(dependency);
-        return nodes.get(dependency.externalId);
-    }
-
-    private void ensureNodeExists(final Dependency dependency) {
-        if (!nodes.containsKey(dependency.externalId)) {
-            final GraphNode node = new GraphNode();
-            node.dependency = dependency;
-            nodes.put(dependency.externalId, node);
+    private void ensureDependencyExists(final Dependency dependency) {
+        if (!dependencies.containsKey(dependency.externalId)) {
+            dependencies.put(dependency.externalId, dependency);
         }
     }
 
-    private void addRelationship(final GraphNode parentNode, final Dependency child) {
-        parentNode.relationships.add(child.externalId);
+    private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
+        ensureDependencyExists(dependency);
+        if (!relationships.containsKey(dependency.externalId)) {
+            relationships.put(dependency.externalId, new HashSet<ExternalId>());
+        }
+    }
+
+    private void addRelationship(final Dependency parent, final Dependency child) {
+        relationships.get(parent.externalId).add(child.externalId);
     }
 
     private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
         final Set<Dependency> foundDependencies = new HashSet<>();
         for (final ExternalId id : ids) {
-            if (nodes.containsKey(id)) {
-                foundDependencies.add(nodes.get(id).dependency);
+            if (dependencies.containsKey(id)) {
+                foundDependencies.add(dependencies.get(id));
             }
         }
         return foundDependencies;
+    }
+
+    @Override
+    public boolean hasDependency(final ExternalId dependency) {
+        return dependencies.containsKey(dependency);
+    }
+
+    @Override
+    public boolean hasDependency(final Dependency dependency) {
+        return dependencies.containsKey(dependency.externalId);
+    }
+
+    @Override
+    public Dependency getDependency(final ExternalId dependency) {
+        if (dependencies.containsKey(dependency)) {
+            return dependencies.get(dependency);
+        }
+        return null;
+    }
+
+    @Override
+    public Set<Dependency> getChildrenForParent(final ExternalId parent) {
+        final Set<ExternalId> childIds = getChildrenExternalIdsForParent(parent);
+        return dependenciesFromExternalIds(childIds);
+    }
+
+    @Override
+    public Set<Dependency> getParentsForChild(final ExternalId child) {
+        final Set<ExternalId> parentIds = getParentExternalIdsForChild(child);
+        return dependenciesFromExternalIds(parentIds);
+    }
+
+    @Override
+    public Set<ExternalId> getChildrenExternalIdsForParent(final ExternalId parent) {
+        final Set<ExternalId> children = new HashSet<>();
+        if (relationships.containsKey(parent)) {
+            for (final ExternalId id : relationships.get(parent)) {
+                children.add(id);
+            }
+        }
+        return children;
+    }
+
+    @Override
+    public Set<ExternalId> getParentExternalIdsForChild(final ExternalId child) {
+        final Set<ExternalId> parents = new HashSet<>();
+        for (final ExternalId parentId : relationships.keySet()) {
+            for (final ExternalId childId : relationships.get(parentId)) {
+                if (childId.equals(child)) {
+                    parents.add(parentId);
+                }
+            }
+        }
+        return parents;
     }
 
     @Override
@@ -96,46 +144,10 @@ public class NodeDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Set<Dependency> getChildrenForParent(final ExternalId parent) {
-        final Set<ExternalId> childIds = getChildrenExternalIdsForParent(parent);
-        return dependenciesFromExternalIds(childIds);
-    }
-
-    @Override
-    public Set<Dependency> getParentsForChild(final ExternalId child) {
-        final Set<ExternalId> ParentExternalIds = getParentExternalIdsForChild(child);
-        return dependenciesFromExternalIds(ParentExternalIds);
-    }
-
-    @Override
-    public Set<ExternalId> getChildrenExternalIdsForParent(final ExternalId parent) {
-        final Set<ExternalId> children = new HashSet<>();
-        if (nodes.containsKey(parent)) {
-            for (final ExternalId id : nodes.get(parent).relationships) {
-                children.add(id);
-            }
-        }
-        return children;
-    }
-
-    @Override
-    public Set<ExternalId> getParentExternalIdsForChild(final ExternalId child) {
-        final Set<ExternalId> parents = new HashSet<>();
-        for (final ExternalId parentId : nodes.keySet()) {
-            for (final ExternalId childId : nodes.get(parentId).relationships) {
-                if (childId.equals(child)) {
-                    parents.add(parentId);
-                }
-            }
-        }
-        return parents;
-    }
-
-    @Override
     public void addParentWithChild(final Dependency parent, final Dependency child) {
-        ensureNodeExists(child);
-        final GraphNode parentNode = getOrCreateNode(parent);
-        addRelationship(parentNode, child);
+        ensureDependencyAndRelationshipExists(parent);
+        ensureDependencyExists(child);
+        addRelationship(parent, child);
     }
 
     @Override
@@ -145,38 +157,38 @@ public class NodeDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public void addParentWithChildren(final Dependency parent, final List<Dependency> children) {
-        final GraphNode parentNode = getOrCreateNode(parent);
+        ensureDependencyAndRelationshipExists(parent);
         for (final Dependency child : children) {
-            ensureNodeExists(child);
-            addRelationship(parentNode, child);
+            ensureDependencyExists(child);
+            addRelationship(parent, child);
         }
     }
 
     @Override
     public void addChildWithParents(final Dependency child, final List<Dependency> parents) {
-        ensureNodeExists(child);
+        ensureDependencyExists(child);
         for (final Dependency parent : parents) {
-            final GraphNode parentNode = getOrCreateNode(parent);
-            addRelationship(parentNode, child);
+            ensureDependencyAndRelationshipExists(parent);
+            addRelationship(parent, child);
         }
 
     }
 
     @Override
     public void addParentWithChildren(final Dependency parent, final Set<Dependency> children) {
-        final GraphNode parentNode = getOrCreateNode(parent);
+        ensureDependencyAndRelationshipExists(parent);
         for (final Dependency child : children) {
-            ensureNodeExists(child);
-            addRelationship(parentNode, child);
+            ensureDependencyExists(child);
+            addRelationship(parent, child);
         }
     }
 
     @Override
     public void addChildWithParents(final Dependency child, final Set<Dependency> parents) {
-        ensureNodeExists(child);
+        ensureDependencyExists(child);
         for (final Dependency parent : parents) {
-            final GraphNode parentNode = getOrCreateNode(parent);
-            addRelationship(parentNode, child);
+            ensureDependencyAndRelationshipExists(parent);
+            addRelationship(parent, child);
         }
     }
 
@@ -191,21 +203,10 @@ public class NodeDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public boolean hasDependency(final Dependency dependency) {
-        return hasDependency(dependency.externalId);
-    }
-
-    @Override
-    public boolean hasDependency(final ExternalId dependency) {
-        return nodes.containsKey(dependency);
-    }
-
-    @Override
-    public Dependency getDependency(final ExternalId dependency) {
-        if (nodes.containsKey(dependency)) {
-            return nodes.get(dependency).dependency;
-        }
-        return null;
+    public Set<ExternalId> getRootDependencyExternalIds() {
+        final HashSet<ExternalId> copy = new HashSet<>();
+        copy.addAll(rootDependencies);
+        return copy;
     }
 
     @Override
@@ -214,15 +215,8 @@ public class NodeDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Set<ExternalId> getRootDependencyExternalIds() {
-        final HashSet<ExternalId> copy = new HashSet<>();
-        copy.addAll(rootDependencies);
-        return copy;
-    }
-
-    @Override
     public void addChildToRoot(final Dependency child) {
-        ensureNodeExists(child);
+        ensureDependencyExists(child);
         rootDependencies.add(child.externalId);
     }
 
@@ -246,4 +240,5 @@ public class NodeDependencyGraph implements MutableDependencyGraph {
             addChildToRoot(child);
         }
     }
+
 }

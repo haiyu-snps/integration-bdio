@@ -23,82 +23,18 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Dependency;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
-public class DependencyGraphTransformer {
-    private final BdioNodeFactory bdioNodeFactory;
+public interface DependencyGraphTransformer {
 
-    private final BdioPropertyHelper bdioPropertyHelper;
+    public SimpleBdioDocument transformDependencyGraph(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph);
 
-    public DependencyGraphTransformer(final BdioNodeFactory bdioNodeFactory, final BdioPropertyHelper bdioPropertyHelper) {
-        this.bdioNodeFactory = bdioNodeFactory;
-        this.bdioPropertyHelper = bdioPropertyHelper;
-    }
+    public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph);
 
-    public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
-        return transformDependencyGraph(null, projectName, projectVersionName, projectExternalId, graph);
-    }
-
-    /**
-     * The hubCodeLocationName is optional and will likely be null for most cases.
-     */
-    public SimpleBdioDocument transformDependencyGraph(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
-        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
-
-        final String projectId = projectExternalId.createDataId();
-        final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
-        final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
-
-        final SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
-        simpleBdioDocument.billOfMaterials = billOfMaterials;
-        simpleBdioDocument.project = project;
-
-        final Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
-        existingComponents.put(projectExternalId, project);
-
-        final List<BdioComponent> bdioComponents = transformDependencyGraph(graph, project, graph.getRootDependencies(), existingComponents);
-        simpleBdioDocument.components = bdioComponents;
-
-        return simpleBdioDocument;
-    }
-
-    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents) {
-        final List<BdioComponent> addedComponents = new ArrayList<>();
-        for (final Dependency dependency : dependencies) {
-            if (!existingComponents.containsKey(dependency.externalId)) {
-                final BdioComponent addedNode = componentFromDependency(dependency);
-                addedComponents.add(addedNode);
-                existingComponents.put(dependency.externalId, addedNode);
-                final List<BdioComponent> addedChildren = transformDependencyGraph(graph, addedNode, graph.getChildrenForParent(dependency), existingComponents);
-                addedComponents.addAll(addedChildren);
-            }
-            bdioPropertyHelper.addRelationship(currentNode, existingComponents.get(dependency.externalId));
-        }
-
-        return addedComponents;
-    }
-
-    private BdioComponent componentFromDependency(final Dependency dependency) {
-        final String componentName = dependency.name;
-        final String componentVersion = dependency.version;
-        final String componentId = dependency.externalId.createDataId();
-        final BdioExternalIdentifier componentExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(dependency.externalId);
-
-        final BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);
-        return component;
-    }
-
+    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode projectNode);
 }

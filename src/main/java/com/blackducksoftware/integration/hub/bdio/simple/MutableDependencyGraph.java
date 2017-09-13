@@ -52,4 +52,5 @@ public interface MutableDependencyGraph extends DependencyGraph {
     public void addChildrenToRoot(final Set<Dependency> children);
 
     public void addChildrenToRoot(final Dependency... children);
+
 }
