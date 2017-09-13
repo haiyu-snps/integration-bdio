@@ -23,6 +23,7 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +42,14 @@ public class BdioNodeFactory {
     }
 
     public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion) {
+        return createBillOfMaterials(codeLocationName, projectName, projectVersion, null, null);
+    }
+
+    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion, final String detectVersion) {
+        return createBillOfMaterials(codeLocationName, projectName, projectVersion, detectVersion, null);
+    }
+
+    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion, final String detectVersion, final Map<String, String> customData) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
         if (StringUtils.isNotBlank(codeLocationName)) {
@@ -49,19 +58,25 @@ public class BdioNodeFactory {
             billOfMaterials.spdxName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
         }
         billOfMaterials.bdioSpecificationVersion = "1.1.0";
+        if (StringUtils.isNotBlank(detectVersion)) {
+            billOfMaterials.detectVersion = detectVersion;
+        } else {
+            // Check current directory for appropriate version.txt file
+        }
+        if (customData != null) {
+            billOfMaterials.customData = customData;
+        }
 
         return billOfMaterials;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge,
-            final String externalId) {
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return createProject(projectName, projectVersion, bdioId, externalIdentifier);
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId,
-            final BdioExternalIdentifier externalIdentifier) {
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
         final BdioProject project = new BdioProject();
         project.id = bdioId;
         project.name = projectName;
@@ -75,15 +90,13 @@ public class BdioNodeFactory {
         return createComponent(componentName, componentVersion, externalId.createDataId(), externalId.forge.toString(), externalId.createExternalId());
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge,
-            final String externalId) {
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return createComponent(componentName, componentVersion, bdioId, externalIdentifier);
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId,
-            final BdioExternalIdentifier externalIdentifier) {
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
         final BdioComponent component = new BdioComponent();
         component.id = bdioId;
         component.name = componentName;

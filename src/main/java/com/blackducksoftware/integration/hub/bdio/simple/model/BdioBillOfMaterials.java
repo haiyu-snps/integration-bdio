@@ -23,6 +23,8 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
+import java.util.Map;
+
 import com.google.gson.annotations.SerializedName;
 
 public class BdioBillOfMaterials extends BdioNode {
@@ -31,6 +33,12 @@ public class BdioBillOfMaterials extends BdioNode {
 
     @SerializedName("spdx:name")
     public String spdxName;
+
+    @SerializedName("detectVersion")
+    public String detectVersion;
+
+    @SerializedName("customData")
+    public Map<String, String> customData;
 
     public BdioBillOfMaterials() {
         type = "BillOfMaterials";
