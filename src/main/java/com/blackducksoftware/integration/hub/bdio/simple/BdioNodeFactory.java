@@ -42,14 +42,10 @@ public class BdioNodeFactory {
     }
 
     public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion) {
-        return createBillOfMaterials(codeLocationName, projectName, projectVersion, null, null);
+        return createBillOfMaterials(codeLocationName, projectName, projectVersion, null);
     }
 
-    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion, final String detectVersion) {
-        return createBillOfMaterials(codeLocationName, projectName, projectVersion, detectVersion, null);
-    }
-
-    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion, final String detectVersion, final Map<String, String> customData) {
+    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion, final Map<String, String> customData) {
         final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
         if (StringUtils.isNotBlank(codeLocationName)) {
@@ -58,11 +54,6 @@ public class BdioNodeFactory {
             billOfMaterials.spdxName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
         }
         billOfMaterials.bdioSpecificationVersion = "1.1.0";
-        if (StringUtils.isNotBlank(detectVersion)) {
-            billOfMaterials.detectVersion = detectVersion;
-        } else {
-            // Check current directory for appropriate version.txt file
-        }
         if (customData != null) {
             billOfMaterials.customData = customData;
         }

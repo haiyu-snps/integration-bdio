@@ -34,9 +34,6 @@ public class BdioBillOfMaterials extends BdioNode {
     @SerializedName("spdx:name")
     public String spdxName;
 
-    @SerializedName("detectVersion")
-    public String detectVersion;
-
     @SerializedName("customData")
     public Map<String, String> customData;
 

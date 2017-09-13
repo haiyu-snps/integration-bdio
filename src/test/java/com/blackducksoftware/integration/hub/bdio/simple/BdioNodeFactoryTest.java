@@ -103,14 +103,13 @@ public class BdioNodeFactoryTest {
         final String projectGroup = "com.blackducksoftware.gradle.test";
         final String projectName = "gradleTestProject";
         final String projectVersion = "99.5-SNAPSHOT";
-        final String detectVersion = "1.0.0";
         final Map<String, String> customData = new HashMap<>();
-        customData.put("test", "testValue");
+        customData.put("testVersion", "1.2.3-SNAPSHOT");
         final ExternalId mavenExternalId = new MavenExternalId(Forge.MAVEN, projectGroup, projectName, projectVersion);
         final String projectExternalId = mavenExternalId.createExternalId();
         final String projectBdioId = mavenExternalId.createDataId();
 
-        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion, detectVersion, customData);
+        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion, customData);
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
