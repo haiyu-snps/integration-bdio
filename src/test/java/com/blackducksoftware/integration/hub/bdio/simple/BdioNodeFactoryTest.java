@@ -109,7 +109,8 @@ public class BdioNodeFactoryTest {
         final String projectExternalId = mavenExternalId.createExternalId();
         final String projectBdioId = mavenExternalId.createDataId();
 
-        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion, customData);
+        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
+        bdioBillOfMaterials.customData = customData;
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
