@@ -49,6 +49,11 @@ public abstract class ExternalId {
 
     public abstract String[] getExternalIdPieces();
 
+    @Deprecated
+    public String createDataId() {
+        return createBdioId();
+    }
+
     public String createBdioId() {
         final List<String> bdioIdPieces = new ArrayList<>();
         bdioIdPieces.add(forge.toString());
