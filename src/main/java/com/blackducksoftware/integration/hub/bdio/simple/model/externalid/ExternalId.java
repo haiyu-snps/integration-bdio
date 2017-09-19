@@ -37,7 +37,7 @@ import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.util.IntegrationEscapeUtil;
 
 public abstract class ExternalId {
-    public static final String DATA_ID_SEPARATOR = "/";
+    public static final String BDIO_ID_SEPARATOR = "/";
 
     public final Forge forge;
 
@@ -49,12 +49,12 @@ public abstract class ExternalId {
 
     public abstract String[] getExternalIdPieces();
 
-    public String createDataId() {
-        final List<String> dataIdPieces = new ArrayList<>();
-        dataIdPieces.add(forge.toString());
-        dataIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
+    public String createBdioId() {
+        final List<String> bdioIdPieces = new ArrayList<>();
+        bdioIdPieces.add(forge.toString());
+        bdioIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
 
-        return "http:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
+        return "cid:" + StringUtils.join(bdioIdPieces, BDIO_ID_SEPARATOR);
     }
 
     public String createExternalId() {

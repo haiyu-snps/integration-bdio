@@ -38,7 +38,7 @@ public class DependencyNodeBuilder {
 
     public DependencyNodeBuilder(final DependencyNode root) {
         this.root = root;
-        nodes.put(root.externalId.createDataId(), root);
+        nodes.put(root.externalId.createBdioId(), root);
     }
 
     public void addParentNodeWithChildren(final DependencyNode parent, final List<DependencyNode> children) {
@@ -50,34 +50,34 @@ public class DependencyNodeBuilder {
     }
 
     public void addParentNodeWithChildren(final DependencyNode parent, final Set<DependencyNode> children) {
-        if (!nodes.containsKey(parent.externalId.createDataId())) {
-            nodes.put(parent.externalId.createDataId(), parent);
+        if (!nodes.containsKey(parent.externalId.createBdioId())) {
+            nodes.put(parent.externalId.createBdioId(), parent);
         }
 
         for (final DependencyNode child : children) {
-            if (!nodes.containsKey(child.externalId.createDataId())) {
-                nodes.put(child.externalId.createDataId(), child);
+            if (!nodes.containsKey(child.externalId.createBdioId())) {
+                nodes.put(child.externalId.createBdioId(), child);
             }
 
             // here, we are looping over the children, so 'child' will be different every time, but parent will always
             // be the same
-            nodes.get(parent.externalId.createDataId()).children.add(nodes.get(child.externalId.createDataId()));
+            nodes.get(parent.externalId.createBdioId()).children.add(nodes.get(child.externalId.createBdioId()));
         }
     }
 
     public void addChildNodeWithParents(final DependencyNode child, final Set<DependencyNode> parents) {
-        if (!nodes.containsKey(child.externalId.createDataId())) {
-            nodes.put(child.externalId.createDataId(), child);
+        if (!nodes.containsKey(child.externalId.createBdioId())) {
+            nodes.put(child.externalId.createBdioId(), child);
         }
 
         for (final DependencyNode parent : parents) {
-            if (!nodes.containsKey(parent.externalId.createDataId())) {
-                nodes.put(parent.externalId.createDataId(), parent);
+            if (!nodes.containsKey(parent.externalId.createBdioId())) {
+                nodes.put(parent.externalId.createBdioId(), parent);
             }
 
             // here, we are looping over the parents, so 'parent' will be different every time, but child will always be
             // the same
-            nodes.get(parent.externalId.createDataId()).children.add(nodes.get(child.externalId.createDataId()));
+            nodes.get(parent.externalId.createBdioId()).children.add(nodes.get(child.externalId.createBdioId()));
         }
     }
 

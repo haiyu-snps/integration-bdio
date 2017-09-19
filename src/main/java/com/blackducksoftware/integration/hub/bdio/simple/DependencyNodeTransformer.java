@@ -62,7 +62,7 @@ public class DependencyNodeTransformer {
 
         final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
 
-        final String projectId = root.externalId.createDataId();
+        final String projectId = root.externalId.createBdioId();
         final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(root.externalId);
         final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
 
@@ -105,9 +105,9 @@ public class DependencyNodeTransformer {
 
     private boolean transformDependencyNode(final List<BdioComponent> bdioComponents, final DependencyNode dependencyNode, final Set<String> alreadyAddedIds) {
         final BdioComponent bdioComponent = componentFromDependencyNode(dependencyNode);
-        final String dataId = dependencyNode.externalId.createDataId();
+        final String bdioId = dependencyNode.externalId.createBdioId();
 
-        final boolean newId = alreadyAddedIds.add(dataId);
+        final boolean newId = alreadyAddedIds.add(bdioId);
         if (newId) {
             bdioComponents.add(bdioComponent);
             for (final DependencyNode child : dependencyNode.children) {
@@ -122,7 +122,7 @@ public class DependencyNodeTransformer {
     private BdioComponent componentFromDependencyNode(final DependencyNode dependencyNode) {
         final String componentName = dependencyNode.name;
         final String componentVersion = dependencyNode.version;
-        final String componentId = dependencyNode.externalId.createDataId();
+        final String componentId = dependencyNode.externalId.createBdioId();
         final BdioExternalIdentifier componentExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(dependencyNode.externalId);
 
         final BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);

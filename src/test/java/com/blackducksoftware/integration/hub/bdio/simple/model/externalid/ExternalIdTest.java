@@ -38,30 +38,30 @@ public class ExternalIdTest {
     @Test
     public void testCreatingExternalIds() {
         final ExternalId architectureExternalId = new ArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
-        assertEquals("http:centos/name/version/architecture", architectureExternalId.createDataId());
+        assertEquals("cid:centos/name/version/architecture", architectureExternalId.createBdioId());
         assertEquals("name/version/architecture", architectureExternalId.createExternalId());
 
         final ExternalId mavenExternalId = new MavenExternalId("group", "artifact", "version");
-        assertEquals("http:maven/group/artifact/version", mavenExternalId.createDataId());
+        assertEquals("cid:maven/group/artifact/version", mavenExternalId.createBdioId());
         assertEquals("group:artifact:version", mavenExternalId.createExternalId());
 
         final ExternalId moduleNamesExternalId = new ModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
-        assertEquals("http:cpan/name/version/something/else", moduleNamesExternalId.createDataId());
+        assertEquals("cid:cpan/name/version/something/else", moduleNamesExternalId.createBdioId());
         assertEquals("name::version::something::else", moduleNamesExternalId.createExternalId());
 
         final ExternalId nameVersionExternalId = new NameVersionExternalId(Forge.PYPI, "name", "version");
-        assertEquals("http:pypi/name/version", nameVersionExternalId.createDataId());
+        assertEquals("cid:pypi/name/version", nameVersionExternalId.createBdioId());
         assertEquals("name/version", nameVersionExternalId.createExternalId());
 
         final ExternalId pathExternalId = new PathExternalId(Forge.GOGET, "name");
-        assertEquals("http:goget/name", pathExternalId.createDataId());
+        assertEquals("cid:goget/name", pathExternalId.createBdioId());
         assertEquals("name", pathExternalId.createExternalId());
     }
 
     @Test
     public void testEscapingBadUriCharacters() {
         final ExternalId nameVersionExternalId = new NameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
-        assertEquals("http:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createDataId());
+        assertEquals("cid:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createBdioId());
         assertEquals("name with spaces@version with a - and a # and spaces", nameVersionExternalId.createExternalId());
 
     }

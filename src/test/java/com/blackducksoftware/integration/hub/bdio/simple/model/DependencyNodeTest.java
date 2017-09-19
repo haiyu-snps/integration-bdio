@@ -36,7 +36,7 @@ public class DependencyNodeTest {
         final ExternalId externalId = new NameVersionExternalId(Forge.NPM, "name", "version");
         final DependencyNode dependencyNode = new DependencyNode(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
-        assertEquals("http:npm/name/version", dependencyNode.externalId.createDataId());
+        assertEquals("cid:npm/name/version", dependencyNode.externalId.createBdioId());
         assertEquals("name@version", dependencyNode.externalId.createExternalId());
     }
 

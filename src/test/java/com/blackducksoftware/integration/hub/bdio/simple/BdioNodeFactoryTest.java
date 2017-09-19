@@ -107,7 +107,7 @@ public class BdioNodeFactoryTest {
         customData.put("testVersion", "1.2.3-SNAPSHOT");
         final ExternalId mavenExternalId = new MavenExternalId(Forge.MAVEN, projectGroup, projectName, projectVersion);
         final String projectExternalId = mavenExternalId.createExternalId();
-        final String projectBdioId = mavenExternalId.createDataId();
+        final String projectBdioId = mavenExternalId.createBdioId();
 
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
         bdioBillOfMaterials.customData = customData;

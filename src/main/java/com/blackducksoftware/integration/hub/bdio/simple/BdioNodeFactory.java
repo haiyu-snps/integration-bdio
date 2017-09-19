@@ -70,7 +70,7 @@ public class BdioNodeFactory {
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final ExternalId externalId) {
-        return createComponent(componentName, componentVersion, externalId.createDataId(), externalId.forge.toString(), externalId.createExternalId());
+        return createComponent(componentName, componentVersion, externalId.createBdioId(), externalId.forge.toString(), externalId.createExternalId());
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge, final String externalId) {

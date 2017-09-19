@@ -86,14 +86,14 @@ public class DependencyNodeBuilderTest {
     private void compareNode(final DependencyNode expected, final DependencyNode actual) {
         Assert.assertEquals(expected.name, actual.name);
         Assert.assertEquals(expected.version, actual.version);
-        Assert.assertEquals(expected.externalId.createDataId(), actual.externalId.createDataId());
+        Assert.assertEquals(expected.externalId.createBdioId(), actual.externalId.createBdioId());
         Assert.assertEquals(expected.children.size(), actual.children.size());
 
         for (final DependencyNode expectedChild : expected.children) {
-            final String expectedDataId = expectedChild.externalId.createDataId();
+            final String expectedBdioId = expectedChild.externalId.createBdioId();
             boolean foundMatch = false;
             for (final DependencyNode actualChild : actual.children) {
-                if (expectedDataId.equals(actualChild.externalId.createDataId())) {
+                if (expectedBdioId.equals(actualChild.externalId.createBdioId())) {
                     foundMatch = true;
                     compareNode(expectedChild, actualChild);
                 }
