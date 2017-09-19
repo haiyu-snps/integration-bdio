@@ -54,7 +54,7 @@ public abstract class ExternalId {
         dataIdPieces.add(forge.toString());
         dataIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
 
-        return "data:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
+        return "http:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
     }
 
     public String createExternalId() {
