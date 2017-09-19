@@ -59,7 +59,7 @@ public abstract class ExternalId {
         bdioIdPieces.add(forge.toString());
         bdioIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
 
-        return "cid:" + StringUtils.join(bdioIdPieces, BDIO_ID_SEPARATOR);
+        return "http:" + StringUtils.join(bdioIdPieces, BDIO_ID_SEPARATOR);
     }
 
     public String createExternalId() {

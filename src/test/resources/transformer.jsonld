@@ -8,7 +8,7 @@
 },
 {
   "revision": "projectVersion",
-  "@id": "cid:maven/projectGroup/projectName/projectVersion",
+  "@id": "http:maven/projectGroup/projectName/projectVersion",
   "@type": "Project",
   "name": "projectName",
   "externalIdentifier": {
@@ -17,14 +17,14 @@
   },
   "relationship": [
     {
-      "related": "cid:maven/componentGroup1/componentArtifact1/1_0_0",
+      "related": "http:maven/componentGroup1/componentArtifact1/1_0_0",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "1.0.0",
-  "@id": "cid:maven/componentGroup1/componentArtifact1/1_0_0",
+  "@id": "http:maven/componentGroup1/componentArtifact1/1_0_0",
   "@type": "Component",
   "name": "componentArtifact1",
   "externalIdentifier": {
@@ -33,14 +33,14 @@
   },
   "relationship": [
     {
-      "related": "cid:maven/transitiveGroup/transitiveArtifact/2_1_0",
+      "related": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "2.1.0",
-  "@id": "cid:maven/transitiveGroup/transitiveArtifact/2_1_0",
+  "@id": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
   "@type": "Component",
   "name": "transitiveArtifact",
   "externalIdentifier": {
