@@ -11,7 +11,7 @@
 },
 {
   "revision": "99.5-SNAPSHOT",
-  "@id": "data:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT",
+  "@id": "http:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT",
   "@type": "Project",
   "name": "gradleTestProject",
   "externalIdentifier": {
@@ -20,14 +20,14 @@
   },
   "relationship": [
     {
-      "related": "data:maven/org_apache_cxf/cxf_bundle/2_7_7",
+      "related": "http:maven/org_apache_cxf/cxf_bundle/2_7_7",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "2.7.7",
-  "@id": "data:maven/org_apache_cxf/cxf_bundle/2_7_7",
+  "@id": "http:maven/org_apache_cxf/cxf_bundle/2_7_7",
   "@type": "Component",
   "name": "cxf-bundle",
   "externalIdentifier": {
@@ -36,18 +36,18 @@
   },
   "relationship": [
     {
-      "related": "data:maven/org_apache_velocity/velocity/1_7",
+      "related": "http:maven/org_apache_velocity/velocity/1_7",
       "relationshipType": "DYNAMIC_LINK"
     },
     {
-      "related": "data:maven/commons_lang/commons_lang/2_6",
+      "related": "http:maven/commons_lang/commons_lang/2_6",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "1.7",
-  "@id": "data:maven/org_apache_velocity/velocity/1_7",
+  "@id": "http:maven/org_apache_velocity/velocity/1_7",
   "@type": "Component",
   "name": "velocity",
   "externalIdentifier": {
@@ -56,18 +56,18 @@
   },
   "relationship": [
     {
-      "related": "data:maven/commons_collections/commons_collections/3_2_1",
+      "related": "http:maven/commons_collections/commons_collections/3_2_1",
       "relationshipType": "DYNAMIC_LINK"
     },
     {
-      "related": "data:maven/commons_lang/commons_lang/2_6",
+      "related": "http:maven/commons_lang/commons_lang/2_6",
       "relationshipType": "DYNAMIC_LINK"
     }
   ]
 },
 {
   "revision": "3.2.1",
-  "@id": "data:maven/commons_collections/commons_collections/3_2_1",
+  "@id": "http:maven/commons_collections/commons_collections/3_2_1",
   "@type": "Component",
   "name": "commons-collections",
   "externalIdentifier": {
@@ -78,7 +78,7 @@
 },
 {
   "revision": "2.6",
-  "@id": "data:maven/commons_lang/commons_lang/2_6",
+  "@id": "http:maven/commons_lang/commons_lang/2_6",
   "@type": "Component",
   "name": "commons-lang",
   "externalIdentifier": {
