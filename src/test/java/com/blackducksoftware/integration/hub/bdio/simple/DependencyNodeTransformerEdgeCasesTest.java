@@ -36,19 +36,19 @@ import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalIdFactory;
 
 public class DependencyNodeTransformerEdgeCasesTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
     private DependencyNode node(final String name, final String version, final String group, Set<DependencyNode> dependencies) {
         if (dependencies == null) {
             dependencies = new HashSet<>();
         }
-        final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, group, name, version);
+        final ExternalId projectExternalId = externalIdFactory.createMavenExternalId(group, name, version);
         final DependencyNode root = new DependencyNode(name, version, projectExternalId, dependencies);
         return root;
     }
