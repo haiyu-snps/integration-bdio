@@ -24,8 +24,7 @@
 package com.blackducksoftware.integration.hub.bdio.simple;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,7 +47,7 @@ public class DependencyNodeBuilderTest {
 
     private DependencyNode getRootNodeToCompareWith() {
         // Constructing the root node in a specific structure
-        final Set<DependencyNode> children = new HashSet<>();
+        final LinkedHashSet<DependencyNode> children = new LinkedHashSet<>();
         firstChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild));
         secondChild.children.add(subThirdChild);
         fourthChild.children.addAll(Arrays.asList(subFirstChild, subSecondChild, subThirdChild));
@@ -119,8 +118,8 @@ public class DependencyNodeBuilderTest {
         right.children.add(sharedright);
         sharedright.children.add(sharedrightkid);
 
-        root.children.add(right);
         root.children.add(left);
+        root.children.add(right);
 
         final DependencyNodeBuilder builder = new DependencyNodeBuilder(root);
 

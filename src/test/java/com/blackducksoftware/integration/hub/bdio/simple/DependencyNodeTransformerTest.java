@@ -28,8 +28,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 import org.json.JSONException;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class DependencyNodeTransformerTest {
 
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
-        final Set<DependencyNode> projectDependencies = new HashSet<>();
+        final LinkedHashSet<DependencyNode> projectDependencies = new LinkedHashSet<>();
         final ExternalId projectExternalId = externalIdFactory.createMavenExternalId("projectGroup", "projectName", "projectVersion");
         final DependencyNode root = new DependencyNode("projectName", "projectVersion", projectExternalId, projectDependencies);
 
@@ -56,7 +55,7 @@ public class DependencyNodeTransformerTest {
 
         final ExternalId transitiveExternalId = externalIdFactory.createMavenExternalId("transitiveGroup", "transitiveArtifact", "2.1.0");
         final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
-        child.children = new HashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
+        child.children = new LinkedHashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);

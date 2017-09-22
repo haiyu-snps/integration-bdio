@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 import org.json.JSONException;
 import org.junit.Ignore;
@@ -44,17 +44,17 @@ public class DependencyNodeTransformerEdgeCasesTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
     private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
-    private DependencyNode node(final String name, final String version, final String group, Set<DependencyNode> dependencies) {
+    private DependencyNode node(final String name, final String version, final String group, LinkedHashSet<DependencyNode> dependencies) {
         if (dependencies == null) {
-            dependencies = new HashSet<>();
+            dependencies = new LinkedHashSet<>();
         }
         final ExternalId projectExternalId = externalIdFactory.createMavenExternalId(group, name, version);
         final DependencyNode root = new DependencyNode(name, version, projectExternalId, dependencies);
         return root;
     }
 
-    private HashSet<DependencyNode> set(final DependencyNode... nodes) {
-        final HashSet<DependencyNode> set = new HashSet<>();
+    private LinkedHashSet<DependencyNode> set(final DependencyNode... nodes) {
+        final LinkedHashSet<DependencyNode> set = new LinkedHashSet<>();
         if (nodes != null) {
             for (final DependencyNode node : nodes) {
                 if (node != null) {

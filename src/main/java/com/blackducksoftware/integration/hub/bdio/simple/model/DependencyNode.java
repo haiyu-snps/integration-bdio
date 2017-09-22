@@ -23,8 +23,7 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -34,8 +33,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
 
 /**
- * The externalId is required, but name, version, and children are all optional. However, most usage assumes the project
- * name/version are set on the root DependencyNode.
+ * The externalId is required, but name, version, and children are all optional. However, most usage assumes the project name/version are set on the root DependencyNode.
  */
 public class DependencyNode {
     public String name;
@@ -44,9 +42,10 @@ public class DependencyNode {
 
     public ExternalId externalId;
 
-    public Set<DependencyNode> children = new HashSet<>();
+    // we are using the concrete class here because the ordering of children nodes is important
+    public LinkedHashSet<DependencyNode> children = new LinkedHashSet<>();
 
-    public DependencyNode(final String name, final String version, final ExternalId externalId, final Set<DependencyNode> children) {
+    public DependencyNode(final String name, final String version, final ExternalId externalId, final LinkedHashSet<DependencyNode> children) {
         this.name = name;
         this.version = version;
         this.externalId = externalId;
@@ -54,19 +53,19 @@ public class DependencyNode {
     }
 
     public DependencyNode(final String name, final String version, final ExternalId externalId) {
-        this(name, version, externalId, new HashSet<DependencyNode>());
+        this(name, version, externalId, new LinkedHashSet<DependencyNode>());
     }
 
-    public DependencyNode(final String name, final ExternalId externalId, final Set<DependencyNode> children) {
+    public DependencyNode(final String name, final ExternalId externalId, final LinkedHashSet<DependencyNode> children) {
         this(name, null, externalId, children);
     }
 
-    public DependencyNode(final ExternalId externalId, final Set<DependencyNode> children) {
+    public DependencyNode(final ExternalId externalId, final LinkedHashSet<DependencyNode> children) {
         this(null, externalId, children);
     }
 
     public DependencyNode(final ExternalId externalId) {
-        this(externalId, new HashSet<DependencyNode>());
+        this(externalId, new LinkedHashSet<DependencyNode>());
     }
 
     @Override
