@@ -27,15 +27,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.NameVersionExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyTest {
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+
     @Test
     public void testConstructingDependencyNode() {
-        final ExternalId externalId = new NameVersionExternalId(Forge.NPM, "name", "version");
+        final ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
         final Dependency dependencyNode = new Dependency(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
         assertEquals("data:npm/name/version", dependencyNode.externalId.createDataId());

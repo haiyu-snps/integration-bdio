@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple;
+package com.blackducksoftware.integration.hub.bdio;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,12 +41,13 @@ import java.util.Map;
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalIdFactory;
+import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
+import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
 
 public class BdioNodeFactoryTest {

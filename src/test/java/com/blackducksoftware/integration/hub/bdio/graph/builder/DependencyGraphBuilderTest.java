@@ -34,27 +34,27 @@ import org.junit.Test;
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
-import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyGraphBuilderTest {
-    // Dependency root = new Dependency("root", "1.0", new MavenExternalId(Forge.MAVEN, "testRoot", "root", "1.0"));
+    // Dependency root = new Dependency("root", "1.0", externalIdFactory.createMavenExternalId("testRoot", "root", "1.0"));
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
-    Dependency firstChild = new Dependency("first", "1.0", new MavenExternalId(Forge.MAVEN, "children", "first", "1.0"));
+    Dependency firstChild = new Dependency("first", "1.0", externalIdFactory.createMavenExternalId("children", "first", "1.0"));
 
-    Dependency secondChild = new Dependency("second", "2.0", new MavenExternalId(Forge.MAVEN, "children", "second", "2.0"));
+    Dependency secondChild = new Dependency("second", "2.0", externalIdFactory.createMavenExternalId("children", "second", "2.0"));
 
-    Dependency thirdChild = new Dependency("third", "3.0", new MavenExternalId(Forge.MAVEN, "children", "third", "3.0"));
+    Dependency thirdChild = new Dependency("third", "3.0", externalIdFactory.createMavenExternalId("children", "third", "3.0"));
 
-    Dependency fourthChild = new Dependency("fourth", "4.0", new MavenExternalId(Forge.MAVEN, "children", "fourth", "4.0"));
+    Dependency fourthChild = new Dependency("fourth", "4.0", externalIdFactory.createMavenExternalId("children", "fourth", "4.0"));
 
-    Dependency subFirstChild = new Dependency("first", "1.0", new MavenExternalId(Forge.MAVEN, "subChild", "first", "1.0"));
+    Dependency subFirstChild = new Dependency("first", "1.0", externalIdFactory.createMavenExternalId("subChild", "first", "1.0"));
 
-    Dependency subSecondChild = new Dependency("second", "2.0", new MavenExternalId(Forge.MAVEN, "subChild", "second", "2.0"));
+    Dependency subSecondChild = new Dependency("second", "2.0", externalIdFactory.createMavenExternalId("subChild", "second", "2.0"));
 
-    Dependency subThirdChild = new Dependency("third", "3.0", new MavenExternalId(Forge.MAVEN, "subChild", "third", "3.0"));
+    Dependency subThirdChild = new Dependency("third", "3.0", externalIdFactory.createMavenExternalId("subChild", "third", "3.0"));
 
     private List<ExpectedDependencyTree> getExpected() {
         final List<ExpectedDependencyTree> trees = new ArrayList<>();
@@ -99,7 +99,7 @@ public class DependencyGraphBuilderTest {
     }
 
     Dependency makeNode(final String org, final String mod, final String rev) {
-        final MavenExternalId id = new MavenExternalId(org, mod, rev);
+        final ExternalId id = externalIdFactory.createMavenExternalId(org, mod, rev);
         final Dependency node = new Dependency(mod, rev, id);
         return node;
     }

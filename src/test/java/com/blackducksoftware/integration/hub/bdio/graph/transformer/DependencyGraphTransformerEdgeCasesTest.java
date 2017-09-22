@@ -42,15 +42,15 @@ import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.MavenExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.NameVersionExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 
 public class DependencyGraphTransformerEdgeCasesTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
     private Dependency node(final String name, final String version, final String group) {
-        final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, group, name, version);
+        final ExternalId projectExternalId = externalIdFactory.createMavenExternalId(group, name, version);
         final Dependency root = new Dependency(name, version, projectExternalId);
         return root;
     }
@@ -106,7 +106,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
 
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
         simpleBdioDocument.billOfMaterials.id = "uuid:123";
@@ -154,7 +154,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
@@ -192,7 +192,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
@@ -233,7 +233,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
@@ -269,7 +269,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final NameVersionExternalId id = new NameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
+        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison

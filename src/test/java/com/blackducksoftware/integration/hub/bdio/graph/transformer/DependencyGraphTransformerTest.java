@@ -38,29 +38,30 @@ import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
 import com.blackducksoftware.integration.hub.bdio.BdioWriter;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
-import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
 
 public class DependencyGraphTransformerTest {
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
 
         final Set<Dependency> projectDependencies = new HashSet<>();
-        final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, "projectGroup", "projectName", "projectVersion");
+        final ExternalId projectExternalId = externalIdFactory.createMavenExternalId("projectGroup", "projectName", "projectVersion");
         final MutableDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
 
-        final ExternalId childExternalId = new MavenExternalId(Forge.MAVEN, "componentGroup1", "componentArtifact1", "1.0.0");
+        final ExternalId childExternalId = externalIdFactory.createMavenExternalId("componentGroup1", "componentArtifact1", "1.0.0");
         final Dependency child = new Dependency("componentArtifact1", "1.0.0", childExternalId);
         dependencyGraph.addChildrenToRoot(child);
 
-        final ExternalId transitiveExternalId = new MavenExternalId(Forge.MAVEN, "transitiveGroup", "transitiveArtifact", "2.1.0");
+        final ExternalId transitiveExternalId = externalIdFactory.createMavenExternalId("transitiveGroup", "transitiveArtifact", "2.1.0");
         final Dependency transitive = new Dependency("transitiveArtifact", "2.1.0", transitiveExternalId);
         dependencyGraph.addParentWithChild(child, transitive);
 

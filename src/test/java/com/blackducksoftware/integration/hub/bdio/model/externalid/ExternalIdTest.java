@@ -30,12 +30,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ArchitectureExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.MavenExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ModuleNamesExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.NameVersionExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.PathExternalId;
 
 public class ExternalIdTest {
     @Rule

@@ -28,14 +28,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyTestUtil {
 
+    public static ExternalIdFactory factory = new ExternalIdFactory();
+
     public static Dependency newMavenDependency(final String name, final String version, final String org) {
-        return new Dependency(name, version, new MavenExternalId(Forge.MAVEN, org, name, version));
+        return new Dependency(name, version, factory.createMavenExternalId(org, name, version));
     }
 
     public static Set<Dependency> asSet(final Dependency... dependencies) {

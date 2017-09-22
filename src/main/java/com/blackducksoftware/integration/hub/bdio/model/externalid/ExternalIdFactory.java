@@ -21,9 +21,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple.model.externalid;
+package com.blackducksoftware.integration.hub.bdio.model.externalid;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.model.Forge;
 
 public class ExternalIdFactory {
     public ExternalId createNameVersionExternalId(final Forge forge, final String name, final String version) {
