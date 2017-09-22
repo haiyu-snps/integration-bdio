@@ -54,7 +54,7 @@ public class ExternalIdTest {
 
         final ExternalId moduleNamesExternalId = externalIdFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
         assertEquals("http:cpan/name/version/something/else", moduleNamesExternalId.createBdioId());
-        assertEquals("name::version::something::else", moduleNamesExternalId.createExternalId());
+        assertEquals("name-version-something-else", moduleNamesExternalId.createExternalId());
 
         final ExternalId nameVersionExternalId = externalIdFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
         assertEquals("http:pypi/name/version", nameVersionExternalId.createBdioId());
