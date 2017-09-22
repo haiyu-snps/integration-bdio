@@ -28,12 +28,14 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.NameVersionExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalIdFactory;
 
 public class DependencyNodeTest {
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+
     @Test
     public void testConstructingDependencyNode() {
-        final ExternalId externalId = new NameVersionExternalId(Forge.NPM, "name", "version");
+        final ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
         final DependencyNode dependencyNode = new DependencyNode(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
         assertEquals("http:npm/name/version", dependencyNode.externalId.createBdioId());

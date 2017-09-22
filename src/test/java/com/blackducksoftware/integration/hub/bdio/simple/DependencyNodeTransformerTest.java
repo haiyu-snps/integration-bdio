@@ -35,26 +35,26 @@ import org.json.JSONException;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.MavenExternalId;
+import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalIdFactory;
 import com.google.gson.Gson;
 
 public class DependencyNodeTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
     @Test
     public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
         final Set<DependencyNode> projectDependencies = new HashSet<>();
-        final ExternalId projectExternalId = new MavenExternalId(Forge.MAVEN, "projectGroup", "projectName", "projectVersion");
+        final ExternalId projectExternalId = externalIdFactory.createMavenExternalId("projectGroup", "projectName", "projectVersion");
         final DependencyNode root = new DependencyNode("projectName", "projectVersion", projectExternalId, projectDependencies);
 
-        final ExternalId childExternalId = new MavenExternalId(Forge.MAVEN, "componentGroup1", "componentArtifact1", "1.0.0");
+        final ExternalId childExternalId = externalIdFactory.createMavenExternalId("componentGroup1", "componentArtifact1", "1.0.0");
         final DependencyNode child = new DependencyNode("componentArtifact1", "1.0.0", childExternalId, null);
         projectDependencies.add(child);
 
-        final ExternalId transitiveExternalId = new MavenExternalId(Forge.MAVEN, "transitiveGroup", "transitiveArtifact", "2.1.0");
+        final ExternalId transitiveExternalId = externalIdFactory.createMavenExternalId("transitiveGroup", "transitiveArtifact", "2.1.0");
         final DependencyNode transitive = new DependencyNode("transitiveArtifact", "2.1.0", transitiveExternalId);
         child.children = new HashSet<>(Arrays.asList(new DependencyNode[] { transitive }));
 
