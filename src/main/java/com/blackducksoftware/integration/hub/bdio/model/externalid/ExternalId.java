@@ -36,10 +36,16 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.util.IntegrationEscapeUtil;
 
-public abstract class ExternalId {
-    public static final String DATA_ID_SEPARATOR = "/";
+public class ExternalId {
+    public static final String BDIO_ID_SEPARATOR = "/";
 
     public final Forge forge;
+    public String group;
+    public String name;
+    public String version;
+    public String architecture;
+    public String[] moduleNames;
+    public String path;
 
     private static final IntegrationEscapeUtil integrationEscapeUtil = new IntegrationEscapeUtil();
 
@@ -47,14 +53,46 @@ public abstract class ExternalId {
         this.forge = forge;
     }
 
-    public abstract String[] getExternalIdPieces();
+    /**
+     * @formatter:off
+     * A forge is always required. The other fields to populate depend on what
+     * external id type you need. The currently supported types are:
+     *   "name/version": populate name and version
+     *   "architecture": populate name, version, and architecture
+     *   "maven": populate name, version, and group
+     *   "module names": populate moduleNames
+     *   "path": populate path
+     * @formatter:on
+     */
+    public String[] getExternalIdPieces() {
+        if (StringUtils.isNotBlank(path)) {
+            return new String[] { path };
+        } else if (moduleNames != null && moduleNames.length > 0) {
+            return moduleNames;
+        } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
+            if (StringUtils.isNotBlank(group)) {
+                return new String[] { group, name, version };
+            } else if (StringUtils.isNotBlank(architecture)) {
+                return new String[] { name, version, architecture };
+            } else {
+                return new String[] { name, version };
+            }
+        }
 
+        throw new IllegalStateException("Not enough state was populated: " + this.toString());
+    }
+
+    @Deprecated
     public String createDataId() {
-        final List<String> dataIdPieces = new ArrayList<>();
-        dataIdPieces.add(forge.toString());
-        dataIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
+        return createBdioId();
+    }
 
-        return "data:" + StringUtils.join(dataIdPieces, DATA_ID_SEPARATOR);
+    public String createBdioId() {
+        final List<String> bdioIdPieces = new ArrayList<>();
+        bdioIdPieces.add(forge.toString());
+        bdioIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
+
+        return "http:" + StringUtils.join(bdioIdPieces, BDIO_ID_SEPARATOR);
     }
 
     public String createExternalId() {

@@ -25,7 +25,9 @@ package com.blackducksoftware.integration.hub.bdio.model.externalid;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ArchitectureExternalId;
@@ -36,6 +38,11 @@ import com.blackducksoftware.integration.hub.bdio.model.externalid.NameVersionEx
 import com.blackducksoftware.integration.hub.bdio.model.externalid.PathExternalId;
 
 public class ExternalIdTest {
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+
     @Test
     public void testForgeEquality() {
         assertEquals(Forge.ANACONDA, new Forge("anaconda", "="));
@@ -43,39 +50,56 @@ public class ExternalIdTest {
 
     @Test
     public void testCreatingExternalIds() {
-        final ExternalId architectureExternalId = new ArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
-        assertEquals("data:centos/name/version/architecture", architectureExternalId.createDataId());
+        final ExternalId architectureExternalId = externalIdFactory.createArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
+        assertEquals("http:centos/name/version/architecture", architectureExternalId.createBdioId());
         assertEquals("name/version/architecture", architectureExternalId.createExternalId());
 
-        final ExternalId mavenExternalId = new MavenExternalId("group", "artifact", "version");
-        assertEquals("data:maven/group/artifact/version", mavenExternalId.createDataId());
+        final ExternalId mavenExternalId = externalIdFactory.createMavenExternalId("group", "artifact", "version");
+        assertEquals("http:maven/group/artifact/version", mavenExternalId.createBdioId());
         assertEquals("group:artifact:version", mavenExternalId.createExternalId());
 
-        final ExternalId moduleNamesExternalId = new ModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
-        assertEquals("data:cpan/name/version/something/else", moduleNamesExternalId.createDataId());
-        assertEquals("name::version::something::else", moduleNamesExternalId.createExternalId());
+        final ExternalId moduleNamesExternalId = externalIdFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
+        assertEquals("http:cpan/name/version/something/else", moduleNamesExternalId.createBdioId());
+        assertEquals("name-version-something-else", moduleNamesExternalId.createExternalId());
 
-        final ExternalId nameVersionExternalId = new NameVersionExternalId(Forge.PYPI, "name", "version");
-        assertEquals("data:pypi/name/version", nameVersionExternalId.createDataId());
+        final ExternalId nameVersionExternalId = externalIdFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
+        assertEquals("http:pypi/name/version", nameVersionExternalId.createBdioId());
         assertEquals("name/version", nameVersionExternalId.createExternalId());
 
-        final ExternalId pathExternalId = new PathExternalId(Forge.GOGET, "name");
-        assertEquals("data:goget/name", pathExternalId.createDataId());
+        final ExternalId pathExternalId = externalIdFactory.createPathExternalId(Forge.GOGET, "name");
+        assertEquals("http:goget/name", pathExternalId.createBdioId());
         assertEquals("name", pathExternalId.createExternalId());
     }
 
     @Test
     public void testEscapingBadUriCharacters() {
-        final ExternalId nameVersionExternalId = new NameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
-        assertEquals("data:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createDataId());
+        final ExternalId nameVersionExternalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
+        assertEquals("http:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createBdioId());
         assertEquals("name with spaces@version with a - and a # and spaces", nameVersionExternalId.createExternalId());
+    }
 
+    @Test
+    public void testExceptionWithoutEnoughState() {
+        final ExternalId externalId = new ExternalId(Forge.MAVEN);
+        exception.expect(IllegalStateException.class);
+        exception.expectMessage("Not enough state was populated:");
+        externalId.getExternalIdPieces();
+    }
+
+    @Test
+    @Deprecated
+    public void testCreateDataId() {
+        // this test should be removed once createDataId() is removed (obviously)
+        final ExternalId externalId = new ExternalId(Forge.MAVEN);
+        externalId.name = "testName";
+        externalId.version = "testVersion";
+        assertEquals("http:maven/testName/testVersion", externalId.createDataId());
     }
 
     @Test
     public void testBoilerplateCode() {
-        final ExternalId externalIdA = new MavenExternalId(Forge.MAVEN, null, null, null);
-        final ExternalId externalIdB = new MavenExternalId(Forge.MAVEN, null, null, null);
+        final ExternalId externalIdA = externalIdFactory.createMavenExternalId(null, null, null);
+        final ExternalId externalIdB = externalIdFactory.createMavenExternalId(null, null, null);
         assertEquals(externalIdA, externalIdB);
         assertEquals(externalIdA.hashCode(), externalIdB.hashCode());
         assertEquals(externalIdA.toString(), externalIdB.toString());

@@ -53,15 +53,13 @@ public class BdioNodeFactory {
         return billOfMaterials;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge,
-            final String externalId) {
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return createProject(projectName, projectVersion, bdioId, externalIdentifier);
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId,
-            final BdioExternalIdentifier externalIdentifier) {
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
         final BdioProject project = new BdioProject();
         project.id = bdioId;
         project.name = projectName;
@@ -72,18 +70,16 @@ public class BdioNodeFactory {
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final ExternalId externalId) {
-        return createComponent(componentName, componentVersion, externalId.createDataId(), externalId.forge.toString(), externalId.createExternalId());
+        return createComponent(componentName, componentVersion, externalId.createBdioId(), externalId.forge.toString(), externalId.createExternalId());
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge,
-            final String externalId) {
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
 
         return createComponent(componentName, componentVersion, bdioId, externalIdentifier);
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId,
-            final BdioExternalIdentifier externalIdentifier) {
+    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
         final BdioComponent component = new BdioComponent();
         component.id = bdioId;
         component.name = componentName;
