@@ -51,9 +51,9 @@ public class DependencyGraphCombiner {
             if (!encountered.contains(dependency)) {
                 encountered.add(dependency);
 
-                destinationGraph.addChildWithParent(dependency, parentDependency);
+                copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
             }
-
+            destinationGraph.addChildWithParent(dependency, parentDependency);
         }
     }
 

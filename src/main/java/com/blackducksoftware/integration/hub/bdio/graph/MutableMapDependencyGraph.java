@@ -148,7 +148,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph { // ex
 
     @Override
     public void addChildWithParent(final Dependency child, final Dependency parent) {
-        addParentWithChild(child, parent);
+        addParentWithChild(parent, child);
     }
 
     @Override
