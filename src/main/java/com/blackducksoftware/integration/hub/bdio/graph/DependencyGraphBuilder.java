@@ -139,7 +139,7 @@ public class DependencyGraphBuilder {
     }
 
     public void addChildWithParent(final Dependency child, final Dependency parent) {
-        addParentWithChild(child, parent);
+        addParentWithChild(parent, child);
     }
 
     public void addParentWithChildren(final Dependency parent, final List<Dependency> children) {

@@ -23,8 +23,13 @@
  */
 package com.blackducksoftware.integration.hub.bdio.graph;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -32,7 +37,7 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.utility.DependencyGraphTestUtil;
 import com.blackducksoftware.integration.hub.bdio.utility.DependencyTestUtil;
 
-public class MutableMapDependencyGraphTest {
+public class DependencyGraphBuilderTest {
 
     Dependency parent1 = DependencyTestUtil.newMavenDependency("parent1", "1.0", "parents");
     Dependency parent2 = DependencyTestUtil.newMavenDependency("parent2", "1.0", "parents");
@@ -52,12 +57,14 @@ public class MutableMapDependencyGraphTest {
     @Test
     public void testAddChildWithParents() {
 
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addChildWithParent(child1, parent1);
-        graph.addChildWithParents(grandchild2, parent1, child1);
-        graph.addChildWithParents(child2, DependencyTestUtil.asSet(parent2, child1));
-        graph.addChildWithParents(child3, DependencyTestUtil.asList(parent3));
-        graph.addChildrenToRoot(parent1, parent2, parent3);
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        builder.addChildWithParent(child1, parent1);
+        builder.addChildWithParents(grandchild2, parent1, child1);
+        builder.addChildWithParents(child2, DependencyTestUtil.asSet(parent2, child1));
+        builder.addChildWithParents(child3, DependencyTestUtil.asList(parent3));
+        builder.addChildrenToRoot(parent1, parent2, parent3);
+
+        final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1, grandchild2);
 
@@ -75,12 +82,14 @@ public class MutableMapDependencyGraphTest {
 
     @Test
     public void testRootAdd() {
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
 
-        graph.addChildToRoot(parent1);
-        graph.addChildrenToRoot(parent2, parent3);
-        graph.addChildrenToRoot(DependencyTestUtil.asSet(child1, child2));
-        graph.addChildrenToRoot(DependencyTestUtil.asList(child3, child4));
+        builder.addChildToRoot(parent1);
+        builder.addChildrenToRoot(parent2, parent3);
+        builder.addChildrenToRoot(DependencyTestUtil.asSet(child1, child2));
+        builder.addChildrenToRoot(DependencyTestUtil.asList(child3, child4));
+
+        final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2, parent3, child1, child2, child3, child4);
     }
@@ -88,11 +97,13 @@ public class MutableMapDependencyGraphTest {
     @Test
     public void testAddParentsWithChildren() {
 
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addParentWithChild(parent1, child1);
-        graph.addParentWithChildren(child1, DependencyTestUtil.asSet(grandchild1, grandchild2));
-        graph.addParentWithChildren(parent2, DependencyTestUtil.asList(child2, child3));
-        graph.addChildrenToRoot(parent1, parent2);
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        builder.addParentWithChild(parent1, child1);
+        builder.addParentWithChildren(child1, DependencyTestUtil.asSet(grandchild1, grandchild2));
+        builder.addParentWithChildren(parent2, DependencyTestUtil.asList(child2, child3));
+        builder.addChildrenToRoot(parent1, parent2);
+
+        final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1);
         DependencyGraphTestUtil.assertGraphChildren(graph, parent2, child2, child3);
@@ -104,10 +115,12 @@ public class MutableMapDependencyGraphTest {
     @Test
     public void testAddToSameParent() {
 
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addParentWithChildren(parent1, child1);
-        graph.addParentWithChildren(parent1, child2);
-        graph.addChildrenToRoot(parent1);
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        builder.addParentWithChildren(parent1, child1);
+        builder.addParentWithChildren(parent1, child2);
+        builder.addChildrenToRoot(parent1);
+
+        final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1, child2);
         DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1);
@@ -116,9 +129,20 @@ public class MutableMapDependencyGraphTest {
     @Test
     public void testHas() {
 
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addParentWithChildren(parent1, child1);
-        graph.addChildrenToRoot(parent1);
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        builder.addParentWithChildren(parent1, child1);
+        builder.addChildrenToRoot(parent1);
+
+        final Set<Dependency> dependencies = new HashSet<>();
+        dependencies.add(parent1);
+        dependencies.add(child1);
+        for (final Dependency dependency : dependencies) {
+            assertTrue(builder.hasDependency(dependency));
+            assertTrue(builder.hasDependency(dependency.externalId));
+            assertEquals(builder.getDependency(dependency.externalId), dependency);
+        }
+
+        final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphHas(graph, child1, parent1);
     }
@@ -126,15 +150,15 @@ public class MutableMapDependencyGraphTest {
     @Test
     public void testDoesNotHas() {
 
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addParentWithChildren(parent1, child1);
-        graph.addChildrenToRoot(parent1);
+        final DependencyGraphBuilder builder = new DependencyGraphBuilder();
+        builder.addParentWithChildren(parent1, child1);
+        builder.addChildrenToRoot(parent1);
 
-        assertNull(graph.getDependency(parent2.externalId));
-        assertFalse(graph.hasDependency(parent2));
+        assertNull(builder.getDependency(parent2.externalId));
+        assertFalse(builder.hasDependency(parent2));
 
-        assertNull(graph.getDependency(child2.externalId));
-        assertFalse(graph.hasDependency(child2));
+        assertNull(builder.getDependency(child2.externalId));
+        assertFalse(builder.hasDependency(child2));
 
     }
 
