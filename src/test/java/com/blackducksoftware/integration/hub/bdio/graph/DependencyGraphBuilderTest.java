@@ -66,18 +66,18 @@ public class DependencyGraphBuilderTest {
 
         final DependencyGraph graph = builder.build();
 
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1, grandchild2);
+        assertBuilderChildren(builder, graph, parent1, child1, grandchild2);
 
-        DependencyGraphTestUtil.assertGraphChildren(graph, child1, child2, grandchild2);
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent3, child3);
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent2, child2);
+        assertBuilderChildren(builder, graph, child1, child2, grandchild2);
+        assertBuilderChildren(builder, graph, parent3, child3);
+        assertBuilderChildren(builder, graph, parent2, child2);
 
-        DependencyGraphTestUtil.assertGraphParents(graph, child1, parent1);
-        DependencyGraphTestUtil.assertGraphParents(graph, grandchild2, parent1, child1);
-        DependencyGraphTestUtil.assertGraphParents(graph, child2, parent2, child1);
-        DependencyGraphTestUtil.assertGraphParents(graph, child3, parent3);
+        assertBuilderParents(builder, graph, child1, parent1);
+        assertBuilderParents(builder, graph, grandchild2, parent1, child1);
+        assertBuilderParents(builder, graph, child2, parent2, child1);
+        assertBuilderParents(builder, graph, child3, parent3);
 
-        DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2, parent3);
+        assertBuilderRootChildren(builder, graph, parent1, parent2, parent3);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class DependencyGraphBuilderTest {
 
         final DependencyGraph graph = builder.build();
 
-        DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2, parent3, child1, child2, child3, child4);
+        assertBuilderRootChildren(builder, graph, parent1, parent2, parent3, child1, child2, child3, child4);
     }
 
     @Test
@@ -105,11 +105,11 @@ public class DependencyGraphBuilderTest {
 
         final DependencyGraph graph = builder.build();
 
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1);
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent2, child2, child3);
-        DependencyGraphTestUtil.assertGraphChildren(graph, child1, grandchild1, grandchild2);
+        assertBuilderChildren(builder, graph, parent1, child1);
+        assertBuilderChildren(builder, graph, parent2, child2, child3);
+        assertBuilderChildren(builder, graph, child1, grandchild1, grandchild2);
 
-        DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2);
+        assertBuilderRootChildren(builder, graph, parent1, parent2);
     }
 
     @Test
@@ -119,11 +119,11 @@ public class DependencyGraphBuilderTest {
         builder.addParentWithChildren(parent1, child1);
         builder.addParentWithChildren(parent1, child2);
         builder.addChildrenToRoot(parent1);
-
         final DependencyGraph graph = builder.build();
 
-        DependencyGraphTestUtil.assertGraphChildren(graph, parent1, child1, child2);
-        DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1);
+        assertBuilderChildren(builder, graph, parent1, child1, child2);
+        assertBuilderRootChildren(builder, graph, parent1);
+
     }
 
     @Test
@@ -160,6 +160,35 @@ public class DependencyGraphBuilderTest {
         assertNull(builder.getDependency(child2.externalId));
         assertFalse(builder.hasDependency(child2));
 
+        final DependencyGraph graph = builder.build();
+
+        assertNull(graph.getDependency(parent2.externalId));
+        assertFalse(graph.hasDependency(parent2));
+
+        assertNull(graph.getDependency(child2.externalId));
+        assertFalse(graph.hasDependency(child2));
+
+    }
+
+    public static void assertBuilderRootChildren(final DependencyGraphBuilder builder, final DependencyGraph graph, final Dependency... dependencies) {
+        DependencyGraphTestUtil.assertGraphRootChildren(graph, dependencies);
+        DependencyGraphTestUtil.assertDependencySet(builder.getRootDependencies(), dependencies);
+    }
+
+    public static void assertBuilderChildren(final DependencyGraphBuilder builder, final DependencyGraph graph, final Dependency node, final Dependency... dependencies) {
+        DependencyGraphTestUtil.assertGraphChildren(graph, node, dependencies);
+        final Set<Dependency> actualChildren = new HashSet<>(builder.getChildrenForParent(node));
+        DependencyGraphTestUtil.assertDependencySet(actualChildren, dependencies);
+        DependencyGraphTestUtil.assertExternalIdSet(builder.getChildrenExternalIdsForParent(node.externalId), DependencyGraphTestUtil.extractExternalIds(dependencies));
+        DependencyGraphTestUtil.assertExternalIdSet(builder.getChildrenExternalIdsForParent(node), DependencyGraphTestUtil.extractExternalIds(dependencies));
+    }
+
+    public static void assertBuilderParents(final DependencyGraphBuilder builder, final DependencyGraph graph, final Dependency node, final Dependency... dependencies) {
+        DependencyGraphTestUtil.assertGraphParents(graph, node, dependencies);
+        final Set<Dependency> actualParents = new HashSet<>(builder.getParentsForChild(node));
+        DependencyGraphTestUtil.assertDependencySet(actualParents, dependencies);
+        DependencyGraphTestUtil.assertExternalIdSet(builder.getParentExternalIdsForChild(node.externalId), DependencyGraphTestUtil.extractExternalIds(dependencies));
+        DependencyGraphTestUtil.assertExternalIdSet(builder.getParentExternalIdsForChild(node), DependencyGraphTestUtil.extractExternalIds(dependencies));
     }
 
 }

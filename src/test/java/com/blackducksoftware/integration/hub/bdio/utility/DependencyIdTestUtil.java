@@ -21,14 +21,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.model.dependencyid;
+package com.blackducksoftware.integration.hub.bdio.utility;
 
-public class NameDependencyId extends DependencyId {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-    public String name;
+import com.blackducksoftware.integration.hub.bdio.model.dependencyid.DependencyId;
 
-    public NameDependencyId(final String name) {
-        this.name = name;
+public class DependencyIdTestUtil {
+
+    public static Set<DependencyId> asSet(final DependencyId... dependencies) {
+        final Set<DependencyId> set = new HashSet<>();
+        for (final DependencyId dependency : dependencies) {
+            set.add(dependency);
+        }
+        return set;
+    }
+
+    public static List<DependencyId> asList(final DependencyId... dependencies) {
+        final List<DependencyId> list = new ArrayList<>();
+        for (final DependencyId dependency : dependencies) {
+            list.add(dependency);
+        }
+        return list;
     }
 
 }

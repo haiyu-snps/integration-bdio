@@ -258,6 +258,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final Dependency one = node("one", "one", "one");
         final Dependency two = node("two", "two", "two");
         final Dependency three = node("three", "three", "three");
+        final Dependency project = node("project", "project", "project");
 
         graph.addParentWithChild(one, three);
         graph.addParentWithChild(two, one);
@@ -267,15 +268,43 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
-        final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
+        final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer recursiveTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
+        final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
+        simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";
 
-        // we are overriding the default value of a new uuid just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.id = "uuid:123";
+        assertEquals(simpleBdioDocumentIterative.components.size(), 3);
+        assertEquals(simpleBdioDocumentRecursive.components.size(), 3);
+    }
 
-        assertEquals(simpleBdioDocument.components.size(), 3);
+    @Test
+    public void testProjectAsChild() throws URISyntaxException, IOException, JSONException {
+
+        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
+
+        final Dependency one = node("one", "one", "one");
+        final Dependency two = node("two", "two", "two");
+        final Dependency project = node("project", "project", "project");
+
+        graph.addParentWithChild(one, two);
+        graph.addParentWithChild(project, two);
+
+        graph.addChildrenToRoot(one);
+        graph.addChildrenToRoot(project);
+
+        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+
+        final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer recursiveTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
+        final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
+        simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";
+
+        assertEquals(simpleBdioDocumentIterative.components.size(), 2);
+        assertEquals(simpleBdioDocumentRecursive.components.size(), 2);
     }
 
 }

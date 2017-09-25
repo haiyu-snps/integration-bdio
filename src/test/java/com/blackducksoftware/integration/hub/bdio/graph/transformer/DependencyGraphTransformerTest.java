@@ -51,7 +51,7 @@ public class DependencyGraphTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
-    public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingDocument() throws URISyntaxException, IOException, JSONException {
 
         final Set<Dependency> projectDependencies = new HashSet<>();
         final ExternalId projectExternalId = externalIdFactory.createMavenExternalId("projectGroup", "projectName", "projectVersion");

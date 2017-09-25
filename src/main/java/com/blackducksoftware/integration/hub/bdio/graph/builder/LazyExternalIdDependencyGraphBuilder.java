@@ -38,7 +38,7 @@ import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class LazyExternalIdDependencyGraphBuilder {
     private class LazyDependencyInfo {
-        public Set<DependencyId> related = new HashSet<>();
+        public Set<DependencyId> children = new HashSet<>();
 
         public DependencyId aliasId;
         public ExternalId externalId;
@@ -65,10 +65,10 @@ public class LazyExternalIdDependencyGraphBuilder {
             final LazyDependencyInfo info = infoForId(id);
             final Dependency dep = new Dependency(info.name, info.version, info.externalId);
 
-            for (final DependencyId related : info.related) {
-                final LazyDependencyInfo relatedInfo = infoForId(related);
+            for (final DependencyId child : info.children) {
+                final LazyDependencyInfo childInfo = infoForId(child);
 
-                graph.addChildWithParent(dep, new Dependency(relatedInfo.name, relatedInfo.version, relatedInfo.externalId));
+                graph.addParentWithChild(dep, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
             }
 
             if (rootDependencyIds.contains(id) || rootDependencyIds.contains(info.aliasId)) {
@@ -83,12 +83,6 @@ public class LazyExternalIdDependencyGraphBuilder {
         if (!dependencyInfo.containsKey(dependencyId)) {
             dependencyInfo.put(dependencyId, new LazyDependencyInfo());
         }
-    }
-
-    public void addRelationship(final DependencyId parent, final DependencyId child) {
-        ensureDependencyInfoExists(parent);
-        ensureDependencyInfoExists(child);
-        dependencyInfo.get(parent).related.add(child);
     }
 
     public void setDependencyAsAlias(final DependencyId realDependencyId, final DependencyId fakeDependencyId) {
@@ -128,7 +122,7 @@ public class LazyExternalIdDependencyGraphBuilder {
 
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
-        dependencyInfo.get(parent).related.add(child);
+        dependencyInfo.get(parent).children.add(child);
 
     }
 
@@ -154,7 +148,7 @@ public class LazyExternalIdDependencyGraphBuilder {
 
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
-        dependencyInfo.get(parent).related.add(child);
+        dependencyInfo.get(parent).children.add(child);
     }
 
     public void addChildWithParents(final DependencyId child, final List<DependencyId> parents) {

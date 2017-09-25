@@ -53,6 +53,7 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
         this.bdioPropertyHelper = bdioPropertyHelper;
     }
 
+    @Override
     public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
         return transformDependencyGraph(null, projectName, projectVersionName, projectExternalId, graph);
     }
@@ -60,6 +61,7 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
     /**
      * The hubCodeLocationName is optional and will likely be null for most cases.
      */
+    @Override
     public SimpleBdioDocument transformDependencyGraph(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
         final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
 
@@ -71,16 +73,18 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
         simpleBdioDocument.billOfMaterials = billOfMaterials;
         simpleBdioDocument.project = project;
 
-        final List<BdioComponent> bdioComponents = transformDependencyGraph(graph, project);
+        final Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
+        existingComponents.put(projectExternalId, project);
+        final List<BdioComponent> bdioComponents = transformDependencyGraph(graph, project, graph.getRootDependencies(), existingComponents);
         simpleBdioDocument.components = bdioComponents;
 
         return simpleBdioDocument;
     }
 
-    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode projectNode) {
+    @Override
+    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents) {
         final List<BdioComponent> newComponents = new ArrayList<>();
-        final Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
-        final Queue<Dependency> unprocessed = new LinkedList<>(graph.getRootDependencies());
+        final Queue<Dependency> unprocessed = new LinkedList<>(dependencies);
 
         while (unprocessed.size() > 0) {
             final Dependency next = unprocessed.remove();
@@ -105,7 +109,7 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
         }
 
         for (final Dependency rootChild : graph.getRootDependencies()) {
-            bdioPropertyHelper.addRelationship(projectNode, existingComponents.get(rootChild.externalId));
+            bdioPropertyHelper.addRelationship(currentNode, existingComponents.get(rootChild.externalId));
         }
 
         return newComponents;

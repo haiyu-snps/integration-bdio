@@ -80,15 +80,6 @@ public class RecursiveDependencyGraphTransformer implements DependencyGraphTrans
         return simpleBdioDocument;
     }
 
-    @Override
-    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode projectNode) {
-        return transformDependencyGraph(graph, projectNode, graph.getRootDependencies());
-    }
-
-    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies) {
-        return transformDependencyGraph(graph, currentNode, dependencies, new HashMap<ExternalId, BdioNode>());
-    }
-
     public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents) {
         final List<BdioComponent> addedComponents = new ArrayList<>();
         for (final Dependency dependency : dependencies) {

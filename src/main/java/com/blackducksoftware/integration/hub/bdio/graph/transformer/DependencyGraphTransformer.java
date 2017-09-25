@@ -24,11 +24,14 @@
 package com.blackducksoftware.integration.hub.bdio.graph.transformer;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public interface DependencyGraphTransformer {
@@ -36,5 +39,5 @@ public interface DependencyGraphTransformer {
 
     public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph);
 
-    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode projectNode);
+    public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents);
 }
