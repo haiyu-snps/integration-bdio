@@ -104,7 +104,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
 
@@ -152,7 +152,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -190,7 +190,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -231,7 +231,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
 
         final ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph("dumb", "dumbVer", id, graph);
@@ -270,7 +270,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
         final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final DependencyGraphTransformer recursiveTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer recursiveTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
         final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";
@@ -298,7 +298,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
         final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final DependencyGraphTransformer recursiveTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer recursiveTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
         final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";

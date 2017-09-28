@@ -23,17 +23,18 @@
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
+import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
 import com.blackducksoftware.integration.hub.bdio.model.BdioRelationship;
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
-import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
@@ -44,24 +45,27 @@ public class BdioTransformer {
         this.forgeMap = forgeMap;
     }
 
-    // returns a dependency node that is the project
-    public Dependency transformToDependencyNode(final SimpleBdioDocument document) {
-        final List<BdioComponent> components = new ArrayList<>(document.components);
-        components.add(document.project);
+    public DependencyGraph transformToDependencyGraph(final BdioProject project, final List<BdioComponent> components) {
+        final MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
 
-        final Map<String, Dependency> map = componentsToNodes(components);
+        dependencyGraph.addChildrenToRoot(children);
+        componentsToNodes(components);
 
-        return map.get(document.project.id);
+        return dependencyGraph;
 
     }
 
-    public Map<String, Dependency> componentsToNodes(final List<BdioComponent> components) {
+    public DependencyGraph componentsToNodes(final List<BdioComponent> components) {
         final Map<String, Dependency> map = new HashMap<>();
 
         for (final BdioComponent component : components) {
-            final Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
-            final ExternalId id = uncreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
-            final Dependency dependency = new Dependency(component.name, component.version, id);
+            final ExternalId externalId = component.bdioExternalIdentifier.externalIdMetaData;
+            if (externalId == null) {
+                // if the integration has not set the metadata, try our best to guess it
+                final Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
+                externalId = uncreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
+            }
+            final Dependency dependency = new Dependency(component.name, component.version, externalId);
             map.put(component.id, dependency);
         }
 

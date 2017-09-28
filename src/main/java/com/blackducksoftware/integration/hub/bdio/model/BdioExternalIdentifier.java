@@ -23,6 +23,7 @@
  */
 package com.blackducksoftware.integration.hub.bdio.model;
 
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 import com.google.gson.annotations.SerializedName;
 
 public class BdioExternalIdentifier {
@@ -32,4 +33,7 @@ public class BdioExternalIdentifier {
     @SerializedName("externalId")
     public String externalId;
 
+    @SerializedName("externalIdMetaData")
+    // this horrible name exists because 'externalId' is reserved by the bdio specification
+    public ExternalId externalIdMetaData;
 }

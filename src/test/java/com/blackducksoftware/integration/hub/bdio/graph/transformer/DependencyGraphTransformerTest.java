@@ -67,7 +67,7 @@ public class DependencyGraphTransformerTest {
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new RecursiveDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
         final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
