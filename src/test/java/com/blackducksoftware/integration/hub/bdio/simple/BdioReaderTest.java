@@ -26,17 +26,20 @@ package com.blackducksoftware.integration.hub.bdio.simple;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.BdioReader;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
 
 public class BdioReaderTest {
@@ -46,7 +49,7 @@ public class BdioReaderTest {
     public void testReaderOnSample() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
         final String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
 
-        final Reader reader = new StringReader(expectedJson);
+        final InputStream reader = new ByteArrayInputStream(expectedJson.getBytes(StandardCharsets.UTF_8.name()));
         SimpleBdioDocument doc = null;
         try (BdioReader bdioReader = new BdioReader(new Gson(), reader)) {
             doc = bdioReader.readSimpleBdioDocument();

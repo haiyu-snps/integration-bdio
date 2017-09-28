@@ -1,52 +1,79 @@
 [
-{
-  "specVersion": "1.1.0",
-  "@id": "uuid:123",
-  "@type": "BillOfMaterials",
-  "spdx:name": "projectName/projectVersion Black Duck I/O Export",
-  "relationship": []
-},
-{
-  "revision": "projectVersion",
-  "@id": "http:maven/projectGroup/projectName/projectVersion",
-  "@type": "Project",
-  "name": "projectName",
-  "externalIdentifier": {
-    "externalSystemTypeId": "maven",
-    "externalId": "projectGroup:projectName:projectVersion"
+  {
+    "specVersion": "1.1.0",
+    "spdx:name": "projectName/projectVersion Black Duck I/O Export",
+    "@id": "uuid:123",
+    "@type": "BillOfMaterials",
+    "relationship": []
   },
-  "relationship": [
-    {
-      "related": "http:maven/componentGroup1/componentArtifact1/1_0_0",
-      "relationshipType": "DYNAMIC_LINK"
-    }
-  ]
-},
-{
-  "revision": "1.0.0",
-  "@id": "http:maven/componentGroup1/componentArtifact1/1_0_0",
-  "@type": "Component",
-  "name": "componentArtifact1",
-  "externalIdentifier": {
-    "externalSystemTypeId": "maven",
-    "externalId": "componentGroup1:componentArtifact1:1.0.0"
+  {
+    "name": "projectName",
+    "revision": "projectVersion",
+    "@id": "http:maven/projectGroup/projectName/projectVersion",
+    "@type": "Project",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "projectGroup:projectName:projectVersion",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":"
+        },
+        "group": "projectGroup",
+        "name": "projectName",
+        "version": "projectVersion"
+      }
+    },
+    "relationship": [
+      {
+        "related": "http:maven/componentGroup1/componentArtifact1/1_0_0",
+        "relationshipType": "DYNAMIC_LINK"
+      }
+    ]
   },
-  "relationship": [
-    {
-      "related": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
-      "relationshipType": "DYNAMIC_LINK"
-    }
-  ]
-},
-{
-  "revision": "2.1.0",
-  "@id": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
-  "@type": "Component",
-  "name": "transitiveArtifact",
-  "externalIdentifier": {
-    "externalSystemTypeId": "maven",
-    "externalId": "transitiveGroup:transitiveArtifact:2.1.0"
+  {
+    "name": "componentArtifact1",
+    "revision": "1.0.0",
+    "@id": "http:maven/componentGroup1/componentArtifact1/1_0_0",
+    "@type": "Component",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "componentGroup1:componentArtifact1:1.0.0",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":"
+        },
+        "group": "componentGroup1",
+        "name": "componentArtifact1",
+        "version": "1.0.0"
+      }
+    },
+    "relationship": [
+      {
+        "related": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
+        "relationshipType": "DYNAMIC_LINK"
+      }
+    ]
   },
-  "relationship": []
-}
+  {
+    "name": "transitiveArtifact",
+    "revision": "2.1.0",
+    "@id": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
+    "@type": "Component",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "transitiveGroup:transitiveArtifact:2.1.0",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":"
+        },
+        "group": "transitiveGroup",
+        "name": "transitiveArtifact",
+        "version": "2.1.0"
+      }
+    },
+    "relationship": []
+  }
 ]

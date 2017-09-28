@@ -37,19 +37,35 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
-import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
+import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
+import com.blackducksoftware.integration.hub.bdio.BdioReader;
+import com.blackducksoftware.integration.hub.bdio.BdioTransformer;
+import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
+import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioRelationship;
+import com.blackducksoftware.integration.hub.bdio.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
 
 public class BdioTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
-    public void testTransformingDependencyNodes() throws URISyntaxException, IOException, JSONException {
-        final String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
+    public void testTransformingDependencyGraphSample() throws URISyntaxException, IOException, JSONException {
+        testTransformingDependencyGraphs("sample.jsonld");
+    }
+
+    @Test
+    public void testTransformingDependencyGraphSampleEdge() throws URISyntaxException, IOException, JSONException {
+        testTransformingDependencyGraphs("sample-edge.jsonld");
+    }
+
+    public void testTransformingDependencyGraphs(final String filename) throws URISyntaxException, IOException, JSONException {
+        final String expectedJson = jsonTestUtils.getExpectedJson(filename);
 
         final Reader reader = new StringReader(expectedJson);
         SimpleBdioDocument doc = null;
@@ -61,15 +77,21 @@ public class BdioTransformerTest {
         forgeMap.put("maven", Forge.MAVEN);
         final BdioTransformer transformer = new BdioTransformer(forgeMap);
 
-        final DependencyNode node = transformer.transformToDependencyNode(doc);
+        final DependencyGraph graph = transformer.transformToDependencyGraph(doc.project, doc.components);
 
-        assertEquals("gradleTestProject", node.name);
+        assertEquals(1, graph.getRootDependencies().size());
+
+        final ExternalId projectId = new ExternalId(Forge.MAVEN);
+        projectId.group = "com.blackducksoftware.gradle.test";
+        projectId.name = "gradleTestProject";
+        projectId.version = "99.5-SNAPSHOT";
 
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyNodeTransformer dependencyNodeTransformer = new DependencyNodeTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyNode(node);
+        final DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        final SimpleBdioDocument simpleBdioDocument = dependencyGraphTransformer.transformDependencyGraph(doc.project.name, doc.project.version, projectId, graph);
 
+        simpleBdioDocument.project.bdioExternalIdentifier.externalIdMetaData = null;
         simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
         simpleBdioDocument.billOfMaterials.customData = doc.billOfMaterials.customData;
 
@@ -87,7 +109,7 @@ public class BdioTransformerTest {
                     fnd = true;
 
                     assertEquals(true, EqualsBuilder.reflectionEquals(expected, actual, "bdioExternalIdentifier", "relationships"));
-                    assertEquals(true, EqualsBuilder.reflectionEquals(expected.bdioExternalIdentifier, actual.bdioExternalIdentifier));
+                    assertEquals(true, EqualsBuilder.reflectionEquals(expected.bdioExternalIdentifier, actual.bdioExternalIdentifier, "externalIdMetaData"));
                     assertRelationships(expected.relationships, actual.relationships);
 
                 }

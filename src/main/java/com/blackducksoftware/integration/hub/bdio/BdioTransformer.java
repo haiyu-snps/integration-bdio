@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.simple;
+package com.blackducksoftware.integration.hub.bdio;
 
 import java.util.HashMap;
 import java.util.List;

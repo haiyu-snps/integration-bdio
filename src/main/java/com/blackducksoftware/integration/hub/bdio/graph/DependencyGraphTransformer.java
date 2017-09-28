@@ -21,7 +21,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.blackducksoftware.integration.hub.bdio.graph.transformer;
+package com.blackducksoftware.integration.hub.bdio.graph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,6 @@ import java.util.Set;
 
 import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
 import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
-import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioExternalIdentifier;

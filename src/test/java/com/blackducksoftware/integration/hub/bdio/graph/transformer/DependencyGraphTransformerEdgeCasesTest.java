@@ -35,6 +35,7 @@ import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
 import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
+import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;

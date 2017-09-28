@@ -1,0 +1,90 @@
+[
+{
+  "specVersion": "1.1.0",
+  "@id": "uuid:45772d33-5353-44f1-8681-3d8a15540646",
+  "@type": "BillOfMaterials",
+  "spdx:name": "gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export",
+  "customData": {
+    "testVersion": "1.2.3-SNAPSHOT"
+  },
+  "relationship": []
+},
+{
+  "revision": "99.5-SNAPSHOT",
+  "@id": "http:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT",
+  "@type": "Project",
+  "name": "gradleTestProject",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT"
+  },
+  "relationship": [
+    {
+      "related": "http:maven/org_apache_cxf/cxf_bundle2/2_7_7",
+      "relationshipType": "DYNAMIC_LINK"
+    }
+  ]
+},
+{
+  "revision": "2.7.7",
+  "@id": "http:maven/org_apache_cxf/cxf_bundle2/2_7_7",
+  "@type": "Component",
+  "name": "cxf-mismatch-name",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "org.apache.cxf:cxf-bundle2:2.7.7"
+  },
+  "relationship": [
+    {
+      "related": "http:maven/org_apache_velocity/velocity/1_7/asd/asd",
+      "relationshipType": "DYNAMIC_LINK"
+    },
+    {
+      "related": "http:maven/commons_lang",
+      "relationshipType": "DYNAMIC_LINK"
+    }
+  ]
+},
+{
+  "revision": "1.7",
+  "@id": "http:maven/org_apache_velocity/velocity/1_7/asd/asd",
+  "@type": "Component",
+  "name": "velocity",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "org.apache.velocity:velocity:1.7:asd:asd"
+  },
+  "relationship": [
+    {
+      "related": "http:maven/commons_mismatch/commons_mismatch2/3_2_1",
+      "relationshipType": "DYNAMIC_LINK"
+    },
+    {
+      "related": "http:maven/commons_lang",
+      "relationshipType": "DYNAMIC_LINK"
+    }
+  ]
+},
+{
+  "revision": "3.2.1",
+  "@id": "http:maven/commons_mismatch/commons_mismatch2/3_2_1",
+  "@type": "Component",
+  "name": "commons-thing",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "commons-mismatch:commons-mismatch2:3.2.1"
+  },
+  "relationship": []
+},
+{
+  "revision": "2.6",
+  "@id": "http:maven/commons_lang",
+  "@type": "Component",
+  "name": "commons-lang",
+  "externalIdentifier": {
+    "externalSystemTypeId": "maven",
+    "externalId": "commons-lang"
+  },
+  "relationship": []
+}
+]
