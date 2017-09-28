@@ -24,7 +24,6 @@
 package com.blackducksoftware.integration.hub.bdio.model.dependencyid;
 
 public class NameDependencyId extends DependencyId {
-
     public String name;
 
     public NameDependencyId(final String name) {

@@ -82,11 +82,6 @@ public class ExternalId {
         throw new IllegalStateException("Not enough state was populated: " + this.toString());
     }
 
-    @Deprecated
-    public String createDataId() {
-        return createBdioId();
-    }
-
     public String createBdioId() {
         final List<String> bdioIdPieces = new ArrayList<>();
         bdioIdPieces.add(forge.toString());

@@ -87,7 +87,7 @@ public class ExternalIdTest {
         final ExternalId externalId = new ExternalId(Forge.MAVEN);
         externalId.name = "testName";
         externalId.version = "testVersion";
-        assertEquals("http:maven/testName/testVersion", externalId.createDataId());
+        assertEquals("http:maven/testName/testVersion", externalId.createBdioId());
     }
 
     @Test

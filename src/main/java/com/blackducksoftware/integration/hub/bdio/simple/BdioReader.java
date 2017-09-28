@@ -30,16 +30,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioBillOfMaterials;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 public class BdioReader implements Closeable {
     private final Gson gson;
-
     private final JsonReader jsonReader;
 
     public BdioReader(final Gson gson, final Reader reader) throws IOException {

@@ -28,9 +28,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.blackducksoftware.integration.util.NameVersion;
+
 public class GraphSummary {
     public Set<String> rootExternalDataIds = new HashSet<>();
     public Map<String, Set<String>> externalDataIdRelationships = new HashMap<>();
-    public Map<String, DependencySummary> dependencySummaries = new HashMap<>();
+    public Map<String, NameVersion> dependencySummaries = new HashMap<>();
 
 }

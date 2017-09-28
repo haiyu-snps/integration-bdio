@@ -31,6 +31,7 @@ import java.util.Set;
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
+import com.blackducksoftware.integration.util.NameVersion;
 import com.google.gson.Gson;
 
 public class DependencyGraphSummarizer {
@@ -56,26 +57,25 @@ public class DependencyGraphSummarizer {
         final Queue<Dependency> unprocessed = new LinkedList<>(graph.getRootDependencies());
         final Set<Dependency> processed = new HashSet<>();
 
-        final GraphSummary summary = new GraphSummary();
+        final GraphSummary graphSummary = new GraphSummary();
 
         while (unprocessed.size() > 0) {
-            final Dependency next = unprocessed.remove();
-            processed.add(next);
+            final Dependency nextDependency = unprocessed.remove();
+            processed.add(nextDependency);
 
-            final String nextId = next.externalId.createDataId();
-
-            if (!summary.dependencySummaries.containsKey(nextId)) {
-                final DependencySummary depSummary = new DependencySummary();
-                depSummary.name = next.name;
-                depSummary.version = next.version;
-                summary.dependencySummaries.put(nextId, depSummary);
+            final String nextId = nextDependency.externalId.createBdioId();
+            if (!graphSummary.dependencySummaries.containsKey(nextId)) {
+                final NameVersion nameVersion = new NameVersion();
+                nameVersion.setName(nextDependency.name);
+                nameVersion.setVersion(nextDependency.version);
+                graphSummary.dependencySummaries.put(nextId, nameVersion);
             }
 
-            for (final Dependency dep : graph.getChildrenForParent(next)) {
-                if (!summary.externalDataIdRelationships.containsKey(nextId)) {
-                    summary.externalDataIdRelationships.put(nextId, new HashSet<String>());
+            for (final Dependency dep : graph.getChildrenForParent(nextDependency)) {
+                if (!graphSummary.externalDataIdRelationships.containsKey(nextId)) {
+                    graphSummary.externalDataIdRelationships.put(nextId, new HashSet<String>());
                 }
-                summary.externalDataIdRelationships.get(nextId).add(dep.externalId.createDataId());
+                graphSummary.externalDataIdRelationships.get(nextId).add(dep.externalId.createBdioId());
                 if (!processed.contains(dep)) {
                     unprocessed.add(dep);
                 }
@@ -83,10 +83,10 @@ public class DependencyGraphSummarizer {
         }
 
         for (final ExternalId externalId : graph.getRootDependencyExternalIds()) {
-            summary.rootExternalDataIds.add(externalId.createDataId());
+            graphSummary.rootExternalDataIds.add(externalId.createBdioId());
         }
 
-        return summary;
+        return graphSummary;
     }
 
 }

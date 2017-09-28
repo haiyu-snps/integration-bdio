@@ -34,9 +34,9 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class MutableMapDependencyGraph implements MutableDependencyGraph { // extend Map
-    final Set<ExternalId> rootDependencies = new HashSet<>();
-    final Map<ExternalId, Dependency> dependencies = new HashMap<>();
-    final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
+    private final Set<ExternalId> rootDependencies = new HashSet<>();
+    private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
+    private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
 
     private void ensureDependencyExists(final Dependency dependency) {
         if (!dependencies.containsKey(dependency.externalId)) {

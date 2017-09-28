@@ -40,4 +40,5 @@ public interface DependencyGraphTransformer {
     public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph);
 
     public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents);
+
 }

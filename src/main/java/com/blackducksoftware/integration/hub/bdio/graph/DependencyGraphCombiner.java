@@ -46,7 +46,6 @@ public class DependencyGraphCombiner {
     }
 
     public void copyDependencyFromGraph(final MutableDependencyGraph destinationGraph, final Dependency parentDependency, final DependencyGraph sourceGraph, final Set<Dependency> encountered) {
-
         for (final Dependency dependency : sourceGraph.getChildrenForParent(parentDependency)) {
             if (!encountered.contains(dependency)) {
                 encountered.add(dependency);

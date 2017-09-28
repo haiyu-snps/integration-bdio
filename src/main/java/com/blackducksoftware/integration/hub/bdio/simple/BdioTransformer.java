@@ -30,12 +30,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.simple.model.BdioRelationship;
-import com.blackducksoftware.integration.hub.bdio.simple.model.DependencyNode;
-import com.blackducksoftware.integration.hub.bdio.simple.model.Forge;
-import com.blackducksoftware.integration.hub.bdio.simple.model.SimpleBdioDocument;
-import com.blackducksoftware.integration.hub.bdio.simple.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioRelationship;
+import com.blackducksoftware.integration.hub.bdio.model.Forge;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class BdioTransformer {
     private final Map<String, Forge> forgeMap;
@@ -44,32 +44,31 @@ public class BdioTransformer {
         this.forgeMap = forgeMap;
     }
 
-    public DependencyNode transformToDependencyNode(final SimpleBdioDocument document) {
-        // returns a dependency node that is the project
-
+    // returns a dependency node that is the project
+    public Dependency transformToDependencyNode(final SimpleBdioDocument document) {
         final List<BdioComponent> components = new ArrayList<>(document.components);
         components.add(document.project);
 
-        final Map<String, DependencyNode> map = componentsToNodes(components);
+        final Map<String, Dependency> map = componentsToNodes(components);
 
         return map.get(document.project.id);
 
     }
 
-    public Map<String, DependencyNode> componentsToNodes(final List<BdioComponent> components) {
-        final Map<String, DependencyNode> map = new HashMap<>();
+    public Map<String, Dependency> componentsToNodes(final List<BdioComponent> components) {
+        final Map<String, Dependency> map = new HashMap<>();
 
         for (final BdioComponent component : components) {
             final Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
             final ExternalId id = uncreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
-            final DependencyNode node = new DependencyNode(component.name, component.version, id);
-            map.put(component.id, node);
+            final Dependency dependency = new Dependency(component.name, component.version, id);
+            map.put(component.id, dependency);
         }
 
         for (final BdioComponent component : components) {
-            final DependencyNode node = map.get(component.id);
+            final Dependency dependency = map.get(component.id);
             for (final BdioRelationship relation : component.relationships) {
-                node.children.add(map.get(relation.related));
+                dependency.children.add(map.get(relation.related));
             }
         }
 
@@ -97,7 +96,6 @@ public class BdioTransformer {
             } else {
                 id.moduleNames = pieces;
             }
-
         } else {
             id.moduleNames = pieces;
         }

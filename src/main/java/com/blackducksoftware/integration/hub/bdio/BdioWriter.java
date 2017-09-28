@@ -39,7 +39,6 @@ import com.google.gson.stream.JsonWriter;
 
 public class BdioWriter implements Closeable {
     private final Gson gson;
-
     private final JsonWriter jsonWriter;
 
     public BdioWriter(final Gson gson, final Writer writer) throws IOException {

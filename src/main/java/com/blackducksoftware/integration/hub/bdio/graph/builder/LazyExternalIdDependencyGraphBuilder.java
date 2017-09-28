@@ -46,9 +46,9 @@ public class LazyExternalIdDependencyGraphBuilder {
         public String version;
     }
 
-    final Set<DependencyId> rootDependencyIds = new HashSet<>();
-    final Map<DependencyId, DependencyId> aliases = new HashMap<>();
-    final Map<DependencyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
+    private final Set<DependencyId> rootDependencyIds = new HashSet<>();
+    private final Map<DependencyId, DependencyId> aliases = new HashMap<>();
+    private final Map<DependencyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
 
     private LazyDependencyInfo infoForId(final DependencyId id) {
         LazyDependencyInfo info = dependencyInfo.get(id);
@@ -119,7 +119,6 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public void addParentWithChild(final DependencyId parent, final DependencyId child) {
-
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
         dependencyInfo.get(parent).children.add(child);
@@ -145,7 +144,6 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public void addChildWithParent(final DependencyId child, final DependencyId parent) {
-
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
         dependencyInfo.get(parent).children.add(child);

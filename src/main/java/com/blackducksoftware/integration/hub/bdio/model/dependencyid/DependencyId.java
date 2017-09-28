@@ -29,10 +29,6 @@ import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public abstract class DependencyId {
-
-    public DependencyId() {
-    }
-
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);

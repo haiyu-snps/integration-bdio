@@ -45,7 +45,6 @@ import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class IterativeDependencyGraphTransformer implements DependencyGraphTransformer {
     private final BdioNodeFactory bdioNodeFactory;
-
     private final BdioPropertyHelper bdioPropertyHelper;
 
     public IterativeDependencyGraphTransformer(final BdioNodeFactory bdioNodeFactory, final BdioPropertyHelper bdioPropertyHelper) {
@@ -65,7 +64,7 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
     public SimpleBdioDocument transformDependencyGraph(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
         final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
 
-        final String projectId = projectExternalId.createDataId();
+        final String projectId = projectExternalId.createBdioId();
         final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
         final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
 
@@ -105,7 +104,6 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
                     unprocessed.add(child);
                 }
             }
-
         }
 
         for (final Dependency rootChild : graph.getRootDependencies()) {
@@ -118,7 +116,7 @@ public class IterativeDependencyGraphTransformer implements DependencyGraphTrans
     private BdioComponent componentFromDependency(final Dependency dependency) {
         final String componentName = dependency.name;
         final String componentVersion = dependency.version;
-        final String componentId = dependency.externalId.createDataId();
+        final String componentId = dependency.externalId.createBdioId();
         final BdioExternalIdentifier componentExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(dependency.externalId);
 
         final BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);

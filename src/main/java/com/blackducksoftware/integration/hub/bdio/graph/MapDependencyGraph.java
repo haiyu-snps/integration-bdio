@@ -32,10 +32,9 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class MapDependencyGraph implements DependencyGraph {
-
-    Set<ExternalId> rootDependencies = new HashSet<>();
-    Map<ExternalId, Dependency> dependencies = new HashMap<>();
-    Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
+    private Set<ExternalId> rootDependencies = new HashSet<>();
+    private Map<ExternalId, Dependency> dependencies = new HashMap<>();
+    private Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
 
     public MapDependencyGraph(final Set<ExternalId> rootDependencies, final Map<ExternalId, Dependency> dependencies, final Map<ExternalId, Set<ExternalId>> relationships) {
         this.rootDependencies = rootDependencies;
