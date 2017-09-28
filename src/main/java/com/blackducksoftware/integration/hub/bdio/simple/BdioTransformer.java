@@ -47,40 +47,39 @@ public class BdioTransformer {
 
     public DependencyGraph transformToDependencyGraph(final BdioProject project, final List<BdioComponent> components) {
         final MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
-
-        final Map<String, Dependency> map = new HashMap<>();
+        final Map<String, Dependency> externalIdToDependencyMap = new HashMap<>();
 
         for (final BdioComponent component : components) {
             ExternalId externalId = component.bdioExternalIdentifier.externalIdMetaData;
             if (externalId == null) {
                 // if the integration has not set the metadata, try our best to guess it
                 final Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
-                externalId = uncreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
+                externalId = recreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
             }
             final Dependency dependency = new Dependency(component.name, component.version, externalId);
-            map.put(component.id, dependency);
+            externalIdToDependencyMap.put(component.id, dependency);
         }
 
         for (final BdioRelationship relation : project.relationships) {
-            dependencyGraph.addChildrenToRoot(map.get(relation.related));
+            dependencyGraph.addChildrenToRoot(externalIdToDependencyMap.get(relation.related));
         }
 
         for (final BdioComponent component : components) {
-            final Dependency dependency = map.get(component.id);
+            final Dependency dependency = externalIdToDependencyMap.get(component.id);
             for (final BdioRelationship relation : component.relationships) {
-                dependencyGraph.addParentWithChild(dependency, map.get(relation.related));
+                dependencyGraph.addParentWithChild(dependency, externalIdToDependencyMap.get(relation.related));
             }
         }
 
         return dependencyGraph;
     }
 
-    public ExternalId uncreateExternalId(final Forge forge, final String fullExternalId, final String name, final String revision) {
+    private ExternalId recreateExternalId(final Forge forge, final String fullExternalId, final String name, final String revision) {
         final String[] pieces = StringUtils.split(fullExternalId, forge.getSeparator());
         final ExternalId id = new ExternalId(forge);
 
         if (pieces.length == 1) {
-            // assume path? could be a 1 length module id?
+            // assume path but could be a 1 length moduleNames id...le sigh
             id.path = pieces[0];
         } else if (pieces.length == 2 || pieces.length == 3) {
             if (pieces[0].equals(name)) {

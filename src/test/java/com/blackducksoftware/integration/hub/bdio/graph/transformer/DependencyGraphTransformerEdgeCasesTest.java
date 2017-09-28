@@ -269,19 +269,14 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
-        final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
         final DependencyGraphTransformer recursiveTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
-        simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";
 
-        assertEquals(simpleBdioDocumentIterative.components.size(), 3);
         assertEquals(simpleBdioDocumentRecursive.components.size(), 3);
     }
 
     @Test
     public void testProjectAsChild() throws URISyntaxException, IOException, JSONException {
-
         final MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         final Dependency one = node("one", "one", "one");
@@ -297,13 +292,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
-        final DependencyGraphTransformer iterativeTransformer = new IterativeDependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
         final DependencyGraphTransformer recursiveTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocumentIterative = iterativeTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
         final SimpleBdioDocument simpleBdioDocumentRecursive = recursiveTransformer.transformDependencyGraph(project.name, project.version, project.externalId, graph);
-        simpleBdioDocumentIterative.billOfMaterials.id = "uuid:123";
 
-        assertEquals(simpleBdioDocumentIterative.components.size(), 2);
         assertEquals(simpleBdioDocumentRecursive.components.size(), 2);
     }
 
