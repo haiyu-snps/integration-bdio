@@ -23,12 +23,13 @@
  */
 package com.blackducksoftware.integration.hub.bdio.graph.summary;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
@@ -56,21 +57,21 @@ public class DependencyGraphSummarizerTest {
     Dependency grandchild4 = DependencyTestUtil.newMavenDependency("grandchild4", "1.0", "grandchildren");
 
     @Test
-    public void testGraphSummarized() throws IOException {
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
-        graph.addParentWithChild(parent1, child1);
-        graph.addParentWithChildren(child1, DependencyTestUtil.asSet(grandchild1, grandchild2));
-        graph.addParentWithChildren(parent2, DependencyTestUtil.asList(child2, child3));
-        graph.addChildrenToRoot(parent1, parent2);
-
+    public void testGraphSummarized() throws IOException, JSONException {
         final DependencyGraphSummarizer summarizer = new DependencyGraphSummarizer(gson);
 
-        final String json = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("summary.json"));
+        final MutableDependencyGraph actualGraph = new MutableMapDependencyGraph();
+        actualGraph.addParentWithChild(parent1, child1);
+        actualGraph.addParentWithChildren(child1, DependencyTestUtil.asSet(grandchild1, grandchild2));
+        actualGraph.addParentWithChildren(parent2, DependencyTestUtil.asList(child2, child3));
+        actualGraph.addChildrenToRoot(parent1, parent2);
+        final String actualGraphSummaryJson = summarizer.toJson(actualGraph);
 
-        final GraphSummary summaryJson = summarizer.fromJson(json);
+        final String expectedJson = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("summary.json"), StandardCharsets.UTF_8);
+        final GraphSummary expectedGraphSummary = summarizer.fromJson(expectedJson);
+        final String expectedGraphSummaryJson = summarizer.toJson(expectedGraphSummary);
 
-        assertEquals(summarizer.toJson(graph), summarizer.toJson(summaryJson));
-
+        JSONAssert.assertEquals(expectedGraphSummaryJson, actualGraphSummaryJson, false);
     }
 
 }

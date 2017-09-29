@@ -44,6 +44,9 @@ public class BdioPropertyHelper {
         node.relationships.add(relationship);
     }
 
+    /**
+     * @deprecated Please use createExternalIdentifier(ExternalId externalId) instead.
+     */
     @Deprecated
     public BdioExternalIdentifier createExternalIdentifier(final String forge, final String externalId) {
         final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
