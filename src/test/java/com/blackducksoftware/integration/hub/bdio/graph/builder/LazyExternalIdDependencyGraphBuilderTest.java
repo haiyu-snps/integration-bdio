@@ -86,7 +86,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
 
         builder.addChildToRoot(aliasId);
         builder.setDependencyInfo(stringId, "test1", "test2", stringDep.externalId);
-        builder.setDependencyAsAlias(aliasId, stringId);
+        builder.setDependencyAsAlias(stringId, aliasId);
 
         final DependencyGraph graph = builder.build();
 

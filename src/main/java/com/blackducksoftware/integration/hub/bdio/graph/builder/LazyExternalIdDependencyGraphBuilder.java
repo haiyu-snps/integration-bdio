@@ -93,8 +93,8 @@ public class LazyExternalIdDependencyGraphBuilder {
     public void setDependencyAsAlias(final DependencyId realDependencyId, final DependencyId fakeDependencyId) {
         ensureDependencyInfoExists(realDependencyId);
         ensureDependencyInfoExists(fakeDependencyId);
-        final LazyDependencyInfo info = dependencyInfo.get(realDependencyId);
-        info.aliasId = fakeDependencyId;
+        final LazyDependencyInfo info = dependencyInfo.get(fakeDependencyId);
+        info.aliasId = realDependencyId;
     }
 
     public void setDependencyInfo(final DependencyId id, final String name, final String version, final ExternalId externalId) {
