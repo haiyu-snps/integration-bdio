@@ -85,8 +85,8 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(aliasId);
-        builder.setDependencyInfo(aliasId, "test1", "test2", stringDep.externalId);
-        builder.setDependencyAsAlias(stringId, aliasId);
+        builder.setDependencyInfo(stringId, "test1", "test2", stringDep.externalId);
+        builder.setDependencyAsAlias(aliasId, stringId);
 
         final DependencyGraph graph = builder.build();
 
@@ -97,6 +97,17 @@ public class LazyExternalIdDependencyGraphBuilderTest {
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
 
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testNoExternalId() {
+        final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
+
+        builder.addChildToRoot(aliasId);
+        builder.setDependencyName(stringId, "test1");
+        builder.setDependencyAsAlias(aliasId, stringId);
+
+        builder.build();
     }
 
     @Test
