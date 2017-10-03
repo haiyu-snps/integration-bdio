@@ -47,7 +47,6 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     private final Set<DependencyId> rootDependencyIds = new HashSet<>();
-    private final Map<DependencyId, DependencyId> aliases = new HashMap<>();
     private final Map<DependencyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
 
     private LazyDependencyInfo infoForId(final DependencyId id) {
@@ -63,10 +62,16 @@ public class LazyExternalIdDependencyGraphBuilder {
 
         for (final DependencyId id : dependencyInfo.keySet()) {
             final LazyDependencyInfo info = infoForId(id);
+            if (info.externalId == null) {
+                throw new IllegalStateException("A dependency in a relationship in the graph never had it's external id set.");
+            }
             final Dependency dep = new Dependency(info.name, info.version, info.externalId);
 
             for (final DependencyId child : info.children) {
                 final LazyDependencyInfo childInfo = infoForId(child);
+                if (childInfo.externalId == null) {
+                    throw new IllegalStateException("A dependency in a relationship in the graph never had it's external id set.");
+                }
 
                 graph.addParentWithChild(dep, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
             }
@@ -88,8 +93,8 @@ public class LazyExternalIdDependencyGraphBuilder {
     public void setDependencyAsAlias(final DependencyId realDependencyId, final DependencyId fakeDependencyId) {
         ensureDependencyInfoExists(realDependencyId);
         ensureDependencyInfoExists(fakeDependencyId);
-        final LazyDependencyInfo info = dependencyInfo.get(realDependencyId);
-        info.aliasId = fakeDependencyId;
+        final LazyDependencyInfo info = dependencyInfo.get(fakeDependencyId);
+        info.aliasId = realDependencyId;
     }
 
     public void setDependencyInfo(final DependencyId id, final String name, final String version, final ExternalId externalId) {
