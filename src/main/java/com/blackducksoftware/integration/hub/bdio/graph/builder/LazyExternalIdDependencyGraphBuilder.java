@@ -58,30 +58,30 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public DependencyGraph build() {
-        final MutableDependencyGraph graph = new MutableMapDependencyGraph();
+        final MutableDependencyGraph mutableDependencyGraph = new MutableMapDependencyGraph();
 
-        for (final DependencyId id : dependencyInfo.keySet()) {
-            final LazyDependencyInfo info = infoForId(id);
-            if (info.externalId == null) {
+        for (final DependencyId dependencyId : dependencyInfo.keySet()) {
+            final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
+            if (lazyDependencyInfo.externalId == null) {
                 throw new IllegalStateException("A dependency in a relationship in the graph never had it's external id set.");
             }
-            final Dependency dep = new Dependency(info.name, info.version, info.externalId);
+            final Dependency dependency = new Dependency(lazyDependencyInfo.name, lazyDependencyInfo.version, lazyDependencyInfo.externalId);
 
-            for (final DependencyId child : info.children) {
+            for (final DependencyId child : lazyDependencyInfo.children) {
                 final LazyDependencyInfo childInfo = infoForId(child);
                 if (childInfo.externalId == null) {
-                    throw new IllegalStateException("A dependency in a relationship in the graph never had it's external id set.");
+                    throw new IllegalStateException("A child dependency in a relationship in the graph never had it's external id set.");
                 }
 
-                graph.addParentWithChild(dep, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
+                mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
             }
 
-            if (rootDependencyIds.contains(id) || rootDependencyIds.contains(info.aliasId)) {
-                graph.addChildToRoot(dep);
+            if (rootDependencyIds.contains(dependencyId) || rootDependencyIds.contains(lazyDependencyInfo.aliasId)) {
+                mutableDependencyGraph.addChildToRoot(dependency);
             }
         }
 
-        return graph;
+        return mutableDependencyGraph;
     }
 
     private void ensureDependencyInfoExists(final DependencyId dependencyId) {

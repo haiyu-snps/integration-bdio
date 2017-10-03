@@ -92,8 +92,8 @@ public class ExternalIdTest {
 
     @Test
     public void testBoilerplateCode() {
-        final ExternalId externalIdA = externalIdFactory.createMavenExternalId(null, null, null);
-        final ExternalId externalIdB = externalIdFactory.createMavenExternalId(null, null, null);
+        final ExternalId externalIdA = externalIdFactory.createMavenExternalId("group", "artifact", "version");
+        final ExternalId externalIdB = externalIdFactory.createMavenExternalId("group", "artifact", "version");
         assertEquals(externalIdA, externalIdB);
         assertEquals(externalIdA.hashCode(), externalIdB.hashCode());
         assertEquals(externalIdA.toString(), externalIdB.toString());

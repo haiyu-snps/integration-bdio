@@ -27,16 +27,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
-import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
 import com.blackducksoftware.integration.hub.bdio.BdioWriter;
-import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
+import com.blackducksoftware.integration.hub.bdio.SimpleBdioFactory;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
@@ -48,13 +44,10 @@ import com.google.gson.Gson;
 
 public class DependencyGraphTransformerTest {
     private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
-
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
     public void testTransformingDocument() throws URISyntaxException, IOException, JSONException {
-
-        final Set<Dependency> projectDependencies = new HashSet<>();
         final ExternalId projectExternalId = externalIdFactory.createMavenExternalId("projectGroup", "projectName", "projectVersion");
         final MutableDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
 
@@ -66,10 +59,8 @@ public class DependencyGraphTransformerTest {
         final Dependency transitive = new Dependency("transitiveArtifact", "2.1.0", transitiveExternalId);
         dependencyGraph.addParentWithChild(child, transitive);
 
-        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
-        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyNodeTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocument = dependencyNodeTransformer.transformDependencyGraph(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
+        final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
+        final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.billOfMaterials.id = "uuid:123";

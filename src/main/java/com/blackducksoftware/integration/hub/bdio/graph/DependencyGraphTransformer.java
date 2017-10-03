@@ -37,12 +37,12 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class DependencyGraphTransformer {
-    private final BdioNodeFactory bdioNodeFactory;
     private final BdioPropertyHelper bdioPropertyHelper;
+    private final BdioNodeFactory bdioNodeFactory;
 
-    public DependencyGraphTransformer(final BdioNodeFactory bdioNodeFactory, final BdioPropertyHelper bdioPropertyHelper) {
-        this.bdioNodeFactory = bdioNodeFactory;
+    public DependencyGraphTransformer(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory) {
         this.bdioPropertyHelper = bdioPropertyHelper;
+        this.bdioNodeFactory = bdioNodeFactory;
     }
 
     public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents) {

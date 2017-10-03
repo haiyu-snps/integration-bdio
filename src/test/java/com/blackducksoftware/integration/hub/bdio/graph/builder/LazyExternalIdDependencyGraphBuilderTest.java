@@ -25,7 +25,9 @@ package com.blackducksoftware.integration.hub.bdio.graph.builder;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
@@ -38,6 +40,9 @@ import com.blackducksoftware.integration.hub.bdio.utility.DependencyIdTestUtil;
 import com.blackducksoftware.integration.hub.bdio.utility.DependencyTestUtil;
 
 public class LazyExternalIdDependencyGraphBuilderTest {
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     DependencyId stringId = new StringDependencyId("id1");
     Dependency stringDep = DependencyTestUtil.newMavenDependency("test1", "test2", "org");
     DependencyId aliasId = new StringDependencyId("alias1");
@@ -99,13 +104,33 @@ public class LazyExternalIdDependencyGraphBuilderTest {
 
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testNoExternalId() {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(aliasId);
         builder.setDependencyName(stringId, "test1");
         builder.setDependencyAsAlias(aliasId, stringId);
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("A dependency in a relationship in the graph never had it's external id set.");
+
+        builder.build();
+    }
+
+    @Test
+    public void testNoExternalIdForChild() {
+        final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
+
+        builder.addChildToRoot(parentId1);
+        builder.addChildWithParent(childId1, parentId1);
+        builder.addChildWithParent(childId2, parentId1);
+
+        builder.setDependencyInfo(parentId1, parent1.name, parent1.version, parent1.externalId);
+        builder.setDependencyInfo(childId1, child1.name, child1.version, child1.externalId);
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("A child dependency in a relationship in the graph never had it's external id set.");
 
         builder.build();
     }
@@ -127,7 +152,6 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         assertEquals("test2", dep.version);
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
-
     }
 
     @Test
