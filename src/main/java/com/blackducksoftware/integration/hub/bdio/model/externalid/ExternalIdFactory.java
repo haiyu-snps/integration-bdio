@@ -30,31 +30,43 @@ public class ExternalIdFactory {
         final ExternalId externalId = new ExternalId(forge);
         externalId.name = name;
         externalId.version = version;
+        checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createMavenExternalId(final String group, final String name, final String version) {
         final ExternalId externalId = createNameVersionExternalId(Forge.MAVEN, name, version);
         externalId.group = group;
+        checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createArchitectureExternalId(final Forge forge, final String name, final String version, final String architecture) {
         final ExternalId externalId = createNameVersionExternalId(forge, name, version);
         externalId.architecture = architecture;
+        checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createModuleNamesExternalId(final Forge forge, final String... moduleNames) {
         final ExternalId externalId = new ExternalId(forge);
         externalId.moduleNames = moduleNames;
+        checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createPathExternalId(final Forge forge, final String path) {
         final ExternalId externalId = new ExternalId(forge);
         externalId.path = path;
+        checkForValidity(externalId);
         return externalId;
+    }
+
+    /**
+     * An ExternalId should be able to create a bdioId - if it can not, an appropriate IllegalStateException will be thrown.
+     */
+    private void checkForValidity(final ExternalId externalId) {
+        externalId.createBdioId();
     }
 
 }

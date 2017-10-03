@@ -24,19 +24,15 @@
 package com.blackducksoftware.integration.hub.bdio.graph;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
 import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
-import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.model.BdioNode;
-import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
@@ -47,30 +43,6 @@ public class DependencyGraphTransformer {
     public DependencyGraphTransformer(final BdioNodeFactory bdioNodeFactory, final BdioPropertyHelper bdioPropertyHelper) {
         this.bdioNodeFactory = bdioNodeFactory;
         this.bdioPropertyHelper = bdioPropertyHelper;
-    }
-
-    public SimpleBdioDocument transformDependencyGraph(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
-        return transformDependencyGraph(null, projectName, projectVersionName, projectExternalId, graph);
-    }
-
-    public SimpleBdioDocument transformDependencyGraph(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph graph) {
-        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
-
-        final String projectId = projectExternalId.createBdioId();
-        final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
-        final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
-
-        final SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
-        simpleBdioDocument.billOfMaterials = billOfMaterials;
-        simpleBdioDocument.project = project;
-
-        final Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
-        existingComponents.put(projectExternalId, project);
-
-        final List<BdioComponent> bdioComponents = transformDependencyGraph(graph, project, graph.getRootDependencies(), existingComponents);
-        simpleBdioDocument.components = bdioComponents;
-
-        return simpleBdioDocument;
     }
 
     public List<BdioComponent> transformDependencyGraph(final DependencyGraph graph, final BdioNode currentNode, final Set<Dependency> dependencies, final Map<ExternalId, BdioNode> existingComponents) {
