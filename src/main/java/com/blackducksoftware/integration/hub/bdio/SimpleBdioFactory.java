@@ -15,19 +15,19 @@ import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class SimpleBdioFactory {
-    private final BdioNodeFactory bdioNodeFactory;
     private final BdioPropertyHelper bdioPropertyHelper;
+    private final BdioNodeFactory bdioNodeFactory;
     private final DependencyGraphTransformer dependencyGraphTransformer;
 
     public SimpleBdioFactory() {
         this.bdioPropertyHelper = new BdioPropertyHelper();
         this.bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        this.dependencyGraphTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
+        this.dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
     }
 
-    public SimpleBdioFactory(final BdioNodeFactory bdioNodeFactory, final BdioPropertyHelper bdioPropertyHelper, final DependencyGraphTransformer dependencyGraphTransformer) {
-        this.bdioNodeFactory = bdioNodeFactory;
+    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer) {
         this.bdioPropertyHelper = bdioPropertyHelper;
+        this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
     }
 
@@ -71,6 +71,18 @@ public class SimpleBdioFactory {
         populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
 
         return simpleBdioDocument;
+    }
+
+    public BdioPropertyHelper getBdioPropertyHelper() {
+        return bdioPropertyHelper;
+    }
+
+    public BdioNodeFactory getBdioNodeFactory() {
+        return bdioNodeFactory;
+    }
+
+    public DependencyGraphTransformer getDependencyGraphTransformer() {
+        return dependencyGraphTransformer;
     }
 
 }

@@ -37,12 +37,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.blackducksoftware.integration.hub.bdio.BdioNodeFactory;
-import com.blackducksoftware.integration.hub.bdio.BdioPropertyHelper;
 import com.blackducksoftware.integration.hub.bdio.BdioReader;
 import com.blackducksoftware.integration.hub.bdio.BdioTransformer;
+import com.blackducksoftware.integration.hub.bdio.SimpleBdioFactory;
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
-import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioRelationship;
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
@@ -86,10 +84,8 @@ public class BdioTransformerTest {
         projectId.name = "gradleTestProject";
         projectId.version = "99.5-SNAPSHOT";
 
-        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
-        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        final DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioNodeFactory, bdioPropertyHelper);
-        final SimpleBdioDocument simpleBdioDocument = dependencyGraphTransformer.transformDependencyGraph(doc.project.name, doc.project.version, projectId, graph);
+        final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
+        final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
 
         simpleBdioDocument.project.bdioExternalIdentifier.externalIdMetaData = null;
         simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
