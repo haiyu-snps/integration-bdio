@@ -41,6 +41,10 @@ import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 public class BdioTransformer {
     private final Map<String, Forge> forgeMap;
 
+    public BdioTransformer() {
+        this.forgeMap = Forge.FORGE_NAME_TO_FORGE;
+    }
+
     public BdioTransformer(final Map<String, Forge> forgeMap) {
         this.forgeMap = forgeMap;
     }

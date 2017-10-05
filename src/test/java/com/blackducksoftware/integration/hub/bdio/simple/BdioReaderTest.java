@@ -33,14 +33,19 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.BdioReader;
+import com.blackducksoftware.integration.hub.bdio.BdioTransformer;
+import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
+import com.blackducksoftware.integration.hub.bdio.graph.summary.DependencyGraphSummarizer;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class BdioReaderTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
@@ -102,7 +107,25 @@ public class BdioReaderTest {
         assertEquals("DYNAMIC_LINK", first.relationships.get(0).relationshipType);
         assertEquals("http:maven/commons_lang/commons_lang/2_6", first.relationships.get(1).related);
         assertEquals("DYNAMIC_LINK", first.relationships.get(1).relationshipType);
-
     }
 
+    @Test
+    public void testDockerInspectorOutput() throws IOException {
+        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        SimpleBdioDocument simpleBdioDocument = null;
+        BdioReader bdioReader = null;
+        try {
+            final InputStream dockerOutputInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("ubuntu_var_lib_dpkg_ubuntu_latest_bdio.jsonld");
+            bdioReader = new BdioReader(gson, dockerOutputInputStream);
+            simpleBdioDocument = bdioReader.readSimpleBdioDocument();
+        } finally {
+            IOUtils.closeQuietly(bdioReader);
+        }
+
+        final BdioTransformer bdioTransformer = new BdioTransformer();
+        final DependencyGraph dependencyGraph = bdioTransformer.transformToDependencyGraph(simpleBdioDocument.project, simpleBdioDocument.components);
+
+        final DependencyGraphSummarizer dependencyGraphSummarizer = new DependencyGraphSummarizer(gson);
+        System.out.println(dependencyGraphSummarizer.toJson(dependencyGraph));
+    }
 }

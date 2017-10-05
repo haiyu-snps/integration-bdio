@@ -34,7 +34,6 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class DependencyGraphTestUtil {
-
     public static void assertGraphRootChildren(final DependencyGraph graph, final Dependency... dependencies) {
         assertDependencySet(graph.getRootDependencies(), dependencies);
     }
@@ -86,7 +85,6 @@ public class DependencyGraphTestUtil {
     }
 
     public static void assertDependencySet(final Set<Dependency> actualDependencies, final Set<Dependency> expectedDependencies) {
-
         assertEquals("Expected graph children size to equal given children size.", actualDependencies.size(), expectedDependencies.size());
 
         final Set<Dependency> missingExpected = new HashSet<>(expectedDependencies);
@@ -99,7 +97,6 @@ public class DependencyGraphTestUtil {
     }
 
     public static void assertExternalIdSet(final Set<ExternalId> actualDependencies, final Set<ExternalId> expectedDependencies) {
-
         assertEquals("Expected graph children size to equal given children size.", actualDependencies.size(), expectedDependencies.size());
 
         final Set<ExternalId> missingExpected = new HashSet<>(expectedDependencies);

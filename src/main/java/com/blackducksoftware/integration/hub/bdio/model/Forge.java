@@ -23,10 +23,15 @@
  */
 package com.blackducksoftware.integration.hub.bdio.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Forge {
+    public static final Map<String, Forge> FORGE_NAME_TO_FORGE = new HashMap<>();
+
     public static final Forge ALPINE = new Forge("alpine", "/");
     public static final Forge ANACONDA = new Forge("anaconda", "=");
     public static final Forge BOWER = new Forge("bower", "#");
@@ -56,6 +61,7 @@ public class Forge {
     public Forge(final String name, final String separator) {
         this.name = name;
         this.separator = separator;
+        FORGE_NAME_TO_FORGE.put(name, this);
     }
 
     @Override

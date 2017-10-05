@@ -37,32 +37,21 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     private final Set<ExternalId> rootDependencies = new HashSet<>();
     private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
+    private final DependencyGraphCombiner dependencyGraphCombiner = new DependencyGraphCombiner();
 
-    private void ensureDependencyExists(final Dependency dependency) {
-        if (!dependencies.containsKey(dependency.externalId)) {
-            dependencies.put(dependency.externalId, dependency);
-        }
+    @Override
+    public void addGraphAsChildrenToRoot(final DependencyGraph sourceGraph) {
+        dependencyGraphCombiner.addGraphAsChildrenToRoot(this, sourceGraph);
     }
 
-    private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
-        ensureDependencyExists(dependency);
-        if (!relationships.containsKey(dependency.externalId)) {
-            relationships.put(dependency.externalId, new HashSet<ExternalId>());
-        }
+    @Override
+    public void addGraphAsChildrenToParent(final Dependency parent, final DependencyGraph sourceGraph) {
+        dependencyGraphCombiner.addGraphAsChildrenToParent(this, parent, sourceGraph);
     }
 
-    private void addRelationship(final Dependency parent, final Dependency child) {
-        relationships.get(parent.externalId).add(child.externalId);
-    }
-
-    private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
-        final Set<Dependency> foundDependencies = new HashSet<>();
-        for (final ExternalId id : ids) {
-            if (dependencies.containsKey(id)) {
-                foundDependencies.add(dependencies.get(id));
-            }
-        }
-        return foundDependencies;
+    @Override
+    public void copyDependencyFromGraph(final Dependency parentDependency, final DependencyGraph sourceGraph, final Set<Dependency> encountered) {
+        dependencyGraphCombiner.copyDependencyFromGraph(this, parentDependency, sourceGraph, encountered);
     }
 
     @Override
@@ -235,6 +224,33 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
         for (final Dependency child : children) {
             addChildToRoot(child);
         }
+    }
+
+    private void ensureDependencyExists(final Dependency dependency) {
+        if (!dependencies.containsKey(dependency.externalId)) {
+            dependencies.put(dependency.externalId, dependency);
+        }
+    }
+
+    private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
+        ensureDependencyExists(dependency);
+        if (!relationships.containsKey(dependency.externalId)) {
+            relationships.put(dependency.externalId, new HashSet<ExternalId>());
+        }
+    }
+
+    private void addRelationship(final Dependency parent, final Dependency child) {
+        relationships.get(parent.externalId).add(child.externalId);
+    }
+
+    private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
+        final Set<Dependency> foundDependencies = new HashSet<>();
+        for (final ExternalId id : ids) {
+            if (dependencies.containsKey(id)) {
+                foundDependencies.add(dependencies.get(id));
+            }
+        }
+        return foundDependencies;
     }
 
 }

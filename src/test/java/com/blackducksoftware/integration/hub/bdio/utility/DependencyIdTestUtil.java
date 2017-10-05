@@ -31,7 +31,6 @@ import java.util.Set;
 import com.blackducksoftware.integration.hub.bdio.model.dependencyid.DependencyId;
 
 public class DependencyIdTestUtil {
-
     public static Set<DependencyId> asSet(final DependencyId... dependencies) {
         final Set<DependencyId> set = new HashSet<>();
         for (final DependencyId dependency : dependencies) {
