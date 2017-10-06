@@ -29,13 +29,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.blackducksoftware.integration.hub.bdio.SimpleBdioFactory;
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
 
 public class ExternalIdTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+    private final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
     @Test
     public void testForgeEquality() {
@@ -44,30 +45,30 @@ public class ExternalIdTest {
 
     @Test
     public void testCreatingExternalIds() {
-        final ExternalId architectureExternalId = externalIdFactory.createArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
+        final ExternalId architectureExternalId = simpleBdioFactory.createArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
         assertEquals("http:centos/name/version/architecture", architectureExternalId.createBdioId());
         assertEquals("name/version/architecture", architectureExternalId.createExternalId());
 
-        final ExternalId mavenExternalId = externalIdFactory.createMavenExternalId("group", "artifact", "version");
+        final ExternalId mavenExternalId = simpleBdioFactory.createMavenExternalId("group", "artifact", "version");
         assertEquals("http:maven/group/artifact/version", mavenExternalId.createBdioId());
         assertEquals("group:artifact:version", mavenExternalId.createExternalId());
 
-        final ExternalId moduleNamesExternalId = externalIdFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
+        final ExternalId moduleNamesExternalId = simpleBdioFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
         assertEquals("http:cpan/name/version/something/else", moduleNamesExternalId.createBdioId());
         assertEquals("name-version-something-else", moduleNamesExternalId.createExternalId());
 
-        final ExternalId nameVersionExternalId = externalIdFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
+        final ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
         assertEquals("http:pypi/name/version", nameVersionExternalId.createBdioId());
         assertEquals("name/version", nameVersionExternalId.createExternalId());
 
-        final ExternalId pathExternalId = externalIdFactory.createPathExternalId(Forge.GOGET, "name");
+        final ExternalId pathExternalId = simpleBdioFactory.createPathExternalId(Forge.GOGET, "name");
         assertEquals("http:goget/name", pathExternalId.createBdioId());
         assertEquals("name", pathExternalId.createExternalId());
     }
 
     @Test
     public void testEscapingBadUriCharacters() {
-        final ExternalId nameVersionExternalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
+        final ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
         assertEquals("http:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createBdioId());
         assertEquals("name with spaces@version with a - and a # and spaces", nameVersionExternalId.createExternalId());
     }
@@ -92,8 +93,8 @@ public class ExternalIdTest {
 
     @Test
     public void testBoilerplateCode() {
-        final ExternalId externalIdA = externalIdFactory.createMavenExternalId("group", "artifact", "version");
-        final ExternalId externalIdB = externalIdFactory.createMavenExternalId("group", "artifact", "version");
+        final ExternalId externalIdA = simpleBdioFactory.createMavenExternalId("group", "artifact", "version");
+        final ExternalId externalIdB = simpleBdioFactory.createMavenExternalId("group", "artifact", "version");
         assertEquals(externalIdA, externalIdB);
         assertEquals(externalIdA.hashCode(), externalIdB.hashCode());
         assertEquals(externalIdA.toString(), externalIdB.toString());

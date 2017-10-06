@@ -32,7 +32,6 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyTestUtil {
-
     public static ExternalIdFactory factory = new ExternalIdFactory();
 
     public static Dependency newMavenDependency(final String name, final String version, final String org) {

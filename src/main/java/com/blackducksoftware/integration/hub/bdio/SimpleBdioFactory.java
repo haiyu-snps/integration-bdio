@@ -23,35 +23,83 @@
  */
 package com.blackducksoftware.integration.hub.bdio;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
+import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
+import com.blackducksoftware.integration.hub.bdio.graph.MutableMapDependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.model.BdioNode;
 import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.model.Forge;
 import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
+import com.google.gson.Gson;
 
 public class SimpleBdioFactory {
     private final BdioPropertyHelper bdioPropertyHelper;
     private final BdioNodeFactory bdioNodeFactory;
     private final DependencyGraphTransformer dependencyGraphTransformer;
+    private final ExternalIdFactory externalIdFactory;
 
     public SimpleBdioFactory() {
         this.bdioPropertyHelper = new BdioPropertyHelper();
         this.bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         this.dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
+        this.externalIdFactory = new ExternalIdFactory();
     }
 
-    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer) {
+    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer, final ExternalIdFactory externalIdFactory) {
         this.bdioPropertyHelper = bdioPropertyHelper;
         this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
+        this.externalIdFactory = externalIdFactory;
+    }
+
+    public MutableDependencyGraph createMutableDependencyGraph() {
+        return new MutableMapDependencyGraph();
+    }
+
+    public Dependency createDependency(final String name, final String version, final ExternalId externalId) {
+        return new Dependency(name, version, externalId);
+    }
+
+    public BdioWriter createBdioWriter(final Gson gson, final Writer writer) throws IOException {
+        return new BdioWriter(gson, writer);
+    }
+
+    public BdioWriter createBdioWriter(final Gson gson, final OutputStream outputStream) throws IOException {
+        return new BdioWriter(gson, outputStream);
+    }
+
+    public void writeSimpleBdioDocument(final BdioWriter bdioWriter, final SimpleBdioDocument simpleBdioDocument) {
+        bdioWriter.writeSimpleBdioDocument(simpleBdioDocument);
+    }
+
+    public void writeSimpleBdioDocumentToFile(final File bdioFile, final Gson gson, final SimpleBdioDocument simpleBdioDocument) throws IOException {
+        // while try-with-resources works much better here, it is too much extra test code to cover 100%
+        // https://stackoverflow.com/questions/26360245/try-with-resource-unit-test-coverage
+        BdioWriter bdioWriter = null;
+        try {
+            bdioWriter = createBdioWriter(gson, new FileOutputStream(bdioFile));
+            writeSimpleBdioDocument(bdioWriter, simpleBdioDocument);
+        } finally {
+            IOUtils.closeQuietly(bdioWriter);
+        }
     }
 
     public SimpleBdioDocument createSimpleBdioDocument(final String codeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId) {
@@ -96,6 +144,26 @@ public class SimpleBdioFactory {
         return simpleBdioDocument;
     }
 
+    public ExternalId createNameVersionExternalId(final Forge forge, final String name, final String version) {
+        return externalIdFactory.createNameVersionExternalId(forge, name, version);
+    }
+
+    public ExternalId createMavenExternalId(final String group, final String name, final String version) {
+        return externalIdFactory.createMavenExternalId(group, name, version);
+    }
+
+    public ExternalId createArchitectureExternalId(final Forge forge, final String name, final String version, final String architecture) {
+        return externalIdFactory.createArchitectureExternalId(forge, name, version, architecture);
+    }
+
+    public ExternalId createModuleNamesExternalId(final Forge forge, final String... moduleNames) {
+        return externalIdFactory.createModuleNamesExternalId(forge, moduleNames);
+    }
+
+    public ExternalId createPathExternalId(final Forge forge, final String path) {
+        return externalIdFactory.createPathExternalId(forge, path);
+    }
+
     public BdioPropertyHelper getBdioPropertyHelper() {
         return bdioPropertyHelper;
     }
@@ -108,4 +176,7 @@ public class SimpleBdioFactory {
         return dependencyGraphTransformer;
     }
 
+    public ExternalIdFactory getExternalIdFactory() {
+        return externalIdFactory;
+    }
 }
