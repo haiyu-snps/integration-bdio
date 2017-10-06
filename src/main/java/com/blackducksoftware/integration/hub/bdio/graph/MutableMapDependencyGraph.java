@@ -50,11 +50,6 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public void copyDependencyFromGraph(final Dependency parentDependency, final DependencyGraph sourceGraph, final Set<Dependency> encountered) {
-        dependencyGraphCombiner.copyDependencyFromGraph(this, parentDependency, sourceGraph, encountered);
-    }
-
-    @Override
     public boolean hasDependency(final ExternalId dependency) {
         return dependencies.containsKey(dependency);
     }

@@ -33,8 +33,6 @@ public interface MutableDependencyGraph extends DependencyGraph {
 
     public void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph);
 
-    public void copyDependencyFromGraph(Dependency parentDependency, DependencyGraph sourceGraph, Set<Dependency> encountered);
-
     public void addParentWithChild(final Dependency parent, final Dependency child);
 
     public void addParentWithChildren(final Dependency parent, final List<Dependency> children);
