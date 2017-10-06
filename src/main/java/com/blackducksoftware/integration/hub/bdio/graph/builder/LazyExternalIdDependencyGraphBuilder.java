@@ -63,16 +63,16 @@ public class LazyExternalIdDependencyGraphBuilder {
         for (final DependencyId dependencyId : dependencyInfo.keySet()) {
             final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
             if (lazyDependencyInfo.externalId == null) {
-                throw new IllegalStateException("A dependency in a relationship in the graph never had it's external id set.");
+                throw new IllegalStateException(String.format("A dependency (%s) in a relationship in the graph never had it's external id set.", dependencyId.toString()));
             }
+        }
+
+        for (final DependencyId dependencyId : dependencyInfo.keySet()) {
+            final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
             final Dependency dependency = new Dependency(lazyDependencyInfo.name, lazyDependencyInfo.version, lazyDependencyInfo.externalId);
 
             for (final DependencyId child : lazyDependencyInfo.children) {
                 final LazyDependencyInfo childInfo = infoForId(child);
-                if (childInfo.externalId == null) {
-                    throw new IllegalStateException("A child dependency in a relationship in the graph never had it's external id set.");
-                }
-
                 mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
             }
 
