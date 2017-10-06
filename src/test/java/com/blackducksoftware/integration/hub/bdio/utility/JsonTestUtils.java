@@ -39,10 +39,14 @@ import org.skyscreamer.jsonassert.JSONParser;
 
 public class JsonTestUtils {
     public void verifyJsonArraysEqual(final String expectedJson, final String actualJson) throws JSONException {
+        verifyJsonArraysEqual(expectedJson, actualJson, true);
+    }
+
+    public void verifyJsonArraysEqual(final String expectedJson, final String actualJson, final boolean strict) throws JSONException {
         final JSONArray expected = (JSONArray) JSONParser.parseJSON(expectedJson);
         final JSONArray actual = (JSONArray) JSONParser.parseJSON(actualJson);
         assertEquals(expected.length(), actual.length());
-        JSONAssert.assertEquals(expected, actual, true);
+        JSONAssert.assertEquals(expected, actual, strict);
     }
 
     public String getExpectedJson(final String filename) throws URISyntaxException, IOException {

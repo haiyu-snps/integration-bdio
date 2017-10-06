@@ -165,7 +165,7 @@ public class SimpleBdioFactoryTest {
         final String expectedJson = jsonTestUtils.getExpectedJson("simple-bdio-factory-integration-test-output.jsonld");
         final String actualJson = IOUtils.toString(new FileInputStream(bdioFile), StandardCharsets.UTF_8);
 
-        jsonTestUtils.verifyJsonArraysEqual(expectedJson, actualJson);
+        jsonTestUtils.verifyJsonArraysEqual(expectedJson, actualJson, false);
     }
 
     private SimpleBdioDocument createSimpleBdioDocument(final SimpleBdioFactory simpleBdioFactory) {
