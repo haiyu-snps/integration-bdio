@@ -54,8 +54,8 @@ public class SimpleBdioFactory {
         this.dependencyGraphTransformer = dependencyGraphTransformer;
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId) {
-        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(hubCodeLocationName, projectName, projectVersionName);
+    public SimpleBdioDocument createSimpleBdioDocument(final String codeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId) {
+        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, projectName, projectVersionName);
 
         final String projectId = projectExternalId.createBdioId();
         final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
@@ -88,8 +88,8 @@ public class SimpleBdioFactory {
         return simpleBdioDocument;
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String hubCodeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph dependencyGraph) {
-        final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(hubCodeLocationName, projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(final String codeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph dependencyGraph) {
+        final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationName, projectName, projectVersionName, projectExternalId);
 
         populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
 
