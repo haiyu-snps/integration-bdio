@@ -25,17 +25,12 @@ package com.blackducksoftware.integration.hub.bdio.model.externalid;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.blackducksoftware.integration.hub.bdio.SimpleBdioFactory;
 import com.blackducksoftware.integration.hub.bdio.model.Forge;
 
 public class ExternalIdTest {
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     private final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
     @Test
