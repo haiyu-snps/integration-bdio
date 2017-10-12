@@ -74,11 +74,10 @@ public class ExternalIdTest {
     }
 
     @Test
-    public void testExceptionWithoutEnoughState() {
+    public void testWithoutEnoughState() {
         final ExternalId externalId = new ExternalId(Forge.MAVEN);
-        exception.expect(IllegalStateException.class);
-        exception.expectMessage("Not enough state was populated:");
-        externalId.getExternalIdPieces();
+        externalId.name = "bundler";
+        assertEquals(new String[] { "bundler" }, externalId.getExternalIdPieces());
     }
 
     @Test

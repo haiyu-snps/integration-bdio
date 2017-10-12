@@ -79,7 +79,17 @@ public class ExternalId {
             }
         }
 
-        throw new IllegalStateException("Not enough state was populated: " + this.toString());
+        // if we can't be positive about what kind of external id we are, just give everything we have in a reasonable order
+        final List<String> bestGuessPieces = new ArrayList<>();
+
+        final List<String> bestGuessCandidates = Arrays.asList(group, name, version, architecture);
+        for (final String candidate : bestGuessCandidates) {
+            if (StringUtils.isNotBlank(candidate)) {
+                bestGuessPieces.add(candidate);
+            }
+        }
+
+        return bestGuessPieces.toArray(new String[bestGuessPieces.size()]);
     }
 
     public String createBdioId() {
