@@ -44,7 +44,7 @@ public class Forge {
     public static final Forge FEDORA = new Forge("fedora", "/");
     public static final Forge GOGET = new Forge("goget", "");
     public static final Forge GOLANG = new Forge("golang", ":");
-    public static final Forge HEX = new Forge("hex", "-");
+    public static final Forge HEX = new Forge("hex", "/");
     public static final Forge MAVEN = new Forge("maven", ":");
     public static final Forge NPM = new Forge("npm", "@");
     public static final Forge NUGET = new Forge("nuget", "/");
