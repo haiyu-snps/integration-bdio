@@ -46,7 +46,7 @@ public class Forge {
     public static final Forge GOLANG = new Forge("golang", ":");
     public static final Forge HEX = new Forge("hex", "/");
     public static final Forge MAVEN = new Forge("maven", ":");
-    public static final Forge NPM = new Forge("npm", "/");
+    public static final Forge NPM = new Forge("npm", "@");
     public static final Forge NUGET = new Forge("nuget", "/");
     public static final Forge PACKAGIST = new Forge("packagist", ":");
     public static final Forge PEAR = new Forge("pear", "/");
