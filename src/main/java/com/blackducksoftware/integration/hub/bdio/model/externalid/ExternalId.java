@@ -104,6 +104,10 @@ public class ExternalId {
         return StringUtils.join(getExternalIdPieces(), forge.getSeparator());
     }
 
+    public String createHubOriginId() {
+        return StringUtils.join(getExternalIdPieces(), forge.getKbSeparator());
+    }
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
