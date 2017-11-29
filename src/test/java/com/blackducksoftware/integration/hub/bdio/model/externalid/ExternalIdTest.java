@@ -35,7 +35,7 @@ public class ExternalIdTest {
 
     @Test
     public void testForgeEquality() {
-        assertEquals(Forge.ANACONDA, new Forge("anaconda", "="));
+        assertEquals(Forge.ANACONDA, new Forge("=", "/", "anaconda"));
     }
 
     @Test
@@ -66,6 +66,7 @@ public class ExternalIdTest {
         final ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
         assertEquals("http:npm/name_with_spaces/version_with_a___and_a___and_spaces", nameVersionExternalId.createBdioId());
         assertEquals("name with spaces@version with a - and a # and spaces", nameVersionExternalId.createExternalId());
+        assertEquals("name with spaces/version with a - and a # and spaces", nameVersionExternalId.createHubOriginId());
     }
 
     @Test
