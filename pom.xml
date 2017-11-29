@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>integration-bdio</artifactId>
-  <version>8.2.0-SNAPSHOT</version>
+  <version>9.0.0</version>
 
   <name>Integration Bdio</name>
   <description>A light-weight bdio construction library</description>
