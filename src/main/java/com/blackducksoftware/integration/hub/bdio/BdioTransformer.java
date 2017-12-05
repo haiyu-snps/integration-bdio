@@ -51,7 +51,7 @@ public class BdioTransformer {
 
     public DependencyGraph transformToDependencyGraph(final BdioProject project, final List<BdioComponent> components) {
         final MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
-        final Map<String, Dependency> externalIdToDependencyMap = new HashMap<>();
+        final Map<String, Dependency> bdioIdToDependencyMap = new HashMap<>();
 
         for (final BdioComponent component : components) {
             ExternalId externalId = component.bdioExternalIdentifier.externalIdMetaData;
@@ -61,17 +61,17 @@ public class BdioTransformer {
                 externalId = recreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
             }
             final Dependency dependency = new Dependency(component.name, component.version, externalId);
-            externalIdToDependencyMap.put(component.id, dependency);
+            bdioIdToDependencyMap.put(component.id, dependency);
         }
 
         for (final BdioRelationship relation : project.relationships) {
-            dependencyGraph.addChildrenToRoot(externalIdToDependencyMap.get(relation.related));
+            dependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
         }
 
         for (final BdioComponent component : components) {
-            final Dependency dependency = externalIdToDependencyMap.get(component.id);
+            final Dependency dependency = bdioIdToDependencyMap.get(component.id);
             for (final BdioRelationship relation : component.relationships) {
-                dependencyGraph.addParentWithChild(dependency, externalIdToDependencyMap.get(relation.related));
+                dependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
             }
         }
 

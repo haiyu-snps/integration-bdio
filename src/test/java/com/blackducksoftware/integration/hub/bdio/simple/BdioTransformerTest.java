@@ -54,15 +54,17 @@ public class BdioTransformerTest {
 
     @Test
     public void testTransformingDependencyGraphSample() throws URISyntaxException, IOException, JSONException {
-        testTransformingDependencyGraphs("sample.jsonld");
+        testTransformingDependencyGraphs("sample.jsonld", true);
     }
 
     @Test
     public void testTransformingDependencyGraphSampleEdge() throws URISyntaxException, IOException, JSONException {
-        testTransformingDependencyGraphs("sample-edge.jsonld");
+        // this is testing re-creating a simple bdio document when the externalIdMetadata fields are not populated
+        // in practice, this should not happen with files created with this library, but may happen with older versions, or other bdio files.
+        testTransformingDependencyGraphs("sample-edge.jsonld", false);
     }
 
-    public void testTransformingDependencyGraphs(final String filename) throws URISyntaxException, IOException, JSONException {
+    public void testTransformingDependencyGraphs(final String filename, final boolean testEqualityOfMetadata) throws URISyntaxException, IOException, JSONException {
         final String expectedJson = jsonTestUtils.getExpectedJson(filename);
 
         final Reader reader = new StringReader(expectedJson);
@@ -87,12 +89,14 @@ public class BdioTransformerTest {
         final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
 
-        simpleBdioDocument.project.bdioExternalIdentifier.externalIdMetaData = null;
         simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
         simpleBdioDocument.billOfMaterials.customData = doc.billOfMaterials.customData;
 
         assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.billOfMaterials, doc.billOfMaterials));
         assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.project, doc.project, "bdioExternalIdentifier", "relationships"));
+        if (!testEqualityOfMetadata) {
+            simpleBdioDocument.project.bdioExternalIdentifier.externalIdMetaData = null;
+        }
         assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.project.bdioExternalIdentifier, doc.project.bdioExternalIdentifier));
         assertRelationships(doc.project.relationships, simpleBdioDocument.project.relationships);
 
@@ -105,6 +109,9 @@ public class BdioTransformerTest {
                     fnd = true;
 
                     assertEquals(true, EqualsBuilder.reflectionEquals(expected, actual, "bdioExternalIdentifier", "relationships"));
+                    if (!testEqualityOfMetadata) {
+                        expected.bdioExternalIdentifier.externalIdMetaData = null;
+                    }
                     assertEquals(true, EqualsBuilder.reflectionEquals(expected.bdioExternalIdentifier, actual.bdioExternalIdentifier, "externalIdMetaData"));
                     assertRelationships(expected.relationships, actual.relationships);
 

@@ -69,7 +69,7 @@
   "revision": "3.2.1",
   "@id": "http:maven/commons_mismatch/commons_mismatch2/3_2_1",
   "@type": "Component",
-  "name": "commons-thing",
+  "name": "commons-mismatch2",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
     "externalId": "commons-mismatch:commons-mismatch2:3.2.1"

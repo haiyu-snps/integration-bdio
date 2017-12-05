@@ -16,7 +16,17 @@
   "name": "gradleTestProject",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
-    "externalId": "com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT"
+    "externalId": "com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT",
+    "externalIdMetaData": {
+      "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "com.blackducksoftware.gradle.test",
+        "name": "gradleTestProject",
+        "version": "99.5-SNAPSHOT"
+    }
   },
   "relationship": [
     {
@@ -32,7 +42,17 @@
   "name": "cxf-bundle",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
-    "externalId": "org.apache.cxf:cxf-bundle:2.7.7"
+    "externalId": "org.apache.cxf:cxf-bundle:2.7.7",
+    "externalIdMetaData": {
+      "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "org.apache.cxf",
+        "name": "cxf-bundle",
+        "version": "2.7.7"
+    }
   },
   "relationship": [
     {
@@ -52,7 +72,17 @@
   "name": "velocity",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
-    "externalId": "org.apache.velocity:velocity:1.7"
+    "externalId": "org.apache.velocity:velocity:1.7",
+    "externalIdMetaData": {
+      "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "org.apache.velocity",
+        "name": "velocity",
+        "version": "1.7"
+    }
   },
   "relationship": [
     {
@@ -72,7 +102,17 @@
   "name": "commons-collections",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
-    "externalId": "commons-collections:commons-collections:3.2.1"
+    "externalId": "commons-collections:commons-collections:3.2.1",
+    "externalIdMetaData": {
+      "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "commons-collections",
+        "name": "commons-collections",
+        "version": "3.2.1"
+    }
   },
   "relationship": []
 },
@@ -83,7 +123,17 @@
   "name": "commons-lang",
   "externalIdentifier": {
     "externalSystemTypeId": "maven",
-    "externalId": "commons-lang:commons-lang:2.6"
+    "externalId": "commons-lang:commons-lang:2.6",
+    "externalIdMetaData": {
+      "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "commons-lang",
+        "name": "commons-lang",
+        "version": "2.6"
+    }
   },
   "relationship": []
 }
