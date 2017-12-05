@@ -53,9 +53,8 @@ public class BdioNodeFactory {
         return billOfMaterials;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final String forge, final String externalId) {
-        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
-
+    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final ExternalId externalId) {
+        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         return createProject(projectName, projectVersion, bdioId, externalIdentifier);
     }
 
@@ -70,13 +69,8 @@ public class BdioNodeFactory {
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final ExternalId externalId) {
-        return createComponent(componentName, componentVersion, externalId.createBdioId(), externalId.forge.toString(), externalId.createExternalId());
-    }
-
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final String forge, final String externalId) {
-        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(forge, externalId);
-
-        return createComponent(componentName, componentVersion, bdioId, externalIdentifier);
+        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
+        return createComponent(componentName, componentVersion, externalId.createBdioId(), externalIdentifier);
     }
 
     public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {

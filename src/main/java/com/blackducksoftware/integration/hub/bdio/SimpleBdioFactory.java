@@ -49,25 +49,29 @@ import com.blackducksoftware.integration.hub.bdio.model.dependency.Dependency;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class SimpleBdioFactory {
     private final BdioPropertyHelper bdioPropertyHelper;
     private final BdioNodeFactory bdioNodeFactory;
     private final DependencyGraphTransformer dependencyGraphTransformer;
     private final ExternalIdFactory externalIdFactory;
+    private final Gson gson;
 
     public SimpleBdioFactory() {
         this.bdioPropertyHelper = new BdioPropertyHelper();
         this.bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         this.dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
         this.externalIdFactory = new ExternalIdFactory();
+        this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer, final ExternalIdFactory externalIdFactory) {
+    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer, final ExternalIdFactory externalIdFactory, final Gson gson) {
         this.bdioPropertyHelper = bdioPropertyHelper;
         this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
         this.externalIdFactory = externalIdFactory;
+        this.gson = gson;
     }
 
     public MutableDependencyGraph createMutableDependencyGraph() {
@@ -78,11 +82,11 @@ public class SimpleBdioFactory {
         return new Dependency(name, version, externalId);
     }
 
-    public BdioWriter createBdioWriter(final Gson gson, final Writer writer) throws IOException {
+    public BdioWriter createBdioWriter(final Writer writer) throws IOException {
         return new BdioWriter(gson, writer);
     }
 
-    public BdioWriter createBdioWriter(final Gson gson, final OutputStream outputStream) throws IOException {
+    public BdioWriter createBdioWriter(final OutputStream outputStream) throws IOException {
         return new BdioWriter(gson, outputStream);
     }
 
@@ -90,12 +94,12 @@ public class SimpleBdioFactory {
         bdioWriter.writeSimpleBdioDocument(simpleBdioDocument);
     }
 
-    public void writeSimpleBdioDocumentToFile(final File bdioFile, final Gson gson, final SimpleBdioDocument simpleBdioDocument) throws IOException {
+    public void writeSimpleBdioDocumentToFile(final File bdioFile, final SimpleBdioDocument simpleBdioDocument) throws IOException {
         // while try-with-resources works much better here, it is too much extra test code to cover 100%
         // https://stackoverflow.com/questions/26360245/try-with-resource-unit-test-coverage
         BdioWriter bdioWriter = null;
         try {
-            bdioWriter = createBdioWriter(gson, new FileOutputStream(bdioFile));
+            bdioWriter = createBdioWriter(new FileOutputStream(bdioFile));
             writeSimpleBdioDocument(bdioWriter, simpleBdioDocument);
         } finally {
             IOUtils.closeQuietly(bdioWriter);

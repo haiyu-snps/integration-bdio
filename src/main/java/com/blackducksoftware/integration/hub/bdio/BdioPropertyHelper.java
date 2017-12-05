@@ -44,19 +44,10 @@ public class BdioPropertyHelper {
         node.relationships.add(relationship);
     }
 
-    /**
-     * @deprecated Please use createExternalIdentifier(ExternalId externalId) instead.
-     */
-    @Deprecated
-    public BdioExternalIdentifier createExternalIdentifier(final String forge, final String externalId) {
-        final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
-        externalIdentifier.externalId = externalId;
-        externalIdentifier.forge = forge;
-        return externalIdentifier;
-    }
-
     public BdioExternalIdentifier createExternalIdentifier(final ExternalId externalId) {
-        final BdioExternalIdentifier externalIdentifier = createExternalIdentifier(externalId.forge.toString(), externalId.createExternalId());
+        final BdioExternalIdentifier externalIdentifier = new BdioExternalIdentifier();
+        externalIdentifier.externalId = externalId.createExternalId();
+        externalIdentifier.forge = externalId.forge.toString();
         externalIdentifier.externalIdMetaData = externalId;
         return externalIdentifier;
     }

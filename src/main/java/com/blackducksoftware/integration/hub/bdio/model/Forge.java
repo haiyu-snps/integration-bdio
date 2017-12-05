@@ -52,50 +52,63 @@ public class Forge {
     private static final String EQUAL = "=";
     private static final String HYFEN = "-";
 
-    //@formatter:off
-    public static final Forge ALPINE          = new Forge(SLASH, SLASH, "alpine");
-    public static final Forge ANACONDA        = new Forge(EQUAL, SLASH, "anaconda");
-    public static final Forge ANDROID         = new Forge(COLON, COLON, "android");
-    public static final Forge APACHE_SOFTWARE = new Forge(SLASH, SLASH, "apache_software");
-    public static final Forge BITBUCKET       = new Forge(SLASH, SLASH, "bitbucket");
-    public static final Forge BOWER           = new Forge(NUMBR, SLASH, "bower");
-    public static final Forge BUSYBOX         = new Forge(SLASH, SLASH, "busybox");
-    public static final Forge CENTOS          = new Forge(SLASH, SLASH,"centos");
-    public static final Forge COCOAPODS       = new Forge(COLON, COLON, "cocoapods");
-    public static final Forge CODEPLEX        = new Forge(SLASH, SLASH, "codeplex");
-    public static final Forge CODEPLEX_GROUP  = new Forge(SLASH, SLASH, "codeplex_group");
-    public static final Forge CPAN            = new Forge(HYFEN, SLASH, "cpan");
-    public static final Forge CPE             = new Forge(COLON, COLON, "cpe");
-    public static final Forge CRAN            = new Forge(SLASH, SLASH, "cran");
-    public static final Forge DEBIAN          = new Forge(SLASH, SLASH, "debian");
-    public static final Forge FEDORA          = new Forge(SLASH, SLASH, "fedora");
-    public static final Forge FREEDESKTOP_ORG = new Forge(SLASH, SLASH, "freedesktop_org");
-    public static final Forge GITCAFE         = new Forge(SLASH, SLASH, "gitcafe");
-    public static final Forge GITHUB          = new Forge(COLON, COLON, "github");
-    public static final Forge GITLAB          = new Forge(SLASH, SLASH, "gitlab");
-    public static final Forge GITORIOUS       = new Forge(SLASH, SLASH, "gitorious");
-    public static final Forge GNU             = new Forge(SLASH, SLASH, "gnu");
-    public static final Forge GOGET           = new Forge(EMPTY, SLASH, "goget");
-    public static final Forge GOLANG          = new Forge(COLON, COLON, "golang");
-    public static final Forge GOOGLECODE      = new Forge(SLASH, SLASH, "googlecode");
-    public static final Forge HEX             = new Forge(SLASH, SLASH, "hex");
-    public static final Forge JAVA_NET        = new Forge(SLASH, SLASH, "java_net");
-    public static final Forge KDE_ORG         = new Forge(SLASH, SLASH, "kde_org");
-    public static final Forge LAUNCHPAD       = new Forge(SLASH, SLASH, "launchpad");
-    public static final Forge LONG_TAIL       = new Forge(SLASH, SLASH, "long_tail");
-    public static final Forge MAVEN           = new Forge(COLON, COLON, "maven");
-    public static final Forge NPM             = new Forge(ATSGN, SLASH, "npm");
-    public static final Forge NUGET           = new Forge(SLASH, SLASH, "nuget");
-    public static final Forge PACKAGIST       = new Forge(COLON, COLON, "packagist");
-    public static final Forge PEAR            = new Forge(SLASH, SLASH, "pear");
-    public static final Forge PYPI            = new Forge(SLASH, SLASH, "pypi");
-    public static final Forge REDHAT          = new Forge(SLASH, SLASH, "redhat");
-    public static final Forge RUBYFORGE       = new Forge(SLASH, SLASH, "rubyforge");
-    public static final Forge RUBYGEMS        = new Forge(EQUAL, SLASH, "rubygems");
-    public static final Forge SOURCEFORGE     = new Forge(SLASH, SLASH, "sourceforge");
-    public static final Forge SOURCEFORGE_JP  = new Forge(SLASH, SLASH, "sourceforge_jp");
-    public static final Forge UBUNTU          = new Forge(SLASH, SLASH, "ubuntu");
-    //@formatter:on
+    private static final Forge createSlashSlashForge(final String forgeName) {
+        return new Forge("/", "/", forgeName);
+    }
+
+    private static final Forge createColonColonForge(final String forgeName) {
+        return new Forge(":", ":", forgeName);
+    }
+
+    private static final Forge createEqualSlashForge(final String forgeName) {
+        return new Forge("=", "/", forgeName);
+    }
+
+    public static final Forge ALPINE = createSlashSlashForge("alpine");
+    public static final Forge APACHE_SOFTWARE = createSlashSlashForge("apache_software");
+    public static final Forge BITBUCKET = createSlashSlashForge("bitbucket");
+    public static final Forge BUSYBOX = createSlashSlashForge("busybox");
+    public static final Forge CENTOS = createSlashSlashForge("centos");
+    public static final Forge CODEPLEX = createSlashSlashForge("codeplex");
+    public static final Forge CODEPLEX_GROUP = createSlashSlashForge("codeplex_group");
+    public static final Forge CRAN = createSlashSlashForge("cran");
+    public static final Forge DEBIAN = createSlashSlashForge("debian");
+    public static final Forge FEDORA = createSlashSlashForge("fedora");
+    public static final Forge FREEDESKTOP_ORG = createSlashSlashForge("freedesktop_org");
+    public static final Forge GITCAFE = createSlashSlashForge("gitcafe");
+    public static final Forge GITLAB = createSlashSlashForge("gitlab");
+    public static final Forge GITORIOUS = createSlashSlashForge("gitorious");
+    public static final Forge GNU = createSlashSlashForge("gnu");
+    public static final Forge GOOGLECODE = createSlashSlashForge("googlecode");
+    public static final Forge HEX = createSlashSlashForge("hex");
+    public static final Forge JAVA_NET = createSlashSlashForge("java_net");
+    public static final Forge KDE_ORG = createSlashSlashForge("kde_org");
+    public static final Forge LAUNCHPAD = createSlashSlashForge("launchpad");
+    public static final Forge LONG_TAIL = createSlashSlashForge("long_tail");
+    public static final Forge NUGET = createSlashSlashForge("nuget");
+    public static final Forge PEAR = createSlashSlashForge("pear");
+    public static final Forge PYPI = createSlashSlashForge("pypi");
+    public static final Forge REDHAT = createSlashSlashForge("redhat");
+    public static final Forge RUBYFORGE = createSlashSlashForge("rubyforge");
+    public static final Forge SOURCEFORGE = createSlashSlashForge("sourceforge");
+    public static final Forge SOURCEFORGE_JP = createSlashSlashForge("sourceforge_jp");
+    public static final Forge UBUNTU = createSlashSlashForge("ubuntu");
+
+    public static final Forge ANDROID = createColonColonForge("android");
+    public static final Forge COCOAPODS = createColonColonForge("cocoapods");
+    public static final Forge CPE = createColonColonForge("cpe");
+    public static final Forge GITHUB = createColonColonForge("github");
+    public static final Forge GOLANG = createColonColonForge("golang");
+    public static final Forge MAVEN = createColonColonForge("maven");
+    public static final Forge PACKAGIST = createColonColonForge("packagist");
+
+    public static final Forge ANACONDA = createEqualSlashForge("anaconda");
+    public static final Forge RUBYGEMS = createEqualSlashForge("rubygems");
+
+    public static final Forge BOWER = new Forge("#", "/", "bower");
+    public static final Forge CPAN = new Forge("-", "/", "cpan");
+    public static final Forge GOGET = new Forge("", "/", "goget");
+    public static final Forge NPM = new Forge("@", "/", "npm");
 
     private final String name;
     private final String separator;

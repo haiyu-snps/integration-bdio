@@ -86,8 +86,9 @@ public class SimpleBdioFactoryTest {
         final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         final DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
         final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory(bdioPropertyHelper, bdioNodeFactory, dependencyGraphTransformer, externalIdFactory);
+        final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory(bdioPropertyHelper, bdioNodeFactory, dependencyGraphTransformer, externalIdFactory, gson);
 
         assertNotNull(simpleBdioFactory);
         assertNotNull(simpleBdioFactory.getBdioPropertyHelper());
@@ -104,29 +105,27 @@ public class SimpleBdioFactoryTest {
     public void testConstructingBdioWriters() throws IOException {
         final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
-        final Gson gson = new Gson();
         final Writer writer = new StringWriter();
         final OutputStream outputStream = new ByteArrayOutputStream();
 
-        final BdioWriter writerBdioWriter = simpleBdioFactory.createBdioWriter(gson, writer);
+        final BdioWriter writerBdioWriter = simpleBdioFactory.createBdioWriter(writer);
         assertNotNull(writerBdioWriter);
 
-        final BdioWriter outputStreamBdioWriter = simpleBdioFactory.createBdioWriter(gson, outputStream);
+        final BdioWriter outputStreamBdioWriter = simpleBdioFactory.createBdioWriter(outputStream);
         assertNotNull(outputStreamBdioWriter);
     }
 
     @Test
     public void testTryFinally() throws IOException {
         final SimpleBdioFactory simpleBdioFactory = Mockito.spy(new SimpleBdioFactory());
-        Mockito.doThrow(RuntimeException.class).when(simpleBdioFactory).createBdioWriter(Mockito.any(Gson.class), Mockito.any(OutputStream.class));
+        Mockito.doThrow(RuntimeException.class).when(simpleBdioFactory).createBdioWriter(Mockito.any(OutputStream.class));
         final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(simpleBdioFactory);
 
         final File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
-        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         expectedException.expect(RuntimeException.class);
-        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, gson, simpleBdioDocument);
+        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
     }
 
     @Test
@@ -137,10 +136,9 @@ public class SimpleBdioFactoryTest {
 
         final File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
-        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         expectedException.expect(RuntimeException.class);
-        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, gson, simpleBdioDocument);
+        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
     }
 
     @Test
@@ -151,13 +149,12 @@ public class SimpleBdioFactoryTest {
 
         final File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
-        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         assertEquals(0, bdioFile.length());
 
         // overriding default UUID so the expected value matches the actual value
         simpleBdioDocument.billOfMaterials.id = "uuid:static-uuid-for-testing";
-        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, gson, simpleBdioDocument);
+        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
 
         assertNotEquals(0, bdioFile.length());
 

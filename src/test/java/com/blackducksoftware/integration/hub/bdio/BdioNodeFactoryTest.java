@@ -107,7 +107,6 @@ public class BdioNodeFactoryTest {
         final Map<String, String> customData = new HashMap<>();
         customData.put("testVersion", "1.2.3-SNAPSHOT");
         final ExternalId mavenExternalId = externalIdFactory.createMavenExternalId(projectGroup, projectName, projectVersion);
-        final String projectExternalId = mavenExternalId.createExternalId();
         final String projectBdioId = mavenExternalId.createBdioId();
 
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
@@ -115,7 +114,7 @@ public class BdioNodeFactoryTest {
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
-        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, "maven", projectExternalId);
+        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, mavenExternalId);
 
         final ExternalId cxfBundleExternalId = externalIdFactory.createMavenExternalId("org.apache.cxf", "cxf-bundle", "2.7.7");
         final BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7", cxfBundleExternalId);
