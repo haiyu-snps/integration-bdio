@@ -2,12 +2,17 @@ language: java
 
 jdk:
   - oraclejdk8
-    
+
+notifications:
+  email:
+    recipients:
+      - ekerwin@blackducksoftware.com
+
 install: true
+
 script:
-- mvn -U clean package 
-  
+  - ./gradlew clean build
+
 after_success:
-- mvn jacoco:report coveralls:report 
-- mvn com.blackducksoftware.integration:hub-maven-plugin:2.0.0:build-bom -Dhub.output.directory=. -Dhub.deploy.bdio=false
-- bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./*_bdio.jsonld
+  - ./gradlew test jacocoTestReport coveralls
+  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
