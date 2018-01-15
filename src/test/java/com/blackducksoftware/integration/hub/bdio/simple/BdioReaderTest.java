@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.junit.Test;
 
@@ -113,13 +112,8 @@ public class BdioReaderTest {
     public void testDockerInspectorOutput() throws IOException {
         final Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SimpleBdioDocument simpleBdioDocument = null;
-        BdioReader bdioReader = null;
-        try {
-            final InputStream dockerOutputInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("ubuntu_var_lib_dpkg_ubuntu_latest_bdio.jsonld");
-            bdioReader = new BdioReader(gson, dockerOutputInputStream);
+        try (final BdioReader bdioReader = new BdioReader(gson, getClass().getResourceAsStream("/ubuntu_var_lib_dpkg_ubuntu_latest_bdio.jsonld"))) {
             simpleBdioDocument = bdioReader.readSimpleBdioDocument();
-        } finally {
-            IOUtils.closeQuietly(bdioReader);
         }
 
         final BdioTransformer bdioTransformer = new BdioTransformer();

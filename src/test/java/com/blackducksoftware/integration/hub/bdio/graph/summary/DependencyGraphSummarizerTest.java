@@ -67,7 +67,7 @@ public class DependencyGraphSummarizerTest {
         actualGraph.addChildrenToRoot(parent1, parent2);
         final String actualGraphSummaryJson = summarizer.toJson(actualGraph);
 
-        final String expectedJson = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("summary.json"), StandardCharsets.UTF_8);
+        final String expectedJson = IOUtils.toString(getClass().getResourceAsStream("/summary.json"), StandardCharsets.UTF_8);
         final GraphSummary expectedGraphSummary = summarizer.fromJson(expectedJson);
         final String expectedGraphSummaryJson = summarizer.toJson(expectedGraphSummary);
 

@@ -33,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraph;
 import com.blackducksoftware.integration.hub.bdio.graph.DependencyGraphTransformer;
 import com.blackducksoftware.integration.hub.bdio.graph.MutableDependencyGraph;
@@ -96,14 +94,8 @@ public class SimpleBdioFactory {
     }
 
     public void writeSimpleBdioDocumentToFile(final File bdioFile, final SimpleBdioDocument simpleBdioDocument) throws IOException {
-        // while try-with-resources works much better here, it is too much extra test code to cover 100%
-        // https://stackoverflow.com/questions/26360245/try-with-resource-unit-test-coverage
-        BdioWriter bdioWriter = null;
-        try {
-            bdioWriter = createBdioWriter(new FileOutputStream(bdioFile));
+        try (BdioWriter bdioWriter = createBdioWriter(new FileOutputStream(bdioFile))) {
             writeSimpleBdioDocument(bdioWriter, simpleBdioDocument);
-        } finally {
-            IOUtils.closeQuietly(bdioWriter);
         }
     }
 
