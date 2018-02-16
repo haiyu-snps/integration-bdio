@@ -5,7 +5,7 @@ install: true
 addons:
   sonarcloud:
     token:
-      secure: "jt5Sp6CfCXI+DrJ94X10TCtLUWsz56kLIE3claubb1fAusL6nGgK2hJVpttLzWOZEP/TfDcC4jPxh2CD1K3YL7T2o8DC6K1zsz+jswkdPHnNnSQJdGXxWJ28H21QaCa0nlB9l/RCdrC2fDAZb5D7KuYXnQRpQinwy0sARrhgyxZoEiYtoPLYn262pXhhAF2OlKFaGognNH1KetqMTbm99ZtEA2oNHzeOl614+bdtNL2RChD/QcIE14QblnCJJktjqnmuqQ50r4HPBrTr22ZND9kpRfhMnMZFJKK4EEOfhguCbduO+D1SyoGWTbAuJ7yjw7VXjGartI+Fa6WbTgjkvp4KU4d4OarPg7lPFpeGstgsEfcEebV4x0lbKaHq5S28L7zVXpudOy16TTdPSUP9hbgwo7yzhCn5zVQdXJeKKzknTRH/DZGLdwpcnQZ4yYIESUVQ947tINu6pID+i8AnWqwuhX6ys6Lvt9ZiY991kaXYr+A268psvZu7DiPHSHpdnE2xoqbJrgRAU502djZ4gcWvaHGBXhUtfTom39t9WzQJOD6Q+3d70kHpV7gyZyqY6+gxId+omd3odSj68PP/0peTX7aLHLbegjBU3EhLrqIIpTD1XXiVJ7svOJYenWB3m19zbmMJmTi0MXJUkyyPsa6F1vVnf2FC8ILXvAOfato="
+      secure: "HgZoZlMDKDyHAr/33KFWXKGRH2/r8wMhsRts8DGUNokVpyoHzPtHPDYpNFz5JqERk7sLluHJG7xmDJx5LaO6XlgZNHy2KYW/UIBRoD/MnZoGxcE15/O/DDGKLPzyJ4FDCepEnCQ9lbQnHn4eJpcUkSegwaU/VkXF6xlvZPj1SrY9PVVFTg8yuM1n4qBHcfmHHfQPSHjJQ+qHPEyYbTTO24o82pWRuzUejPQtkEV9iPt7eYTUxN9t/fiuoNemeiRsfS7rCi/d7xn8WsvwjDkcP/+nl5JzH521Syjryhz3OBTSedwdyP+r/6USof+tsP8CYOudm3GiEG9VDXtsgUhEeEpeI1s4RaBvh/Cr1nXjW7BAlCngFQtdVGPbdc4V8KvSgQ9v+X0sgImlIMOkrOrDod4SILAAK3Nkl1JUySUQTC4I16D6Mjoeg1UIRGJ6EChzYZ2hMpGa55KyeYktQYEH/bUS5ATKwglkDySWMJBN8/jM8EtQGSDUv6QVfpOoigz5b7kY66U1nuq1MyeAHa3WzMmTNFUoehzZ93aNns/kkrf5XozKTymSUakT5BNBsS/mUCyp7EJscAwm6jJPIT9YQghSjxfUp88w+37EQqz1qhVqyPmHI36QYxuS+ickNf1XMwor6PS0BcxS5IaBvXCtGRDjvIm4iwTO2WWqBaT84mc="
 
 jdk:
 - oraclejdk8
@@ -13,17 +13,13 @@ jdk:
 notifications:
   email:
     recipients:
-    - akamen@blackducksoftware.com
-    - jrichard@blackducksoftware.com
-    - psantos@blackducksoftware.com
-    - ekerwin@blackducksoftware.com
+    - bdsoss@blackducksoftware.com
 
 script:
- - "./gradlew clean build sonarqube"
+- "./gradlew clean build jacocoTestReport coveralls sonarqube"
 
 after_success:
- - "./gradlew test jacocoTestReport coveralls"
- - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
+- bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
 
 cache:
   directories:
