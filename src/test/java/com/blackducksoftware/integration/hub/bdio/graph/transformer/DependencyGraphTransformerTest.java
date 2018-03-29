@@ -1,9 +1,9 @@
 /**
  * Integration Bdio
- *
+ * <p>
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -11,9 +11,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,14 +22,6 @@
  * under the License.
  */
 package com.blackducksoftware.integration.hub.bdio.graph.transformer;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URISyntaxException;
-
-import org.json.JSONException;
-import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.BdioWriter;
 import com.blackducksoftware.integration.hub.bdio.SimpleBdioFactory;
@@ -41,6 +33,13 @@ import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
+import org.json.JSONException;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URISyntaxException;
 
 public class DependencyGraphTransformerTest {
     private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
@@ -61,6 +60,9 @@ public class DependencyGraphTransformerTest {
 
         final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
+
+        // we are overriding the default value of a new creation info just to pass the json comparison
+        simpleBdioDocument.billOfMaterials.creationInfo = null;
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.billOfMaterials.id = "uuid:123";

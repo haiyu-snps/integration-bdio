@@ -23,11 +23,10 @@
  */
 package com.blackducksoftware.integration.hub.bdio.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import com.google.gson.annotations.SerializedName;
 
 public class BdioNode {
     @SerializedName("@id")
@@ -38,9 +37,6 @@ public class BdioNode {
 
     @SerializedName("externalIdentifier")
     public BdioExternalIdentifier bdioExternalIdentifier;
-
-    @SerializedName("customData")
-    public Map<String, String> customData;
 
     @SerializedName("relationship")
     public List<BdioRelationship> relationships = new ArrayList<>();

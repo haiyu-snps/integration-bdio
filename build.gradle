@@ -7,9 +7,14 @@ buildscript {
     dependencies { classpath "com.blackducksoftware.integration:common-gradle-plugin:0.0.+" }
 }
 
-version = '12.1.1-SNAPSHOT'
+version = '12.2.0'
 
 apply plugin: 'com.blackducksoftware.integration.library'
+
+final def versionFile = new File("${projectDir}/src/main/resources/com/blackducksoftware/integration/hub/bdio/version.txt")
+versionFile.mkdirs()
+versionFile.delete()
+versionFile << version
 
 dependencies {
     compile 'com.blackducksoftware.integration:integration-common:9.2.0'

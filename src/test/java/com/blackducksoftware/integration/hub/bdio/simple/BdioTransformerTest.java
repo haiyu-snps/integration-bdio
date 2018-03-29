@@ -1,9 +1,9 @@
 /**
  * Integration Bdio
- *
+ * <p>
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -11,9 +11,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,20 +22,6 @@
  * under the License.
  */
 package com.blackducksoftware.integration.hub.bdio.simple;
-
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.json.JSONException;
-import org.junit.Test;
 
 import com.blackducksoftware.integration.hub.bdio.BdioReader;
 import com.blackducksoftware.integration.hub.bdio.BdioTransformer;
@@ -48,6 +34,19 @@ import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.json.JSONException;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class BdioTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
@@ -90,7 +89,7 @@ public class BdioTransformerTest {
         final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
 
         simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
-        simpleBdioDocument.billOfMaterials.customData = doc.billOfMaterials.customData;
+        simpleBdioDocument.billOfMaterials.creationInfo = doc.billOfMaterials.creationInfo;
 
         assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.billOfMaterials, doc.billOfMaterials));
         assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.project, doc.project, "bdioExternalIdentifier", "relationships"));

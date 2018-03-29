@@ -1,9 +1,9 @@
 /**
  * Integration Bdio
- *
+ * <p>
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -11,9 +11,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,32 +23,22 @@
  */
 package com.blackducksoftware.integration.hub.bdio;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.junit.Test;
-
-import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
-import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
-import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.*;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
 import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
 import com.google.gson.Gson;
+import org.json.JSONException;
+import org.junit.Test;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class BdioNodeFactoryTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
@@ -104,13 +94,13 @@ public class BdioNodeFactoryTest {
         final String projectGroup = "com.blackducksoftware.gradle.test";
         final String projectName = "gradleTestProject";
         final String projectVersion = "99.5-SNAPSHOT";
-        final Map<String, String> customData = new HashMap<>();
-        customData.put("testVersion", "1.2.3-SNAPSHOT");
         final ExternalId mavenExternalId = externalIdFactory.createMavenExternalId(projectGroup, projectName, projectVersion);
         final String projectBdioId = mavenExternalId.createBdioId();
 
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
-        bdioBillOfMaterials.customData = customData;
+        // we are overriding the default value of a new creation info just to pass the json comparison
+        bdioBillOfMaterials.creationInfo = new BdioCreationInfo();
+        bdioBillOfMaterials.creationInfo.addSpdxCreator(new ToolSpdxCreator("integration-bdio-test", "0.0.1-SNAPSHOT"));
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 

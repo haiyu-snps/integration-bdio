@@ -1,9 +1,9 @@
 /**
  * Integration Bdio
- *
+ * <p>
  * Copyright (C) 2017 Black Duck Software, Inc.
  * http://www.blackducksoftware.com/
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -11,9 +11,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,6 +25,7 @@ package com.blackducksoftware.integration.hub.bdio.simple;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -66,7 +67,7 @@ public class BdioReaderTest {
         assertEquals("1.1.0", doc.billOfMaterials.bdioSpecificationVersion);
         assertEquals("uuid:45772d33-5353-44f1-8681-3d8a15540646", doc.billOfMaterials.id);
         assertEquals("BillOfMaterials", doc.billOfMaterials.type);
-        assertEquals("1.2.3-SNAPSHOT", doc.billOfMaterials.customData.get("testVersion"));
+        assertTrue(doc.billOfMaterials.creationInfo.getCreator().contains("Tool: integration-bdio-test-0.0.1-SNAPSHOT"));
         assertEquals("gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export", doc.billOfMaterials.spdxName);
         assertEquals(0, doc.billOfMaterials.relationships.size());
 

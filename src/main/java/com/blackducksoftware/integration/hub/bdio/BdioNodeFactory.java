@@ -23,14 +23,23 @@
  */
 package com.blackducksoftware.integration.hub.bdio;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
 import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioCreationInfo;
 import com.blackducksoftware.integration.hub.bdio.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.model.ToolSpdxCreator;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class BdioNodeFactory {
@@ -49,6 +58,15 @@ public class BdioNodeFactory {
             billOfMaterials.spdxName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
         }
         billOfMaterials.bdioSpecificationVersion = "1.1.0";
+
+        billOfMaterials.creationInfo = new BdioCreationInfo();
+        billOfMaterials.creationInfo.created = Instant.now().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+        String version = "UnknownVersion";
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("com/blackducksoftware/integration/hub/bdio/version.txt")) {
+            version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        } catch (final IOException e) {
+        }
+        billOfMaterials.creationInfo.addSpdxCreator(new ToolSpdxCreator("IntegrationBdio", version));
 
         return billOfMaterials;
     }

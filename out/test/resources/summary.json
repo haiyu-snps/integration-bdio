@@ -1,0 +1,49 @@
+{
+  "rootExternalDataIds": [
+    "http:maven/parents/parent1/1_0",
+    "http:maven/parents/parent2/1_0"
+  ],
+  "externalDataIdRelationships": {
+    "http:maven/children/child1/1_0": [
+      "http:maven/grandchildren/grandchild2/1_0",
+      "http:maven/grandchildren/grandchild1/1_0"
+    ],
+    "http:maven/parents/parent1/1_0": [
+      "http:maven/children/child1/1_0"
+    ],
+    "http:maven/parents/parent2/1_0": [
+      "http:maven/children/child2/1_0",
+      "http:maven/children/child3/1_0"
+    ]
+  },
+  "dependencySummaries": {
+    "http:maven/children/child1/1_0": {
+      "name": "child1",
+      "version": "1.0"
+    },
+    "http:maven/children/child2/1_0": {
+      "name": "child2",
+      "version": "1.0"
+    },
+    "http:maven/parents/parent1/1_0": {
+      "name": "parent1",
+      "version": "1.0"
+    },
+    "http:maven/parents/parent2/1_0": {
+      "name": "parent2",
+      "version": "1.0"
+    },
+    "http:maven/grandchildren/grandchild2/1_0": {
+      "name": "grandchild2",
+      "version": "1.0"
+    },
+    "http:maven/children/child3/1_0": {
+      "name": "child3",
+      "version": "1.0"
+    },
+    "http:maven/grandchildren/grandchild1/1_0": {
+      "name": "grandchild1",
+      "version": "1.0"
+    }
+  }
+}

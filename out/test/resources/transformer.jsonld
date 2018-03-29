@@ -1,0 +1,82 @@
+[
+  {
+    "specVersion": "1.1.0",
+    "spdx:name": "projectName/projectVersion Black Duck I/O Export",
+    "@id": "uuid:123",
+    "@type": "BillOfMaterials",
+    "relationship": []
+  },
+  {
+    "name": "projectName",
+    "revision": "projectVersion",
+    "@id": "http:maven/projectGroup/projectName/projectVersion",
+    "@type": "Project",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "projectGroup:projectName:projectVersion",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "projectGroup",
+        "name": "projectName",
+        "version": "projectVersion"
+      }
+    },
+    "relationship": [
+      {
+        "related": "http:maven/componentGroup1/componentArtifact1/1_0_0",
+        "relationshipType": "DYNAMIC_LINK"
+      }
+    ]
+  },
+  {
+    "name": "componentArtifact1",
+    "revision": "1.0.0",
+    "@id": "http:maven/componentGroup1/componentArtifact1/1_0_0",
+    "@type": "Component",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "componentGroup1:componentArtifact1:1.0.0",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "componentGroup1",
+        "name": "componentArtifact1",
+        "version": "1.0.0"
+      }
+    },
+    "relationship": [
+      {
+        "related": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
+        "relationshipType": "DYNAMIC_LINK"
+      }
+    ]
+  },
+  {
+    "name": "transitiveArtifact",
+    "revision": "2.1.0",
+    "@id": "http:maven/transitiveGroup/transitiveArtifact/2_1_0",
+    "@type": "Component",
+    "externalIdentifier": {
+      "externalSystemTypeId": "maven",
+      "externalId": "transitiveGroup:transitiveArtifact:2.1.0",
+      "externalIdMetaData": {
+        "forge": {
+          "name": "maven",
+          "separator": ":",
+          "kbSeparator": ":"
+        },
+        "group": "transitiveGroup",
+        "name": "transitiveArtifact",
+        "version": "2.1.0"
+      }
+    },
+    "relationship": []
+  }
+]
