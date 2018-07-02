@@ -36,6 +36,12 @@ public class BdioCreationInfo {
     @SerializedName("spdx:created")
     public String created;
 
+    // ekerwin 2018-06-11
+    // The Hub only supports a single creator and if there are multiple creators, the Hub will use only the first one.
+    public void setPrimarySpdxCreator(final SpdxCreator spdxCreator) {
+        creator.add(0, spdxCreator.getData());
+    }
+
     public void addSpdxCreator(final SpdxCreator spdxCreator) {
         creator.add(spdxCreator.getData());
     }

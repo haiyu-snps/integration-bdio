@@ -27,8 +27,19 @@ public class SpdxCreator {
     public String type;
     public String identifier;
 
+    public SpdxCreator(final String type, final String identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+
     public String getData() {
         return String.format("%s: %s", type, identifier);
+    }
+
+    public static SpdxCreator createToolSpdxCreator(final String name, final String version) {
+        final String identifier = String.format("%s-%s", name, version);
+        final SpdxCreator spdxCreator = new SpdxCreator("Tool", identifier);
+        return spdxCreator;
     }
 
 }

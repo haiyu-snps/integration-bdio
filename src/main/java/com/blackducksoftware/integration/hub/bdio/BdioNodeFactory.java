@@ -39,7 +39,7 @@ import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
 import com.blackducksoftware.integration.hub.bdio.model.BdioCreationInfo;
 import com.blackducksoftware.integration.hub.bdio.model.BdioExternalIdentifier;
 import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
-import com.blackducksoftware.integration.hub.bdio.model.ToolSpdxCreator;
+import com.blackducksoftware.integration.hub.bdio.model.SpdxCreator;
 import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
 
 public class BdioNodeFactory {
@@ -66,7 +66,7 @@ public class BdioNodeFactory {
             version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (final IOException e) {
         }
-        billOfMaterials.creationInfo.addSpdxCreator(new ToolSpdxCreator("IntegrationBdio", version));
+        billOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("IntegrationBdio", version));
 
         return billOfMaterials;
     }

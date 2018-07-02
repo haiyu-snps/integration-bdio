@@ -23,22 +23,32 @@
  */
 package com.blackducksoftware.integration.hub.bdio;
 
-import com.blackducksoftware.integration.hub.bdio.model.*;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
-import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
-import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
-import com.google.gson.Gson;
-import org.json.JSONException;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.json.JSONException;
+import org.junit.Test;
+
+import com.blackducksoftware.integration.hub.bdio.model.BdioBillOfMaterials;
+import com.blackducksoftware.integration.hub.bdio.model.BdioComponent;
+import com.blackducksoftware.integration.hub.bdio.model.BdioCreationInfo;
+import com.blackducksoftware.integration.hub.bdio.model.BdioProject;
+import com.blackducksoftware.integration.hub.bdio.model.SimpleBdioDocument;
+import com.blackducksoftware.integration.hub.bdio.model.SpdxCreator;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalId;
+import com.blackducksoftware.integration.hub.bdio.model.externalid.ExternalIdFactory;
+import com.blackducksoftware.integration.hub.bdio.utility.JsonTestUtils;
+import com.google.gson.Gson;
 
 public class BdioNodeFactoryTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
@@ -100,7 +110,7 @@ public class BdioNodeFactoryTest {
         final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
         // we are overriding the default value of a new creation info just to pass the json comparison
         bdioBillOfMaterials.creationInfo = new BdioCreationInfo();
-        bdioBillOfMaterials.creationInfo.addSpdxCreator(new ToolSpdxCreator("integration-bdio-test", "0.0.1-SNAPSHOT"));
+        bdioBillOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("integration-bdio-test", "0.0.1-SNAPSHOT"));
         // we are overriding the default value of a new uuid just to pass the json comparison
         bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
 
