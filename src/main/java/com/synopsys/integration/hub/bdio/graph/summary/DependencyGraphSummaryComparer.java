@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 import com.synopsys.integration.hub.bdio.graph.DependencyGraph;
 
-public class DependencyGraphComparer {
+public class DependencyGraphSummaryComparer {
     private final DependencyGraphSummarizer dependencyGraphSummarizer;
 
-    public DependencyGraphComparer(final DependencyGraphSummarizer dependencyGraphSummarizer) {
+    public DependencyGraphSummaryComparer(final DependencyGraphSummarizer dependencyGraphSummarizer) {
         this.dependencyGraphSummarizer = dependencyGraphSummarizer;
     }
 
