@@ -93,6 +93,7 @@ public class Forge {
     public static final Forge SOURCEFORGE = createSlashSlashForge("sourceforge");
     public static final Forge SOURCEFORGE_JP = createSlashSlashForge("sourceforge_jp");
     public static final Forge UBUNTU = createSlashSlashForge("ubuntu");
+    public static final Forge YOCTO = createSlashSlashForge("yocto");
 
     public static final Forge ANDROID = createColonColonForge("android");
     public static final Forge COCOAPODS = createColonColonForge("cocoapods");
