@@ -23,15 +23,18 @@
  */
 package com.synopsys.integration.bdio.model;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Forge {
-    public static final Map<String, Forge> FORGE_NAME_TO_FORGE = new HashMap<>();
-
     /**
      * The various separators here are to support three systems 1) bdio, 2) Black Duck, 3) Black Duck Knowledge Base.
      *
@@ -42,15 +45,6 @@ public class Forge {
      *
      * As of 2017-11-29, only forward slashes and colons are used for KB separators.
      */
-
-    // five character variable names for the separators to maintain the column formatting below
-    private static final String EMPTY = "";
-    private static final String SLASH = "/";
-    private static final String NUMBR = "#";
-    private static final String COLON = ":";
-    private static final String ATSGN = "@";
-    private static final String EQUAL = "=";
-    private static final String HYFEN = "-";
 
     private static final Forge createSlashSlashForge(final String forgeName) {
         return new Forge("/", "/", forgeName);
@@ -114,12 +108,39 @@ public class Forge {
     private final String name;
     private final String separator;
     private final String kbSeparator;
+    private Boolean usePreferredNamespaceAlias;
+
+    public static Map<String, Forge> getKnownForges() {
+        final Map<String, Forge> knownForges = new HashMap<>();
+
+        final List<Field> knownStaticFinalForgeFields = Arrays
+                                                                .stream(Forge.class.getFields())
+                                                                .filter(f -> Modifier.isStatic(f.getModifiers()))
+                                                                .filter(f -> Modifier.isFinal(f.getModifiers()))
+                                                                .filter(f -> f.getType().isAssignableFrom(Forge.class))
+                                                                .collect(Collectors.toList());
+
+        for (final Field field : knownStaticFinalForgeFields) {
+            try {
+                final Forge forge = (Forge) field.get(null);
+                knownForges.put(forge.getName(), forge);
+            } catch (final IllegalAccessException ignored) {
+                // okay to ignore, the filtering above took care of this
+            }
+        }
+
+        return knownForges;
+    }
 
     public Forge(final String separator, final String kbSeparator, final String name) {
         this.name = name;
         this.separator = separator;
         this.kbSeparator = kbSeparator;
-        FORGE_NAME_TO_FORGE.put(name, this);
+    }
+
+    public Forge(final String separator, final String kbSeparator, final String name, final boolean usePreferredNamespaceAlias) {
+        this(separator, kbSeparator, name);
+        this.usePreferredNamespaceAlias = usePreferredNamespaceAlias;
     }
 
     @Override
@@ -134,11 +155,12 @@ public class Forge {
 
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     public String getName() {
-        return name;
+        final String formatString = usePreferredNamespaceAlias != null && usePreferredNamespaceAlias ? "@%s" : "%s";
+        return String.format(formatString, name);
     }
 
     public String getSeparator() {

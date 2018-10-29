@@ -42,7 +42,7 @@ public class BdioTransformer {
     private final Map<String, Forge> forgeMap;
 
     public BdioTransformer() {
-        forgeMap = Forge.FORGE_NAME_TO_FORGE;
+        forgeMap = Forge.getKnownForges();
     }
 
     public BdioTransformer(final Map<String, Forge> forgeMap) {
