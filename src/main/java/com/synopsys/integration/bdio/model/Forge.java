@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -133,6 +134,10 @@ public class Forge {
     }
 
     public Forge(final String separator, final String kbSeparator, final String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("A non-blank name is required.");
+        }
+
         this.name = name;
         this.separator = separator;
         this.kbSeparator = kbSeparator;
@@ -160,7 +165,7 @@ public class Forge {
 
     public String getName() {
         final String formatString = usePreferredNamespaceAlias != null && usePreferredNamespaceAlias ? "@%s" : "%s";
-        return String.format(formatString, name);
+        return String.format(formatString, name.toLowerCase());
     }
 
     public String getSeparator() {
