@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio.simple;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -117,7 +117,7 @@ public class BdioTransformerTest {
 
                 }
             }
-            assertEquals(expected.id, true, fnd);
+            assertEquals(true, fnd, expected.id);
         }
 
     }
@@ -134,7 +134,7 @@ public class BdioTransformerTest {
                     assertEquals(true, EqualsBuilder.reflectionEquals(expected, actual));
                 }
             }
-            assertEquals(expected.related, true, fnd);
+            assertEquals(true, fnd, expected.related);
         }
     }
 

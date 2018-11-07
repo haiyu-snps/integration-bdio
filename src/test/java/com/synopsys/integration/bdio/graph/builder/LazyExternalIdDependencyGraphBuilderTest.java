@@ -23,11 +23,10 @@
  */
 package com.synopsys.integration.bdio.graph.builder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 
 import com.synopsys.integration.bdio.graph.DependencyGraph;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
@@ -40,9 +39,6 @@ import com.synopsys.integration.bdio.utility.DependencyIdTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
 public class LazyExternalIdDependencyGraphBuilderTest {
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     DependencyId stringId = new StringDependencyId("id1");
     Dependency stringDep = DependencyTestUtil.newMavenDependency("test1", "test2", "org");
     DependencyId aliasId = new StringDependencyId("alias1");
@@ -112,10 +108,8 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyName(stringId, "test1");
         builder.setDependencyAsAlias(aliasId, stringId);
 
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("A dependency ({\"name\":\"parent1\"}) in a relationship in the graph never had it's external id set.");
-
-        builder.build();
+        final String expectedMessage = "A dependency ({\"name\":\"parent1\"}) in a relationship in the graph never had it's external id set.";
+        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
     }
 
     @Test
@@ -129,10 +123,8 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyInfo(parentId1, parent1.name, parent1.version, parent1.externalId);
         builder.setDependencyInfo(childId1, child1.name, child1.version, child1.externalId);
 
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("A dependency ({\"name\":\"child2\"}) in a relationship in the graph never had it's external id set.");
-
-        builder.build();
+        final String expectedMessage = "A dependency ({\"name\":\"child2\"}) in a relationship in the graph never had it's external id set.";
+        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
     }
 
     @Test
@@ -199,4 +191,5 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2, parent3, parent4);
         DependencyGraphTestUtil.assertGraphParents(graph, child1, parent1, parent2, parent3, parent4);
     }
+
 }

@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio.model.externalid;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +73,9 @@ public class ExternalIdTest {
     public void testWithoutEnoughState() {
         final ExternalId externalId = new ExternalId(Forge.MAVEN);
         externalId.name = "bundler";
-        assertEquals(new String[] { "bundler" }, externalId.getExternalIdPieces());
+        final String[] pieces = externalId.getExternalIdPieces();
+        assertEquals(1, pieces.length);
+        assertEquals("bundler", pieces[0]);
     }
 
     @Test

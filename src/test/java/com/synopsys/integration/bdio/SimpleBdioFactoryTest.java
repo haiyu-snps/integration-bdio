@@ -37,9 +37,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import com.google.gson.Gson;
@@ -52,9 +50,6 @@ import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 import com.synopsys.integration.bdio.utility.JsonTestUtils;
 
 public class SimpleBdioFactoryTest {
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     @Test
     public void testConstructor() {
         final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
@@ -120,8 +115,7 @@ public class SimpleBdioFactoryTest {
         final File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
 
-        expectedException.expect(RuntimeException.class);
-        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
+        assertThrows(RuntimeException.class, () -> simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument));
     }
 
     @Test
@@ -133,8 +127,7 @@ public class SimpleBdioFactoryTest {
         final File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
 
-        expectedException.expect(RuntimeException.class);
-        simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
+        assertThrows(RuntimeException.class, () -> simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument));
     }
 
     @Test

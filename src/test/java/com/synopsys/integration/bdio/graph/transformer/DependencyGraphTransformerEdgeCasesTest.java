@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio.graph.transformer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -52,7 +52,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         return root;
     }
 
-    @Test(timeout = 30000)
+    @Test
     public void testTransformingExpensiveRecursiveTree() throws URISyntaxException, IOException, JSONException {
         // Here we generate a broad tree - for each new node, it becomes a child of all previous nodes
         // lets do it for [A,B,C,D]
