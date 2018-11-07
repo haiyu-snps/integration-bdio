@@ -23,12 +23,14 @@
  */
 package com.synopsys.integration.bdio.graph.summary;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.google.gson.Gson;
@@ -71,7 +73,7 @@ public class DependencyGraphSummarizerTest {
         final GraphSummary expectedGraphSummary = summarizer.fromJson(expectedJson);
         final String expectedGraphSummaryJson = summarizer.toJson(expectedGraphSummary);
 
-        JSONAssert.assertEquals(expectedGraphSummaryJson, actualGraphSummaryJson, false);
+        JSONassertEquals(expectedGraphSummaryJson, actualGraphSummaryJson, false);
     }
 
 }

@@ -23,7 +23,9 @@
  */
 package com.synopsys.integration.bdio.graph;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;

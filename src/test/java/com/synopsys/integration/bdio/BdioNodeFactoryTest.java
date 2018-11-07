@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -37,7 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
 import com.synopsys.integration.bdio.model.BdioBillOfMaterials;

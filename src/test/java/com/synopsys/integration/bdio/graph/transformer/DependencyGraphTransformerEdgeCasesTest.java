@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio.graph.transformer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.SimpleBdioFactory;
 import com.synopsys.integration.bdio.graph.MutableDependencyGraph;

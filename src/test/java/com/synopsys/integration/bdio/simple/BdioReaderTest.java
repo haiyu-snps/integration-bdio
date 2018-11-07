@@ -23,7 +23,7 @@
  */
 package com.synopsys.integration.bdio.simple;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -33,7 +33,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

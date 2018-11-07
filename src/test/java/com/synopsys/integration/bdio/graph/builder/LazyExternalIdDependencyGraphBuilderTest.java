@@ -23,10 +23,10 @@
  */
 package com.synopsys.integration.bdio.graph.builder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.ExpectedException;
 
 import com.synopsys.integration.bdio.graph.DependencyGraph;
