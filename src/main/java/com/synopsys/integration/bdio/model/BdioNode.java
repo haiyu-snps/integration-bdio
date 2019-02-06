@@ -30,7 +30,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class BdioNode {
     @SerializedName("@id")
-    public String id;
+    public BdioId id;
 
     @SerializedName("@type")
     public String type;

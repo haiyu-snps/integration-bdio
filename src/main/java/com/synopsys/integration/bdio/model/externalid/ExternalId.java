@@ -33,12 +33,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.Forge;
-import com.synopsys.integration.util.IntegrationEscapeUtil;
 
 public class ExternalId {
-    public static final String BDIO_ID_SEPARATOR = "/";
-
     public final Forge forge;
     public String group;
     public String name;
@@ -47,22 +45,18 @@ public class ExternalId {
     public String[] moduleNames;
     public String path;
 
-    private static final IntegrationEscapeUtil integrationEscapeUtil = new IntegrationEscapeUtil();
-
-    public ExternalId(final Forge forge) {
+    public ExternalId(Forge forge) {
         this.forge = forge;
     }
 
     /**
-     * @formatter:off
      * A forge is always required. The other fields to populate depend on what
      * external id type you need. The currently supported types are:
-     *   "name/version": populate name and version
-     *   "architecture": populate name, version, and architecture
-     *   "maven": populate name, version, and group
-     *   "module names": populate moduleNames
-     *   "path": populate path
-     * @formatter:on
+     * "name/version": populate name and version
+     * "architecture": populate name, version, and architecture
+     * "maven": populate name, version, and group
+     * "module names": populate moduleNames
+     * "path": populate path
      */
     public String[] getExternalIdPieces() {
         if (StringUtils.isNotBlank(path)) {
@@ -80,10 +74,10 @@ public class ExternalId {
         }
 
         // if we can't be positive about what kind of external id we are, just give everything we have in a reasonable order
-        final List<String> bestGuessPieces = new ArrayList<>();
+        List<String> bestGuessPieces = new ArrayList<>();
 
-        final List<String> bestGuessCandidates = Arrays.asList(group, name, version, architecture);
-        for (final String candidate : bestGuessCandidates) {
+        List<String> bestGuessCandidates = Arrays.asList(group, name, version, architecture);
+        for (String candidate : bestGuessCandidates) {
             if (StringUtils.isNotBlank(candidate)) {
                 bestGuessPieces.add(candidate);
             }
@@ -92,12 +86,12 @@ public class ExternalId {
         return bestGuessPieces.toArray(new String[bestGuessPieces.size()]);
     }
 
-    public String createBdioId() {
-        final List<String> bdioIdPieces = new ArrayList<>();
+    public BdioId createBdioId() {
+        List<String> bdioIdPieces = new ArrayList<>();
         bdioIdPieces.add(forge.toString());
-        bdioIdPieces.addAll(integrationEscapeUtil.escapePiecesForUri(Arrays.asList(getExternalIdPieces())));
+        bdioIdPieces.addAll((Arrays.asList(getExternalIdPieces())));
 
-        return "http:" + StringUtils.join(bdioIdPieces, BDIO_ID_SEPARATOR);
+        return new BdioId(bdioIdPieces);
     }
 
     public String createExternalId() {
@@ -114,7 +108,7 @@ public class ExternalId {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 

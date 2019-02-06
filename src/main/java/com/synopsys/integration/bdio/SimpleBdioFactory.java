@@ -41,6 +41,7 @@ import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioBillOfMaterials;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioExternalIdentifier;
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioNode;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.Forge;
@@ -64,7 +65,7 @@ public class SimpleBdioFactory {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public SimpleBdioFactory(final BdioPropertyHelper bdioPropertyHelper, final BdioNodeFactory bdioNodeFactory, final DependencyGraphTransformer dependencyGraphTransformer, final ExternalIdFactory externalIdFactory, final Gson gson) {
+    public SimpleBdioFactory(BdioPropertyHelper bdioPropertyHelper, BdioNodeFactory bdioNodeFactory, DependencyGraphTransformer dependencyGraphTransformer, ExternalIdFactory externalIdFactory, Gson gson) {
         this.bdioPropertyHelper = bdioPropertyHelper;
         this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
@@ -76,87 +77,95 @@ public class SimpleBdioFactory {
         return new MutableMapDependencyGraph();
     }
 
-    public Dependency createDependency(final String name, final String version, final ExternalId externalId) {
+    public Dependency createDependency(String name, String version, ExternalId externalId) {
         return new Dependency(name, version, externalId);
     }
 
-    public BdioWriter createBdioWriter(final Writer writer) throws IOException {
+    public BdioWriter createBdioWriter(Writer writer) throws IOException {
         return new BdioWriter(gson, writer);
     }
 
-    public BdioWriter createBdioWriter(final OutputStream outputStream) throws IOException {
+    public BdioWriter createBdioWriter(OutputStream outputStream) throws IOException {
         return new BdioWriter(gson, outputStream);
     }
 
-    public void writeSimpleBdioDocument(final BdioWriter bdioWriter, final SimpleBdioDocument simpleBdioDocument) {
+    public void writeSimpleBdioDocument(BdioWriter bdioWriter, SimpleBdioDocument simpleBdioDocument) {
         bdioWriter.writeSimpleBdioDocument(simpleBdioDocument);
     }
 
-    public void writeSimpleBdioDocumentToFile(final File bdioFile, final SimpleBdioDocument simpleBdioDocument) throws IOException {
+    public void writeSimpleBdioDocumentToFile(File bdioFile, SimpleBdioDocument simpleBdioDocument) throws IOException {
         try (BdioWriter bdioWriter = createBdioWriter(new FileOutputStream(bdioFile))) {
             writeSimpleBdioDocument(bdioWriter, simpleBdioDocument);
         }
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String codeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId) {
-        final BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, projectName, projectVersionName);
+    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName, ExternalId projectExternalId) {
+        BdioId projectId = projectExternalId.createBdioId();
+        BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId);
 
-        final String projectId = projectExternalId.createBdioId();
-        final BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
-        final BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId, projectExternalIdentifier);
+        return createSimpleBdioDocument(codeLocationName, project);
+    }
 
-        final SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
+    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName) {
+        BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName);
+        return createSimpleBdioDocument(codeLocationName, project);
+    }
+
+    private SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, BdioProject project) {
+        BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, project.name, project.version);
+
+        SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
         simpleBdioDocument.billOfMaterials = billOfMaterials;
         simpleBdioDocument.project = project;
 
         return simpleBdioDocument;
     }
 
-    public void populateComponents(final SimpleBdioDocument simpleBdioDocument, final ExternalId projectExternalId, final DependencyGraph dependencyGraph) {
-        final Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
+    public void populateComponents(SimpleBdioDocument simpleBdioDocument, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
+        Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
         existingComponents.put(projectExternalId, simpleBdioDocument.project);
 
-        final List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(dependencyGraph, simpleBdioDocument.project, dependencyGraph.getRootDependencies(), existingComponents);
+        List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(dependencyGraph, simpleBdioDocument.project, dependencyGraph.getRootDependencies(), existingComponents);
         simpleBdioDocument.components = bdioComponents;
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String projectName, final String projectVersionName, final ExternalId projectExternalId) {
+    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ExternalId projectExternalId) {
         return createSimpleBdioDocument(null, projectName, projectVersionName, projectExternalId);
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph dependencyGraph) {
-        final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
+        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectName, projectVersionName, projectExternalId);
 
         populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
 
         return simpleBdioDocument;
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(final String codeLocationName, final String projectName, final String projectVersionName, final ExternalId projectExternalId, final DependencyGraph dependencyGraph) {
-        final SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationName, projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
+        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationName, projectName, projectVersionName, projectExternalId);
 
         populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
 
         return simpleBdioDocument;
     }
 
-    public ExternalId createNameVersionExternalId(final Forge forge, final String name, final String version) {
+    public ExternalId createNameVersionExternalId(Forge forge, String name, String version) {
         return externalIdFactory.createNameVersionExternalId(forge, name, version);
     }
 
-    public ExternalId createMavenExternalId(final String group, final String name, final String version) {
+    public ExternalId createMavenExternalId(String group, String name, String version) {
         return externalIdFactory.createMavenExternalId(group, name, version);
     }
 
-    public ExternalId createArchitectureExternalId(final Forge forge, final String name, final String version, final String architecture) {
+    public ExternalId createArchitectureExternalId(Forge forge, String name, String version, String architecture) {
         return externalIdFactory.createArchitectureExternalId(forge, name, version, architecture);
     }
 
-    public ExternalId createModuleNamesExternalId(final Forge forge, final String... moduleNames) {
+    public ExternalId createModuleNamesExternalId(Forge forge, String... moduleNames) {
         return externalIdFactory.createModuleNamesExternalId(forge, moduleNames);
     }
 
-    public ExternalId createPathExternalId(final Forge forge, final String path) {
+    public ExternalId createPathExternalId(Forge forge, String path) {
         return externalIdFactory.createPathExternalId(forge, path);
     }
 

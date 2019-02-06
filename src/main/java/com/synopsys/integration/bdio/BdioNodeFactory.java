@@ -38,6 +38,7 @@ import com.synopsys.integration.bdio.model.BdioBillOfMaterials;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioCreationInfo;
 import com.synopsys.integration.bdio.model.BdioExternalIdentifier;
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.SpdxCreator;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
@@ -45,13 +46,13 @@ import com.synopsys.integration.bdio.model.externalid.ExternalId;
 public class BdioNodeFactory {
     private final BdioPropertyHelper bdioPropertyHelper;
 
-    public BdioNodeFactory(final BdioPropertyHelper bdioPropertyHelper) {
+    public BdioNodeFactory(BdioPropertyHelper bdioPropertyHelper) {
         this.bdioPropertyHelper = bdioPropertyHelper;
     }
 
-    public BdioBillOfMaterials createBillOfMaterials(final String codeLocationName, final String projectName, final String projectVersion) {
-        final BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
-        billOfMaterials.id = String.format("uuid:%s", UUID.randomUUID());
+    public BdioBillOfMaterials createBillOfMaterials(String codeLocationName, String projectName, String projectVersion) {
+        BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
+        billOfMaterials.id = new BdioId(String.format("uuid:%s", UUID.randomUUID()));
         if (StringUtils.isNotBlank(codeLocationName)) {
             billOfMaterials.spdxName = codeLocationName;
         } else {
@@ -64,35 +65,45 @@ public class BdioNodeFactory {
         String version = "UnknownVersion";
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("com/blackducksoftware/integration/bdio/version.txt")) {
             version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (final IOException e) {
+        } catch (IOException e) {
         }
         billOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("IntegrationBdio", version));
 
         return billOfMaterials;
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final ExternalId externalId) {
-        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
+    public BdioProject createProject(String projectName, String projectVersion, BdioId bdioId, ExternalId externalId) {
+        BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         return createProject(projectName, projectVersion, bdioId, externalIdentifier);
     }
 
-    public BdioProject createProject(final String projectName, final String projectVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
-        final BdioProject project = new BdioProject();
-        project.id = bdioId;
-        project.name = projectName;
-        project.version = projectVersion;
+    public BdioProject createProject(String projectName, String projectVersion, BdioId bdioId, BdioExternalIdentifier externalIdentifier) {
+        BdioProject project = createProject(projectName, projectVersion, bdioId);
         project.bdioExternalIdentifier = externalIdentifier;
 
         return project;
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final ExternalId externalId) {
-        final BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
+    public BdioProject createProject(String projectName, String projectVersion) {
+        return createProject(projectName, projectVersion, new BdioId(projectName, projectVersion));
+    }
+
+    public BdioProject createProject(String projectName, String projectVersion, BdioId bdioId) {
+        BdioProject project = new BdioProject();
+        project.id = bdioId;
+        project.name = projectName;
+        project.version = projectVersion;
+
+        return project;
+    }
+
+    public BdioComponent createComponent(String componentName, String componentVersion, ExternalId externalId) {
+        BdioExternalIdentifier externalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         return createComponent(componentName, componentVersion, externalId.createBdioId(), externalIdentifier);
     }
 
-    public BdioComponent createComponent(final String componentName, final String componentVersion, final String bdioId, final BdioExternalIdentifier externalIdentifier) {
-        final BdioComponent component = new BdioComponent();
+    public BdioComponent createComponent(String componentName, String componentVersion, BdioId bdioId, BdioExternalIdentifier externalIdentifier) {
+        BdioComponent component = new BdioComponent();
         component.id = bdioId;
         component.name = componentName;
         component.version = componentVersion;
