@@ -13,3 +13,5 @@ out/
 # build tool
 .gradle/
 build/
+
+src/main/resources/com/synopsys

@@ -91,7 +91,7 @@ public class ExternalId {
         bdioIdPieces.add(forge.toString());
         bdioIdPieces.addAll((Arrays.asList(getExternalIdPieces())));
 
-        return new BdioId(bdioIdPieces);
+        return BdioId.createFromPieces(bdioIdPieces);
     }
 
     public String createExternalId() {

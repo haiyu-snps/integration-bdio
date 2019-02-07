@@ -11,7 +11,7 @@ version = '17.0.0-SNAPSHOT'
 
 apply plugin: 'com.blackducksoftware.integration.library'
 
-final def versionFile = new File("${projectDir}/src/main/resources/com/blackducksoftware/integration/bdio/version.txt")
+final def versionFile = new File("${projectDir}/src/main/resources/com/synopsys/integration/bdio/version.txt")
 versionFile.mkdirs()
 versionFile.delete()
 versionFile << version

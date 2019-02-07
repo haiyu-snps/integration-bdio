@@ -1,6 +1,6 @@
 package com.synopsys.integration.bdio.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,17 +13,17 @@ public class DependencyTest {
 
     @Test
     public void testConstructingDependencyNode() {
-        final ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
-        final Dependency dependencyNode = new Dependency(externalId);
+        ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
+        Dependency dependencyNode = new Dependency(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
-        assertEquals("http:npm/name/version", dependencyNode.externalId.createBdioId());
+        assertEquals(new BdioId("http:npm/name/version"), dependencyNode.externalId.createBdioId());
         assertEquals("name@version", dependencyNode.externalId.createExternalId());
     }
 
     @Test
     public void testBoilerplateCode() {
-        final Dependency nodeA = new Dependency((String) null, (String) null, (ExternalId) null);
-        final Dependency nodeB = new Dependency((String) null, (String) null, (ExternalId) null);
+        Dependency nodeA = new Dependency((String) null, (String) null, (ExternalId) null);
+        Dependency nodeB = new Dependency((String) null, (String) null, (ExternalId) null);
         assertEquals(nodeA, nodeB);
         assertEquals(nodeA.hashCode(), nodeB.hashCode());
         assertEquals(nodeA.toString(), nodeB.toString());

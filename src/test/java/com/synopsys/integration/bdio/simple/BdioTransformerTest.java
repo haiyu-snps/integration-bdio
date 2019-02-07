@@ -41,30 +41,30 @@ public class BdioTransformerTest {
         testTransformingDependencyGraphs("sample-edge.jsonld", false);
     }
 
-    public void testTransformingDependencyGraphs(final String filename, final boolean testEqualityOfMetadata) throws URISyntaxException, IOException, JSONException {
-        final String expectedJson = jsonTestUtils.getExpectedJson(filename);
+    public void testTransformingDependencyGraphs(String filename, boolean testEqualityOfMetadata) throws URISyntaxException, IOException, JSONException {
+        String expectedJson = jsonTestUtils.getExpectedJson(filename);
 
-        final Reader reader = new StringReader(expectedJson);
+        Reader reader = new StringReader(expectedJson);
         SimpleBdioDocument doc = null;
         try (BdioReader bdioReader = new BdioReader(new Gson(), reader)) {
             doc = bdioReader.readSimpleBdioDocument();
         }
 
-        final Map<String, Forge> forgeMap = new HashMap<>();
+        Map<String, Forge> forgeMap = new HashMap<>();
         forgeMap.put("maven", Forge.MAVEN);
-        final BdioTransformer transformer = new BdioTransformer(forgeMap);
+        BdioTransformer transformer = new BdioTransformer(forgeMap);
 
-        final DependencyGraph graph = transformer.transformToDependencyGraph(doc.project, doc.components);
+        DependencyGraph graph = transformer.transformToDependencyGraph(doc.project, doc.components);
 
         assertEquals(1, graph.getRootDependencies().size());
 
-        final ExternalId projectId = new ExternalId(Forge.MAVEN);
+        ExternalId projectId = new ExternalId(Forge.MAVEN);
         projectId.group = "com.blackducksoftware.gradle.test";
         projectId.name = "gradleTestProject";
         projectId.version = "99.5-SNAPSHOT";
 
-        final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        final SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
+        SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
 
         simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
         simpleBdioDocument.billOfMaterials.creationInfo = doc.billOfMaterials.creationInfo;
@@ -78,9 +78,9 @@ public class BdioTransformerTest {
         assertRelationships(doc.project.relationships, simpleBdioDocument.project.relationships);
 
         assertEquals(doc.components.size(), simpleBdioDocument.components.size());
-        for (final BdioComponent expected : simpleBdioDocument.components) {
+        for (BdioComponent expected : simpleBdioDocument.components) {
             boolean fnd = false;
-            for (final BdioComponent actual : doc.components) {
+            for (BdioComponent actual : doc.components) {
                 if (expected.id.equals(actual.id)) {
                     assertEquals(false, fnd);
                     fnd = true;
@@ -94,16 +94,16 @@ public class BdioTransformerTest {
 
                 }
             }
-            assertEquals(true, fnd, expected.id);
+            assertEquals(true, fnd, expected.id.toString());
         }
 
     }
 
-    private void assertRelationships(final List<BdioRelationship> expectedList, final List<BdioRelationship> actualList) {
+    private void assertRelationships(List<BdioRelationship> expectedList, List<BdioRelationship> actualList) {
         assertEquals(expectedList.size(), actualList.size());
-        for (final BdioRelationship expected : expectedList) {
+        for (BdioRelationship expected : expectedList) {
             boolean fnd = false;
-            for (final BdioRelationship actual : actualList) {
+            for (BdioRelationship actual : actualList) {
                 if (expected.related.equals(actual.related)) {
                     assertEquals(false, fnd);
                     fnd = true;
@@ -111,7 +111,7 @@ public class BdioTransformerTest {
                     assertEquals(true, EqualsBuilder.reflectionEquals(expected, actual));
                 }
             }
-            assertEquals(true, fnd, expected.related);
+            assertEquals(true, fnd, expected.related.toString());
         }
     }
 

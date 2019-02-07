@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.synopsys.integration.bdio.graph.DependencyGraph;
 import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.BdioRelationship;
 import com.synopsys.integration.bdio.model.Forge;
@@ -45,32 +46,32 @@ public class BdioTransformer {
         forgeMap = Forge.getKnownForges();
     }
 
-    public BdioTransformer(final Map<String, Forge> forgeMap) {
+    public BdioTransformer(Map<String, Forge> forgeMap) {
         this.forgeMap = forgeMap;
     }
 
-    public DependencyGraph transformToDependencyGraph(final BdioProject project, final List<BdioComponent> components) {
-        final MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
-        final Map<String, Dependency> bdioIdToDependencyMap = new HashMap<>();
+    public DependencyGraph transformToDependencyGraph(BdioProject project, List<BdioComponent> components) {
+        MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
+        Map<BdioId, Dependency> bdioIdToDependencyMap = new HashMap<>();
 
-        for (final BdioComponent component : components) {
+        for (BdioComponent component : components) {
             ExternalId externalId = component.bdioExternalIdentifier.externalIdMetaData;
             if (externalId == null) {
                 // if the integration has not set the metadata, try our best to guess it
-                final Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
+                Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
                 externalId = recreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
             }
-            final Dependency dependency = new Dependency(component.name, component.version, externalId);
+            Dependency dependency = new Dependency(component.name, component.version, externalId);
             bdioIdToDependencyMap.put(component.id, dependency);
         }
 
-        for (final BdioRelationship relation : project.relationships) {
+        for (BdioRelationship relation : project.relationships) {
             dependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
         }
 
-        for (final BdioComponent component : components) {
-            final Dependency dependency = bdioIdToDependencyMap.get(component.id);
-            for (final BdioRelationship relation : component.relationships) {
+        for (BdioComponent component : components) {
+            Dependency dependency = bdioIdToDependencyMap.get(component.id);
+            for (BdioRelationship relation : component.relationships) {
                 dependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
             }
         }
@@ -78,9 +79,9 @@ public class BdioTransformer {
         return dependencyGraph;
     }
 
-    private ExternalId recreateExternalId(final Forge forge, final String fullExternalId, final String name, final String revision) {
-        final String[] pieces = StringUtils.split(fullExternalId, forge.getSeparator());
-        final ExternalId id = new ExternalId(forge);
+    private ExternalId recreateExternalId(Forge forge, String fullExternalId, String name, String revision) {
+        String[] pieces = StringUtils.split(fullExternalId, forge.getSeparator());
+        ExternalId id = new ExternalId(forge);
 
         if (pieces.length == 1) {
             // assume path but could be a 1 length moduleNames id...le sigh

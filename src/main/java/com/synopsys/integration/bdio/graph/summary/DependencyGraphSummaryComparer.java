@@ -27,43 +27,52 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.synopsys.integration.bdio.graph.DependencyGraph;
+import com.synopsys.integration.bdio.model.BdioId;
 
 public class DependencyGraphSummaryComparer {
     private final DependencyGraphSummarizer dependencyGraphSummarizer;
 
-    public DependencyGraphSummaryComparer(final DependencyGraphSummarizer dependencyGraphSummarizer) {
+    public DependencyGraphSummaryComparer(DependencyGraphSummarizer dependencyGraphSummarizer) {
         this.dependencyGraphSummarizer = dependencyGraphSummarizer;
     }
 
-    public boolean areEqual(final DependencyGraph left, final DependencyGraph right) {
-        final GraphSummary leftSummary = dependencyGraphSummarizer.fromGraph(left);
-        final GraphSummary rightSummary = dependencyGraphSummarizer.fromGraph(right);
+    public boolean areEqual(DependencyGraph left, DependencyGraph right) {
+        GraphSummary leftSummary = dependencyGraphSummarizer.fromGraph(left);
+        GraphSummary rightSummary = dependencyGraphSummarizer.fromGraph(right);
         return areEqual(leftSummary, rightSummary);
     }
 
-    public boolean areEqual(final GraphSummary left, final GraphSummary right) {
+    public boolean areEqual(GraphSummary left, GraphSummary right) {
         boolean isEqual = true;
 
         isEqual = isEqual && left.rootExternalDataIds.equals(right.rootExternalDataIds);
         isEqual = isEqual && left.dependencySummaries.keySet().equals(right.dependencySummaries.keySet());
 
-        final Set<String> leftRelationshipIds = left.externalDataIdRelationships.keySet();
-        final Set<String> leftExistingRelationshipsIds = leftRelationshipIds.stream().filter(key -> left.externalDataIdRelationships.get(key) != null && left.externalDataIdRelationships.get(key).size() > 0).collect(Collectors.toSet());
+        Set<BdioId> leftRelationshipIds = getRelationships(left);
+        Set<BdioId> leftExistingRelationshipsIds = getExistingRelationships(left, leftRelationshipIds);
 
-        final Set<String> rightRelationshipIds = right.externalDataIdRelationships.keySet();
-        final Set<String> rightExistingRelationshipsIds = rightRelationshipIds.stream().filter(key -> right.externalDataIdRelationships.get(key) != null && right.externalDataIdRelationships.get(key).size() > 0).collect(Collectors.toSet());
+        Set<BdioId> rightRelationshipIds = getRelationships(right);
+        Set<BdioId> rightExistingRelationshipsIds = getExistingRelationships(right, rightRelationshipIds);
 
         isEqual = isEqual && leftExistingRelationshipsIds.equals(rightExistingRelationshipsIds);
 
-        for (final String key : left.dependencySummaries.keySet()) {
+        for (BdioId key : left.dependencySummaries.keySet()) {
             isEqual = isEqual && left.dependencySummaries.get(key).getName().equals(right.dependencySummaries.get(key).getName());
             isEqual = isEqual && left.dependencySummaries.get(key).getVersion().equals(right.dependencySummaries.get(key).getVersion());
         }
-        for (final String key : leftExistingRelationshipsIds) {
+        for (BdioId key : leftExistingRelationshipsIds) {
             isEqual = isEqual && left.externalDataIdRelationships.get(key).equals(right.externalDataIdRelationships.get(key));
         }
 
         return isEqual;
+    }
+
+    private Set<BdioId> getRelationships(GraphSummary graphSummary) {
+        return graphSummary.externalDataIdRelationships.keySet();
+    }
+
+    private Set<BdioId> getExistingRelationships(GraphSummary graphSummary, Set<BdioId> relationships) {
+        return relationships.stream().filter(key -> graphSummary.externalDataIdRelationships.get(key) != null && graphSummary.externalDataIdRelationships.get(key).size() > 0).collect(Collectors.toSet());
     }
 
 }

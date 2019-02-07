@@ -1,6 +1,7 @@
 package com.synopsys.integration.bdio;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.synopsys.integration.bdio.model.BdioBillOfMaterials;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioCreationInfo;
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.SpdxCreator;
@@ -33,38 +35,38 @@ public class BdioNodeFactoryTest {
 
     @Test
     public void testWriterOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
-        final String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
+        String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
 
         // we simply write the final structure out through a StringWriter so we can compare what is generated to a stock
         // file
-        final Writer writer = new StringWriter();
+        Writer writer = new StringWriter();
         try (BdioWriter bdioWriter = new BdioWriter(new Gson(), writer)) {
             bdioWriter.writeSimpleBdioDocument(getSimpleBdioDocument());
         }
 
-        final String actualJson = writer.toString();
+        String actualJson = writer.toString();
         jsonTestUtils.verifyJsonArraysEqual(expectedJson, actualJson);
     }
 
     @Test
     public void testOutputStreamOutput() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
-        final String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
+        String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
 
         // we simply write the final structure out through a ByteArrayOutputStream so we can compare what is generated
         // to a stock file
-        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (BdioWriter bdioWriter = new BdioWriter(new Gson(), outputStream)) {
             bdioWriter.writeSimpleBdioDocument(getSimpleBdioDocument());
         }
 
-        final String actualJson = outputStream.toString(StandardCharsets.UTF_8.name());
+        String actualJson = outputStream.toString(StandardCharsets.UTF_8.name());
         jsonTestUtils.verifyJsonArraysEqual(expectedJson, actualJson);
     }
 
     @Test
     public void testCodeLocationOverride() {
-        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
-        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", "name", "version");
         assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.spdxName);
 
@@ -72,38 +74,52 @@ public class BdioNodeFactoryTest {
         assertEquals("override", bdioBillOfMaterials.spdxName);
     }
 
+    @Test
+    public void testCreateMinimumProject() {
+        BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+
+        BdioProject project = bdioNodeFactory.createProject("projectName", "projectVersionName");
+        assertEquals("Project", project.type);
+        assertEquals("projectName", project.name);
+        assertEquals("projectVersionName", project.version);
+        assertEquals(new BdioId("http:projectName/projectVersionName"), project.id);
+        assertEquals(0, project.relationships.size());
+        assertNull(project.bdioExternalIdentifier);
+    }
+
     private SimpleBdioDocument getSimpleBdioDocument() {
-        final SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
+        SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
 
-        final BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
-        final BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
 
-        final String projectGroup = "com.blackducksoftware.gradle.test";
-        final String projectName = "gradleTestProject";
-        final String projectVersion = "99.5-SNAPSHOT";
-        final ExternalId mavenExternalId = externalIdFactory.createMavenExternalId(projectGroup, projectName, projectVersion);
-        final String projectBdioId = mavenExternalId.createBdioId();
+        String projectGroup = "com.blackducksoftware.gradle.test";
+        String projectName = "gradleTestProject";
+        String projectVersion = "99.5-SNAPSHOT";
+        ExternalId mavenExternalId = externalIdFactory.createMavenExternalId(projectGroup, projectName, projectVersion);
+        BdioId projectBdioId = mavenExternalId.createBdioId();
 
-        final BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
+        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
         // we are overriding the default value of a new creation info just to pass the json comparison
         bdioBillOfMaterials.creationInfo = new BdioCreationInfo();
         bdioBillOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("integration-bdio-test", "0.0.1-SNAPSHOT"));
         // we are overriding the default value of a new uuid just to pass the json comparison
-        bdioBillOfMaterials.id = "uuid:45772d33-5353-44f1-8681-3d8a15540646";
+        bdioBillOfMaterials.id = BdioId.createFromUUID("45772d33-5353-44f1-8681-3d8a15540646");
 
-        final BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, mavenExternalId);
+        BdioProject bdioProject = bdioNodeFactory.createProject(projectName, projectVersion, projectBdioId, mavenExternalId);
 
-        final ExternalId cxfBundleExternalId = externalIdFactory.createMavenExternalId("org.apache.cxf", "cxf-bundle", "2.7.7");
-        final BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7", cxfBundleExternalId);
+        ExternalId cxfBundleExternalId = externalIdFactory.createMavenExternalId("org.apache.cxf", "cxf-bundle", "2.7.7");
+        BdioComponent cxfBundle = bdioNodeFactory.createComponent("cxf-bundle", "2.7.7", cxfBundleExternalId);
 
-        final ExternalId velocityExternalId = externalIdFactory.createMavenExternalId("org.apache.velocity", "velocity", "1.7");
-        final BdioComponent velocity = bdioNodeFactory.createComponent("velocity", "1.7", velocityExternalId);
+        ExternalId velocityExternalId = externalIdFactory.createMavenExternalId("org.apache.velocity", "velocity", "1.7");
+        BdioComponent velocity = bdioNodeFactory.createComponent("velocity", "1.7", velocityExternalId);
 
-        final ExternalId commonsCollectionsExternalId = externalIdFactory.createMavenExternalId("commons-collections", "commons-collections", "3.2.1");
-        final BdioComponent commonsCollections = bdioNodeFactory.createComponent("commons-collections", "3.2.1", commonsCollectionsExternalId);
+        ExternalId commonsCollectionsExternalId = externalIdFactory.createMavenExternalId("commons-collections", "commons-collections", "3.2.1");
+        BdioComponent commonsCollections = bdioNodeFactory.createComponent("commons-collections", "3.2.1", commonsCollectionsExternalId);
 
-        final ExternalId commonsLangExternalId = externalIdFactory.createMavenExternalId("commons-lang", "commons-lang", "2.6");
-        final BdioComponent commonsLang = bdioNodeFactory.createComponent("commons-lang", "2.6", commonsLangExternalId);
+        ExternalId commonsLangExternalId = externalIdFactory.createMavenExternalId("commons-lang", "commons-lang", "2.6");
+        BdioComponent commonsLang = bdioNodeFactory.createComponent("commons-lang", "2.6", commonsLangExternalId);
 
         // we will now relate the constructed bdio nodes
 
@@ -118,7 +134,7 @@ public class BdioNodeFactoryTest {
         // as the commonsLang component was already included from the cxfBundle component above
         bdioPropertyHelper.addRelationships(velocity, Arrays.asList(commonsCollections, commonsLang));
 
-        final List<BdioComponent> bdioComponents = new ArrayList<>();
+        List<BdioComponent> bdioComponents = new ArrayList<>();
         bdioComponents.add(cxfBundle);
         bdioComponents.add(velocity);
         bdioComponents.add(commonsCollections);

@@ -52,7 +52,7 @@ public class BdioNodeFactory {
 
     public BdioBillOfMaterials createBillOfMaterials(String codeLocationName, String projectName, String projectVersion) {
         BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
-        billOfMaterials.id = new BdioId(String.format("uuid:%s", UUID.randomUUID()));
+        billOfMaterials.id = BdioId.createFromUUID(UUID.randomUUID().toString());
         if (StringUtils.isNotBlank(codeLocationName)) {
             billOfMaterials.spdxName = codeLocationName;
         } else {
@@ -63,7 +63,7 @@ public class BdioNodeFactory {
         billOfMaterials.creationInfo = new BdioCreationInfo();
         billOfMaterials.creationInfo.created = Instant.now().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         String version = "UnknownVersion";
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("com/blackducksoftware/integration/bdio/version.txt")) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("com/synopsys/integration/bdio/version.txt")) {
             version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
         }
@@ -85,7 +85,7 @@ public class BdioNodeFactory {
     }
 
     public BdioProject createProject(String projectName, String projectVersion) {
-        return createProject(projectName, projectVersion, new BdioId(projectName, projectVersion));
+        return createProject(projectName, projectVersion, BdioId.createFromPieces(projectName, projectVersion));
     }
 
     public BdioProject createProject(String projectName, String projectVersion, BdioId bdioId) {

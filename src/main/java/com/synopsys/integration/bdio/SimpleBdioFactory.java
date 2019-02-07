@@ -103,6 +103,9 @@ public class SimpleBdioFactory {
         BdioId projectId = projectExternalId.createBdioId();
         BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId);
 
+        BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
+        project.bdioExternalIdentifier = projectExternalIdentifier;
+
         return createSimpleBdioDocument(codeLocationName, project);
     }
 

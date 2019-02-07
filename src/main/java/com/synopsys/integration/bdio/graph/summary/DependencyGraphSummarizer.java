@@ -30,6 +30,7 @@ import java.util.Set;
 
 import com.google.gson.Gson;
 import com.synopsys.integration.bdio.graph.DependencyGraph;
+import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.util.NameVersion;
@@ -37,41 +38,41 @@ import com.synopsys.integration.util.NameVersion;
 public class DependencyGraphSummarizer {
     private final Gson gson;
 
-    public DependencyGraphSummarizer(final Gson gson) {
+    public DependencyGraphSummarizer(Gson gson) {
         this.gson = gson;
     }
 
-    public GraphSummary fromJson(final String data) {
+    public GraphSummary fromJson(String data) {
         return gson.fromJson(data, GraphSummary.class);
     }
 
-    public String toJson(final GraphSummary data) {
+    public String toJson(GraphSummary data) {
         return gson.toJson(data);
     }
 
-    public String toJson(final DependencyGraph graph) {
+    public String toJson(DependencyGraph graph) {
         return toJson(fromGraph(graph));
     }
 
-    public GraphSummary fromGraph(final DependencyGraph graph) {
-        final Queue<Dependency> unprocessed = new LinkedList<>(graph.getRootDependencies());
-        final Set<Dependency> processed = new HashSet<>();
+    public GraphSummary fromGraph(DependencyGraph graph) {
+        Queue<Dependency> unprocessed = new LinkedList<>(graph.getRootDependencies());
+        Set<Dependency> processed = new HashSet<>();
 
-        final GraphSummary graphSummary = new GraphSummary();
+        GraphSummary graphSummary = new GraphSummary();
 
         while (unprocessed.size() > 0) {
-            final Dependency nextDependency = unprocessed.remove();
+            Dependency nextDependency = unprocessed.remove();
             processed.add(nextDependency);
 
-            final String nextId = nextDependency.externalId.createBdioId();
+            BdioId nextId = nextDependency.externalId.createBdioId();
             if (!graphSummary.dependencySummaries.containsKey(nextId)) {
-                final NameVersion nameVersion = new NameVersion();
+                NameVersion nameVersion = new NameVersion();
                 nameVersion.setName(nextDependency.name);
                 nameVersion.setVersion(nextDependency.version);
                 graphSummary.dependencySummaries.put(nextId, nameVersion);
             }
 
-            for (final Dependency dep : graph.getChildrenForParent(nextDependency)) {
+            for (Dependency dep : graph.getChildrenForParent(nextDependency)) {
                 if (!graphSummary.externalDataIdRelationships.containsKey(nextId)) {
                     graphSummary.externalDataIdRelationships.put(nextId, new HashSet<>());
                 }
@@ -82,7 +83,7 @@ public class DependencyGraphSummarizer {
             }
         }
 
-        for (final ExternalId externalId : graph.getRootDependencyExternalIds()) {
+        for (ExternalId externalId : graph.getRootDependencyExternalIds()) {
             graphSummary.rootExternalDataIds.add(externalId.createBdioId());
         }
 

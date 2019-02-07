@@ -23,13 +23,21 @@
  */
 package com.synopsys.integration.bdio.model;
 
-import com.google.gson.annotations.SerializedName;
+import java.io.IOException;
 
-public class BdioRelationship {
-    @SerializedName("related")
-    public BdioId related;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-    @SerializedName("relationshipType")
-    public String relationshipType;
+public class BdioIdAdapter extends TypeAdapter<BdioId> {
+    @Override
+    public void write(JsonWriter writer, BdioId value) throws IOException {
+        writer.value(value.toString());
+    }
+
+    @Override
+    public BdioId read(JsonReader in) throws IOException {
+        return new BdioId(in.nextString());
+    }
 
 }
