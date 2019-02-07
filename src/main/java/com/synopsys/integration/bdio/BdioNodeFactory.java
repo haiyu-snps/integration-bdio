@@ -44,10 +44,20 @@ import com.synopsys.integration.bdio.model.SpdxCreator;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class BdioNodeFactory {
+    public static final String UNKNOWN_LIBRARY_VERSION = "UnknownVersion";
+
+    private static final String VERSION_RESOURCE_PATH = "com/synopsys/integration/bdio/version.txt";
+
     private final BdioPropertyHelper bdioPropertyHelper;
 
     public BdioNodeFactory(BdioPropertyHelper bdioPropertyHelper) {
         this.bdioPropertyHelper = bdioPropertyHelper;
+    }
+
+    public BdioBillOfMaterials createBillOfMaterials(String projectName, String projectVersion) {
+        String codeLocationName = String.format("%s/%s Black Duck I/O Export", projectName, projectVersion);
+
+        return createBillOfMaterials(codeLocationName, projectName, projectVersion);
     }
 
     public BdioBillOfMaterials createBillOfMaterials(String codeLocationName, String projectName, String projectVersion) {
@@ -62,8 +72,9 @@ public class BdioNodeFactory {
 
         billOfMaterials.creationInfo = new BdioCreationInfo();
         billOfMaterials.creationInfo.created = Instant.now().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
-        String version = "UnknownVersion";
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("com/synopsys/integration/bdio/version.txt")) {
+        String version = BdioNodeFactory.UNKNOWN_LIBRARY_VERSION;
+        System.out.println(BdioNodeFactory.VERSION_RESOURCE_PATH);
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BdioNodeFactory.VERSION_RESOURCE_PATH)) {
             version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {
         }

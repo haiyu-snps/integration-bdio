@@ -132,6 +132,19 @@ public class SimpleBdioFactoryTest {
         jsonTestUtils.verifyJsonArraysEqual(expectedJson, actualJson, false);
     }
 
+    @Test
+    public void testCreatingProjectWithOnlyNameAndVersion() {
+        SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("code location name", "project name", "project version name");
+
+        assertEquals("code location name", simpleBdioDocument.billOfMaterials.spdxName);
+        assertEquals("project name", simpleBdioDocument.project.name);
+        assertEquals("project version name", simpleBdioDocument.project.version);
+        assertEquals(new BdioId("http:project_name/project_version_name"), simpleBdioDocument.project.id);
+        assertTrue(simpleBdioDocument.project.relationships.isEmpty());
+        assertNull(simpleBdioDocument.project.bdioExternalIdentifier);
+    }
+
     private SimpleBdioDocument createSimpleBdioDocument(SimpleBdioFactory simpleBdioFactory) {
         MutableDependencyGraph mutableDependencyGraph = simpleBdioFactory.createMutableDependencyGraph();
 

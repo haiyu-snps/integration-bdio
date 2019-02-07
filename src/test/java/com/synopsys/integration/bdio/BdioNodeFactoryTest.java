@@ -1,7 +1,6 @@
 package com.synopsys.integration.bdio;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -67,7 +66,7 @@ public class BdioNodeFactoryTest {
     public void testCodeLocationOverride() {
         BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
-        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", "name", "version");
+        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("name", "version");
         assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.spdxName);
 
         bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("override", "name", "version");
@@ -88,6 +87,17 @@ public class BdioNodeFactoryTest {
         assertNull(project.bdioExternalIdentifier);
     }
 
+    @Test
+    public void testVersionFileFound() throws Exception {
+        BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
+        BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
+        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("name", "version");
+        assertEquals("name/version Black Duck I/O Export", bdioBillOfMaterials.spdxName);
+        for (String spdxCreator : bdioBillOfMaterials.creationInfo.getCreator()) {
+            assertFalse(spdxCreator.contains(BdioNodeFactory.UNKNOWN_LIBRARY_VERSION));
+        }
+    }
+
     private SimpleBdioDocument getSimpleBdioDocument() {
         SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
 
@@ -100,7 +110,7 @@ public class BdioNodeFactoryTest {
         ExternalId mavenExternalId = externalIdFactory.createMavenExternalId(projectGroup, projectName, projectVersion);
         BdioId projectBdioId = mavenExternalId.createBdioId();
 
-        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials("", projectName, projectVersion);
+        BdioBillOfMaterials bdioBillOfMaterials = bdioNodeFactory.createBillOfMaterials(projectName, projectVersion);
         // we are overriding the default value of a new creation info just to pass the json comparison
         bdioBillOfMaterials.creationInfo = new BdioCreationInfo();
         bdioBillOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("integration-bdio-test", "0.0.1-SNAPSHOT"));
