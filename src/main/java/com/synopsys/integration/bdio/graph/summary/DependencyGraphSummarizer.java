@@ -33,7 +33,6 @@ import com.synopsys.integration.bdio.graph.DependencyGraph;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
-import com.synopsys.integration.util.NameVersion;
 
 public class DependencyGraphSummarizer {
     private final Gson gson;
@@ -66,10 +65,7 @@ public class DependencyGraphSummarizer {
 
             BdioId nextId = nextDependency.externalId.createBdioId();
             if (!graphSummary.dependencySummaries.containsKey(nextId)) {
-                NameVersion nameVersion = new NameVersion();
-                nameVersion.setName(nextDependency.name);
-                nameVersion.setVersion(nextDependency.version);
-                graphSummary.dependencySummaries.put(nextId, nameVersion);
+                graphSummary.dependencySummaries.put(nextId, nextDependency.externalId);
             }
 
             for (Dependency dep : graph.getChildrenForParent(nextDependency)) {

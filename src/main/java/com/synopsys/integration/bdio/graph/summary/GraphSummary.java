@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.BdioId;
-import com.synopsys.integration.util.NameVersion;
+import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class GraphSummary {
     public Set<BdioId> rootExternalDataIds = new HashSet<>();
     public Map<BdioId, Set<BdioId>> externalDataIdRelationships = new HashMap<>();
-    public Map<BdioId, NameVersion> dependencySummaries = new HashMap<>();
+    public Map<BdioId, ExternalId> dependencySummaries = new HashMap<>();
 
 }

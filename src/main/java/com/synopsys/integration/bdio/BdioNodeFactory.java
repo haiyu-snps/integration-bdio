@@ -73,7 +73,6 @@ public class BdioNodeFactory {
         billOfMaterials.creationInfo = new BdioCreationInfo();
         billOfMaterials.creationInfo.created = Instant.now().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         String version = BdioNodeFactory.UNKNOWN_LIBRARY_VERSION;
-        System.out.println(BdioNodeFactory.VERSION_RESOURCE_PATH);
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BdioNodeFactory.VERSION_RESOURCE_PATH)) {
             version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         } catch (IOException e) {

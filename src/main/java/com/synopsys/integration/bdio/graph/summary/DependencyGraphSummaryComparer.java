@@ -57,8 +57,7 @@ public class DependencyGraphSummaryComparer {
         isEqual = isEqual && leftExistingRelationshipsIds.equals(rightExistingRelationshipsIds);
 
         for (BdioId key : left.dependencySummaries.keySet()) {
-            isEqual = isEqual && left.dependencySummaries.get(key).getName().equals(right.dependencySummaries.get(key).getName());
-            isEqual = isEqual && left.dependencySummaries.get(key).getVersion().equals(right.dependencySummaries.get(key).getVersion());
+            isEqual = isEqual && left.dependencySummaries.get(key).toString().equals(right.dependencySummaries.get(key).toString());
         }
         for (BdioId key : leftExistingRelationshipsIds) {
             isEqual = isEqual && left.externalDataIdRelationships.get(key).equals(right.externalDataIdRelationships.get(key));
