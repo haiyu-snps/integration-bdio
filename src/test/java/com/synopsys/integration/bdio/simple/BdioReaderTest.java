@@ -13,11 +13,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.synopsys.integration.bdio.BdioReader;
-import com.synopsys.integration.bdio.BdioTransformer;
-import com.synopsys.integration.bdio.graph.DependencyGraph;
-import com.synopsys.integration.bdio.graph.summary.DependencyGraphSummarizer;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
@@ -85,18 +81,4 @@ public class BdioReaderTest {
         assertEquals("DYNAMIC_LINK", first.relationships.get(1).relationshipType);
     }
 
-    @Test
-    public void testDockerInspectorOutput() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        SimpleBdioDocument simpleBdioDocument = null;
-        try (BdioReader bdioReader = new BdioReader(gson, getClass().getResourceAsStream("/ubuntu_var_lib_dpkg_ubuntu_latest_bdio.jsonld"))) {
-            simpleBdioDocument = bdioReader.readSimpleBdioDocument();
-        }
-
-        BdioTransformer bdioTransformer = new BdioTransformer();
-        DependencyGraph dependencyGraph = bdioTransformer.transformToDependencyGraph(simpleBdioDocument.project, simpleBdioDocument.components);
-
-        DependencyGraphSummarizer dependencyGraphSummarizer = new DependencyGraphSummarizer(gson);
-        System.out.println(dependencyGraphSummarizer.toJson(dependencyGraph));
-    }
 }
