@@ -10,7 +10,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-bdio'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '17.1.1-SNAPSHOT'
+version = '17.1.1'
 description = 'A library to allow for easy and clear creation of Black Duck I/O (bdio) documents.'
 
 apply plugin: 'com.blackducksoftware.integration.library'
