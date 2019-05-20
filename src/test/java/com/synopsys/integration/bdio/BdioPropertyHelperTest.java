@@ -1,6 +1,6 @@
 package com.synopsys.integration.bdio;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ public class BdioPropertyHelperTest {
         final ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
         final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals("npm", actualExternalIdentifier.forge);
-        assertEquals("name@version", actualExternalIdentifier.externalId);
+        assertEquals("name/version", actualExternalIdentifier.externalId);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class BdioPropertyHelperTest {
         final ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.RUBYGEMS, "name", "version");
         final BdioExternalIdentifier actualExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(externalId);
         assertEquals("rubygems", actualExternalIdentifier.forge);
-        assertEquals("name=version", actualExternalIdentifier.externalId);
+        assertEquals("name/version", actualExternalIdentifier.externalId);
     }
 
     @Test

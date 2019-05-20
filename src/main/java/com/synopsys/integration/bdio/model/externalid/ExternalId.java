@@ -79,7 +79,7 @@ public class ExternalId extends Stringable {
             }
         }
 
-        return bestGuessPieces.toArray(new String[bestGuessPieces.size()]);
+        return bestGuessPieces.toArray(new String[0]);
     }
 
     public BdioId createBdioId() {
@@ -90,12 +90,8 @@ public class ExternalId extends Stringable {
         return BdioId.createFromPieces(bdioIdPieces);
     }
 
-    public String createExternalId() {
+    public String getExternalId() {
         return StringUtils.join(getExternalIdPieces(), forge.getSeparator());
-    }
-
-    public String createBlackDuckOriginId() {
-        return StringUtils.join(getExternalIdPieces(), forge.getKbSeparator());
     }
 
 }

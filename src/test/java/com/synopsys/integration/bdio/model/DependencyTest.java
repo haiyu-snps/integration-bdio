@@ -17,7 +17,7 @@ public class DependencyTest {
         Dependency dependencyNode = new Dependency(externalId);
         assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
         assertEquals(new BdioId("http:npm/name/version"), dependencyNode.externalId.createBdioId());
-        assertEquals("name@version", dependencyNode.externalId.createExternalId());
+        assertEquals("name/version", dependencyNode.externalId.getExternalId());
     }
 
     @Test

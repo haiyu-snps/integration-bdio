@@ -17,8 +17,7 @@
       "externalIdMetaData": {
         "forge": {
           "name": "maven",
-          "separator": ":",
-          "kbSeparator": ":"
+          "separator": ":"
         },
         "group": "projectGroup",
         "name": "projectName",
@@ -43,8 +42,7 @@
       "externalIdMetaData": {
         "forge": {
           "name": "maven",
-          "separator": ":",
-          "kbSeparator": ":"
+          "separator": ":"
         },
         "group": "componentGroup1",
         "name": "componentArtifact1",
@@ -69,8 +67,7 @@
       "externalIdMetaData": {
         "forge": {
           "name": "maven",
-          "separator": ":",
-          "kbSeparator": ":"
+          "separator": ":"
         },
         "group": "transitiveGroup",
         "name": "transitiveArtifact",
