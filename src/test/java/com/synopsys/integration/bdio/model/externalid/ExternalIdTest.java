@@ -41,8 +41,8 @@ public class ExternalIdTest {
 
     @Test
     public void testEscapingBadUriCharacters() {
-        ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPM, "name with spaces", "version with a - and a # and spaces");
-        assertEquals(new BdioId("http:npm/name_with_spaces/version_with_a___and_a___and_spaces"), nameVersionExternalId.createBdioId());
+        ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPMJS, "name with spaces", "version with a - and a # and spaces");
+        assertEquals(new BdioId("http:npmjs/name_with_spaces/version_with_a___and_a___and_spaces"), nameVersionExternalId.createBdioId());
         assertEquals("name with spaces/version with a - and a # and spaces", nameVersionExternalId.getExternalId());
     }
 

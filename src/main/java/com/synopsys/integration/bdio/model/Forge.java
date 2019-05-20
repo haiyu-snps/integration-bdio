@@ -61,7 +61,7 @@ public class Forge {
     public static final Forge LAUNCHPAD = slashForge("launchpad");
     public static final Forge LONG_TAIL = slashForge("long_tail");
     public static final Forge NUGET = slashForge("nuget");
-    public static final Forge NPM = slashForge("npm");
+    public static final Forge NPMJS = slashForge("npmjs");
     public static final Forge PEAR = slashForge("pear");
     public static final Forge PYPI = slashForge("pypi");
     public static final Forge REDHAT = slashForge("redhat");
