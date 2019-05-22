@@ -20,30 +20,30 @@ public class ExternalIdTest {
     public void testCreatingExternalIds() {
         ExternalId architectureExternalId = simpleBdioFactory.createArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
         assertEquals(new BdioId("http:centos/name/version/architecture"), architectureExternalId.createBdioId());
-        assertEquals("name/version/architecture", architectureExternalId.getExternalId());
+        assertEquals("name/version/architecture", architectureExternalId.createExternalId());
 
         ExternalId mavenExternalId = simpleBdioFactory.createMavenExternalId("group", "artifact", "version");
         assertEquals(new BdioId("http:maven/group/artifact/version"), mavenExternalId.createBdioId());
-        assertEquals("group:artifact:version", mavenExternalId.getExternalId());
+        assertEquals("group:artifact:version", mavenExternalId.createExternalId());
 
         ExternalId moduleNamesExternalId = simpleBdioFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
         assertEquals(new BdioId("http:cpan/name/version/something/else"), moduleNamesExternalId.createBdioId());
-        assertEquals("name/version/something/else", moduleNamesExternalId.getExternalId());
+        assertEquals("name/version/something/else", moduleNamesExternalId.createExternalId());
 
         ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
         assertEquals(new BdioId("http:pypi/name/version"), nameVersionExternalId.createBdioId());
-        assertEquals("name/version", nameVersionExternalId.getExternalId());
+        assertEquals("name/version", nameVersionExternalId.createExternalId());
 
         ExternalId pathExternalId = simpleBdioFactory.createPathExternalId(Forge.GOGET, "name");
         assertEquals(new BdioId("http:goget/name"), pathExternalId.createBdioId());
-        assertEquals("name", pathExternalId.getExternalId());
+        assertEquals("name", pathExternalId.createExternalId());
     }
 
     @Test
     public void testEscapingBadUriCharacters() {
         ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPMJS, "name with spaces", "version with a - and a # and spaces");
         assertEquals(new BdioId("http:npmjs/name_with_spaces/version_with_a___and_a___and_spaces"), nameVersionExternalId.createBdioId());
-        assertEquals("name with spaces/version with a - and a # and spaces", nameVersionExternalId.getExternalId());
+        assertEquals("name with spaces/version with a - and a # and spaces", nameVersionExternalId.createExternalId());
     }
 
     @Test

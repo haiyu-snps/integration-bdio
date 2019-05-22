@@ -90,7 +90,7 @@ public class ExternalId extends Stringable {
         return BdioId.createFromPieces(bdioIdPieces);
     }
 
-    public String getExternalId() {
+    public String createExternalId() {
         return StringUtils.join(getExternalIdPieces(), forge.getSeparator());
     }
 
