@@ -30,11 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.synopsys.integration.util.Stringable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Forge {
+public class Forge extends Stringable {
     // forges that use the slash as the separator
     public static final Forge ALPINE = new Forge("/", "alpine");
     public static final Forge ANACONDA = new Forge("/", "anaconda");
@@ -91,7 +92,7 @@ public class Forge {
             throw new IllegalArgumentException("A non-blank name is required.");
         }
 
-        this.name = name;
+        this.name = name.toLowerCase();
         this.separator = separator;
     }
 
@@ -134,23 +135,13 @@ public class Forge {
     }
 
     @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
     public String toString() {
         return name;
     }
 
     public String getName() {
         final String formatString = usePreferredNamespaceAlias != null && usePreferredNamespaceAlias ? "@%s" : "%s";
-        return String.format(formatString, name.toLowerCase());
+        return String.format(formatString, name);
     }
 
     public String getSeparator() {
