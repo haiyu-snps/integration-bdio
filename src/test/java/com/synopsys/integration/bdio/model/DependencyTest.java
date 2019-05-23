@@ -13,11 +13,11 @@ public class DependencyTest {
 
     @Test
     public void testConstructingDependencyNode() {
-        ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPM, "name", "version");
+        ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPMJS, "name", "version");
         Dependency dependencyNode = new Dependency(externalId);
-        assertEquals("npm", dependencyNode.externalId.forge.toString(), "npm");
-        assertEquals(new BdioId("http:npm/name/version"), dependencyNode.externalId.createBdioId());
-        assertEquals("name@version", dependencyNode.externalId.createExternalId());
+        assertEquals("npmjs", dependencyNode.externalId.forge.toString(), "npmjs");
+        assertEquals(new BdioId("http:npmjs/name/version"), dependencyNode.externalId.createBdioId());
+        assertEquals("name/version", dependencyNode.externalId.createExternalId());
     }
 
     @Test

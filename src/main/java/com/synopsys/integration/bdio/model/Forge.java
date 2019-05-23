@@ -30,11 +30,77 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.synopsys.integration.util.Stringable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Forge {
+public class Forge extends Stringable {
+    // forges that use the slash as the separator
+    public static final Forge ALPINE = new Forge("/", "alpine");
+    public static final Forge ANACONDA = new Forge("/", "anaconda");
+    public static final Forge APACHE_SOFTWARE = new Forge("/", "apache_software");
+    public static final Forge BITBUCKET = new Forge("/", "bitbucket");
+    public static final Forge BOWER = new Forge("/", "bower");
+    public static final Forge BUSYBOX = new Forge("/", "busybox");
+    public static final Forge CENTOS = new Forge("/", "centos");
+    public static final Forge CODEPLEX = new Forge("/", "codeplex");
+    public static final Forge CODEPLEX_GROUP = new Forge("/", "codeplex_group");
+    public static final Forge CPAN = new Forge("/", "cpan");
+    public static final Forge CRAN = new Forge("/", "cran");
+    public static final Forge DEBIAN = new Forge("/", "debian");
+    public static final Forge FEDORA = new Forge("/", "fedora");
+    public static final Forge FREEDESKTOP_ORG = new Forge("/", "freedesktop_org");
+    public static final Forge GITCAFE = new Forge("/", "gitcafe");
+    public static final Forge GITLAB = new Forge("/", "gitlab");
+    public static final Forge GITORIOUS = new Forge("/", "gitorious");
+    public static final Forge GOGET = new Forge("/", "goget");
+    public static final Forge GNU = new Forge("/", "gnu");
+    public static final Forge GOOGLECODE = new Forge("/", "googlecode");
+    public static final Forge HEX = new Forge("/", "hex");
+    public static final Forge JAVA_NET = new Forge("/", "java_net");
+    public static final Forge KDE_ORG = new Forge("/", "kde_org");
+    public static final Forge LAUNCHPAD = new Forge("/", "launchpad");
+    public static final Forge LONG_TAIL = new Forge("/", "long_tail");
+    public static final Forge NUGET = new Forge("/", "nuget");
+    public static final Forge NPMJS = new Forge("/", "npmjs");
+    public static final Forge PEAR = new Forge("/", "pear");
+    public static final Forge PYPI = new Forge("/", "pypi");
+    public static final Forge REDHAT = new Forge("/", "redhat");
+    public static final Forge RUBYFORGE = new Forge("/", "rubyforge");
+    public static final Forge RUBYGEMS = new Forge("/", "rubygems");
+    public static final Forge SOURCEFORGE = new Forge("/", "sourceforge");
+    public static final Forge SOURCEFORGE_JP = new Forge("/", "sourceforge_jp");
+    public static final Forge UBUNTU = new Forge("/", "ubuntu");
+    public static final Forge YOCTO = new Forge("/", "yocto");
+
+    // forges that use the colon as the separator
+    public static final Forge ANDROID = new Forge(":", "android");
+    public static final Forge COCOAPODS = new Forge(":", "cocoapods");
+    public static final Forge CPE = new Forge(":", "cpe");
+    public static final Forge GITHUB = new Forge(":", "github");
+    public static final Forge GOLANG = new Forge(":", "golang");
+    public static final Forge MAVEN = new Forge(":", "maven");
+    public static final Forge PACKAGIST = new Forge(":", "packagist");
+
+    private final String name;
+    private final String separator;
+    private Boolean usePreferredNamespaceAlias;
+
+    public Forge(final String separator, final String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("A non-blank name is required.");
+        }
+
+        this.name = name.toLowerCase();
+        this.separator = separator;
+    }
+
+    public Forge(final String separator, final String name, final boolean usePreferredNamespaceAlias) {
+        this(separator, name);
+        this.usePreferredNamespaceAlias = usePreferredNamespaceAlias;
+    }
+
     /**
      * The various separators here are to support three systems 1) bdio, 2) Black Duck, 3) Black Duck Knowledge Base.
      *
@@ -46,79 +112,15 @@ public class Forge {
      * As of 2017-11-29, only forward slashes and colons are used for KB separators.
      */
 
-    private static final Forge createSlashSlashForge(final String forgeName) {
-        return new Forge("/", "/", forgeName);
-    }
-
-    private static final Forge createColonColonForge(final String forgeName) {
-        return new Forge(":", ":", forgeName);
-    }
-
-    private static final Forge createEqualSlashForge(final String forgeName) {
-        return new Forge("=", "/", forgeName);
-    }
-
-    public static final Forge ALPINE = createSlashSlashForge("alpine");
-    public static final Forge APACHE_SOFTWARE = createSlashSlashForge("apache_software");
-    public static final Forge BITBUCKET = createSlashSlashForge("bitbucket");
-    public static final Forge BUSYBOX = createSlashSlashForge("busybox");
-    public static final Forge CENTOS = createSlashSlashForge("centos");
-    public static final Forge CODEPLEX = createSlashSlashForge("codeplex");
-    public static final Forge CODEPLEX_GROUP = createSlashSlashForge("codeplex_group");
-    public static final Forge CRAN = createSlashSlashForge("cran");
-    public static final Forge DEBIAN = createSlashSlashForge("debian");
-    public static final Forge FEDORA = createSlashSlashForge("fedora");
-    public static final Forge FREEDESKTOP_ORG = createSlashSlashForge("freedesktop_org");
-    public static final Forge GITCAFE = createSlashSlashForge("gitcafe");
-    public static final Forge GITLAB = createSlashSlashForge("gitlab");
-    public static final Forge GITORIOUS = createSlashSlashForge("gitorious");
-    public static final Forge GNU = createSlashSlashForge("gnu");
-    public static final Forge GOOGLECODE = createSlashSlashForge("googlecode");
-    public static final Forge HEX = createSlashSlashForge("hex");
-    public static final Forge JAVA_NET = createSlashSlashForge("java_net");
-    public static final Forge KDE_ORG = createSlashSlashForge("kde_org");
-    public static final Forge LAUNCHPAD = createSlashSlashForge("launchpad");
-    public static final Forge LONG_TAIL = createSlashSlashForge("long_tail");
-    public static final Forge NUGET = createSlashSlashForge("nuget");
-    public static final Forge PEAR = createSlashSlashForge("pear");
-    public static final Forge PYPI = createSlashSlashForge("pypi");
-    public static final Forge REDHAT = createSlashSlashForge("redhat");
-    public static final Forge RUBYFORGE = createSlashSlashForge("rubyforge");
-    public static final Forge SOURCEFORGE = createSlashSlashForge("sourceforge");
-    public static final Forge SOURCEFORGE_JP = createSlashSlashForge("sourceforge_jp");
-    public static final Forge UBUNTU = createSlashSlashForge("ubuntu");
-    public static final Forge YOCTO = createSlashSlashForge("yocto");
-
-    public static final Forge ANDROID = createColonColonForge("android");
-    public static final Forge COCOAPODS = createColonColonForge("cocoapods");
-    public static final Forge CPE = createColonColonForge("cpe");
-    public static final Forge GITHUB = createColonColonForge("github");
-    public static final Forge GOLANG = createColonColonForge("golang");
-    public static final Forge MAVEN = createColonColonForge("maven");
-    public static final Forge PACKAGIST = createColonColonForge("packagist");
-
-    public static final Forge ANACONDA = createEqualSlashForge("anaconda");
-    public static final Forge RUBYGEMS = createEqualSlashForge("rubygems");
-
-    public static final Forge BOWER = new Forge("#", "/", "bower");
-    public static final Forge CPAN = new Forge("-", "/", "cpan");
-    public static final Forge GOGET = new Forge("", "/", "goget");
-    public static final Forge NPM = new Forge("@", "/", "npm");
-
-    private final String name;
-    private final String separator;
-    private final String kbSeparator;
-    private Boolean usePreferredNamespaceAlias;
-
     public static Map<String, Forge> getKnownForges() {
         final Map<String, Forge> knownForges = new HashMap<>();
 
         final List<Field> knownStaticFinalForgeFields = Arrays
-                                                                .stream(Forge.class.getFields())
-                                                                .filter(f -> Modifier.isStatic(f.getModifiers()))
-                                                                .filter(f -> Modifier.isFinal(f.getModifiers()))
-                                                                .filter(f -> f.getType().isAssignableFrom(Forge.class))
-                                                                .collect(Collectors.toList());
+                                                            .stream(Forge.class.getFields())
+                                                            .filter(f -> Modifier.isStatic(f.getModifiers()))
+                                                            .filter(f -> Modifier.isFinal(f.getModifiers()))
+                                                            .filter(f -> f.getType().isAssignableFrom(Forge.class))
+                                                            .collect(Collectors.toList());
 
         for (final Field field : knownStaticFinalForgeFields) {
             try {
@@ -132,31 +134,6 @@ public class Forge {
         return knownForges;
     }
 
-    public Forge(final String separator, final String kbSeparator, final String name) {
-        if (StringUtils.isBlank(name)) {
-            throw new IllegalArgumentException("A non-blank name is required.");
-        }
-
-        this.name = name;
-        this.separator = separator;
-        this.kbSeparator = kbSeparator;
-    }
-
-    public Forge(final String separator, final String kbSeparator, final String name, final boolean usePreferredNamespaceAlias) {
-        this(separator, kbSeparator, name);
-        this.usePreferredNamespaceAlias = usePreferredNamespaceAlias;
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
     @Override
     public String toString() {
         return name;
@@ -164,15 +141,11 @@ public class Forge {
 
     public String getName() {
         final String formatString = usePreferredNamespaceAlias != null && usePreferredNamespaceAlias ? "@%s" : "%s";
-        return String.format(formatString, name.toLowerCase());
+        return String.format(formatString, name);
     }
 
     public String getSeparator() {
         return separator;
-    }
-
-    public String getKbSeparator() {
-        return kbSeparator;
     }
 
 }
