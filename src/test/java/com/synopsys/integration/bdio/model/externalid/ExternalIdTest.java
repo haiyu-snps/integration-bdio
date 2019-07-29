@@ -56,9 +56,7 @@ public class ExternalIdTest {
     }
 
     @Test
-    @Deprecated
-    public void testCreateDataId() {
-        // this test should be removed once createDataId() is removed (obviously)
+    public void testCreateBdioId() {
         ExternalId externalId = new ExternalId(Forge.MAVEN);
         externalId.name = "testName";
         externalId.version = "testVersion";
@@ -72,6 +70,29 @@ public class ExternalIdTest {
         assertEquals(externalIdA, externalIdB);
         assertEquals(externalIdA.hashCode(), externalIdB.hashCode());
         assertEquals(externalIdA.toString(), externalIdB.toString());
+    }
+
+    @Test
+    public void testMavenWithoutVersion() {
+        ExternalId externalId = simpleBdioFactory.createMavenExternalId("thegroup", "thename", null);
+        assertEquals("thegroup:thename", externalId.createExternalId());
+        assertEquals(new BdioId("http:maven/thegroup/thename"), externalId.createBdioId());
+    }
+
+    @Test
+    public void testNameWithoutVersion() {
+        ExternalId externalId = simpleBdioFactory.createNameVersionExternalId(Forge.RUBYGEMS, "thename", null);
+        assertEquals("thename", externalId.createExternalId());
+        assertEquals(new BdioId("http:rubygems/thename"), externalId.createBdioId());
+    }
+
+    @Test
+    public void testUnexpectedState() {
+        ExternalId externalId = new ExternalId(Forge.PYPI);
+        externalId.version = "1.0.0";
+        externalId.architecture = "i586";
+        assertEquals("1.0.0/i586", externalId.createExternalId());
+        assertEquals(new BdioId("http:pypi/1_0_0/i586"), externalId.createBdioId());
     }
 
 }

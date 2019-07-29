@@ -48,9 +48,9 @@ public class ExternalId extends Stringable {
     /**
      * A forge is always required. The other fields to populate depend on what
      * external id type you need. The currently supported types are:
-     * "name/version": populate name and version
-     * "architecture": populate name, version, and architecture
-     * "maven": populate name, version, and group
+     * "name/version": populate name and version (if version is blank, only name is included)
+     * "architecture": populate name, version, and architecture (if version is blank, only name is included)
+     * "maven": populate name, version, and group (if version is blank, group and name are included)
      * "module names": populate moduleNames
      * "path": populate path
      */
@@ -66,6 +66,13 @@ public class ExternalId extends Stringable {
                 return new String[] { name, version, architecture };
             } else {
                 return new String[] { name, version };
+            }
+        } else if (StringUtils.isNotBlank(name)) {
+            //Black Duck now (2019.6.0) supports version-less components
+            if (StringUtils.isNotBlank(group)) {
+                return new String[] { group, name };
+            } else {
+                return new String[] { name };
             }
         }
 
