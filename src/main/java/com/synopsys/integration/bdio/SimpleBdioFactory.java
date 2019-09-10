@@ -155,6 +155,10 @@ public class SimpleBdioFactory {
         return externalIdFactory.createNameVersionExternalId(forge, name, version);
     }
 
+    public ExternalId createYoctoExternalId(String layer, String name, String version) {
+        return externalIdFactory.createYoctoExternalId(layer, name, version);
+    }
+
     public ExternalId createMavenExternalId(String group, String name, String version) {
         return externalIdFactory.createMavenExternalId(group, name, version);
     }
