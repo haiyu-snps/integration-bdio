@@ -34,6 +34,7 @@ import com.synopsys.integration.util.Stringable;
 
 public class ExternalId extends Stringable {
     public final Forge forge;
+    public String layer;
     public String group;
     public String name;
     public String version;
@@ -50,6 +51,7 @@ public class ExternalId extends Stringable {
      * external id type you need. The currently supported types are:
      * "name/version": populate name and version (if version is blank, only name is included)
      * "architecture": populate name, version, and architecture (if version is blank, only name is included)
+     * "layer": populate name, version, and layer (if version is blank, only name is included)
      * "maven": populate name, version, and group (if version is blank, group and name are included)
      * "module names": populate moduleNames
      * "path": populate path
@@ -64,6 +66,8 @@ public class ExternalId extends Stringable {
                 return new String[] { group, name, version };
             } else if (StringUtils.isNotBlank(architecture)) {
                 return new String[] { name, version, architecture };
+            } else if (StringUtils.isNotBlank(layer)) {
+                return new String[] { layer, name, version };
             } else {
                 return new String[] { name, version };
             }
@@ -71,6 +75,8 @@ public class ExternalId extends Stringable {
             //Black Duck now (2019.6.0) supports version-less components
             if (StringUtils.isNotBlank(group)) {
                 return new String[] { group, name };
+            } else if (StringUtils.isNotBlank(layer)) {
+                return new String[] { layer, name };
             } else {
                 return new String[] { name };
             }
@@ -79,7 +85,7 @@ public class ExternalId extends Stringable {
         // if we can't be positive about what kind of external id we are, just give everything we have in a reasonable order
         List<String> bestGuessPieces = new ArrayList<>();
 
-        List<String> bestGuessCandidates = Arrays.asList(group, name, version, architecture);
+        final List<String> bestGuessCandidates = Arrays.asList(layer, group, name, version, architecture);
         for (String candidate : bestGuessCandidates) {
             if (StringUtils.isNotBlank(candidate)) {
                 bestGuessPieces.add(candidate);

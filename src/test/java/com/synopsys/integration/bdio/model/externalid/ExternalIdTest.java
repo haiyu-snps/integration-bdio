@@ -37,6 +37,10 @@ public class ExternalIdTest {
         ExternalId pathExternalId = simpleBdioFactory.createPathExternalId(Forge.GOGET, "name");
         assertEquals(new BdioId("http:goget/name"), pathExternalId.createBdioId());
         assertEquals("name", pathExternalId.createExternalId());
+
+        ExternalId yoctoExternalId = simpleBdioFactory.createYoctoExternalId("layer", "name", "version");
+        assertEquals(new BdioId("http:yocto/layer/name/version"), yoctoExternalId.createBdioId());
+        assertEquals("layer/name/version", yoctoExternalId.createExternalId());
     }
 
     @Test
@@ -84,6 +88,13 @@ public class ExternalIdTest {
         ExternalId externalId = simpleBdioFactory.createNameVersionExternalId(Forge.RUBYGEMS, "thename", null);
         assertEquals("thename", externalId.createExternalId());
         assertEquals(new BdioId("http:rubygems/thename"), externalId.createBdioId());
+    }
+
+    @Test
+    public void testYoctoWithoutVersion() {
+        ExternalId externalId = simpleBdioFactory.createYoctoExternalId("thelayer", "thename", null);
+        assertEquals("thelayer/thename", externalId.createExternalId());
+        assertEquals(new BdioId("http:yocto/thelayer/thename"), externalId.createBdioId());
     }
 
     @Test

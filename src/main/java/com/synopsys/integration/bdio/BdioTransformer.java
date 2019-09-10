@@ -93,9 +93,15 @@ public class BdioTransformer {
                     id.architecture = pieces[2];
                 }
             } else if (pieces[1].equals(name) && pieces[2].equals(revision)) {
-                id.group = pieces[0];
-                id.name = pieces[1];
-                id.version = pieces[2];
+                if (Forge.YOCTO.equals(forge)) {
+                    id.layer = pieces[0];
+                    id.name = pieces[1];
+                    id.version = pieces[2];
+                } else {
+                    id.group = pieces[0];
+                    id.name = pieces[1];
+                    id.version = pieces[2];
+                }
             } else {
                 id.moduleNames = pieces;
             }

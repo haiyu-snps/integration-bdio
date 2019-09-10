@@ -33,6 +33,13 @@ public class ExternalIdFactory {
         return externalId;
     }
 
+    public ExternalId createYoctoExternalId(final String layer, final String name, final String version) {
+        final ExternalId externalId = createNameVersionExternalId(Forge.YOCTO, name, version);
+        externalId.layer = layer;
+        checkForValidity(externalId);
+        return externalId;
+    }
+
     public ExternalId createMavenExternalId(final String group, final String name, final String version) {
         final ExternalId externalId = createNameVersionExternalId(Forge.MAVEN, name, version);
         externalId.group = group;
