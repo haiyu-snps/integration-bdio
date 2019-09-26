@@ -69,8 +69,8 @@ public class DependencyGraphTestUtil {
         missingExpected.removeAll(actualDependencies);
         extraActual.removeAll(expectedDependencies);
 
-        assertEquals("Expected graph not to have extra dependencies.", missingExpected.size(), 0);
-        assertEquals("Expected graph not to be missing dependencies.", extraActual.size(), 0);
+        assertEquals("Expected graph not to have extra dependencies.", 0, missingExpected.size());
+        assertEquals("Expected graph not to be missing dependencies.", 0, extraActual.size());
     }
 
     public static void assertExternalIdSet(final Set<ExternalId> actualDependencies, final Set<ExternalId> expectedDependencies) {
@@ -81,7 +81,7 @@ public class DependencyGraphTestUtil {
         missingExpected.removeAll(actualDependencies);
         extraActual.removeAll(expectedDependencies);
 
-        assertEquals("Expected graph not to have extra dependencies.", missingExpected.size(), 0);
-        assertEquals("Expected graph not to be missing dependencies.", extraActual.size(), 0);
+        assertEquals("Expected graph not to have extra dependencies.", 0, missingExpected.size());
+        assertEquals("Expected graph not to be missing dependencies.", 0, extraActual.size());
     }
 }

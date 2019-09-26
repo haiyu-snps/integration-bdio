@@ -116,8 +116,8 @@ public class DependencyGraphTransformerEdgeCasesTest {
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         for (BdioComponent component : simpleBdioDocument.getComponents()) {
-            if (component.name == "shared") {
-                assertEquals(component.relationships.size(), 2);
+            if (component.name.equals("shared")) {
+                assertEquals(2, component.relationships.size());
             }
         }
 
@@ -215,7 +215,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
 
-        assertEquals(simpleBdioDocumentRecursive.getComponents().size(), 3);
+        assertEquals(3, simpleBdioDocumentRecursive.getComponents().size());
     }
 
     @Test
@@ -235,7 +235,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
 
-        assertEquals(simpleBdioDocumentRecursive.getComponents().size(), 2);
+        assertEquals(2, simpleBdioDocumentRecursive.getComponents().size());
     }
 
 }

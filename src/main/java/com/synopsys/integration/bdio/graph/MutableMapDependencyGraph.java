@@ -82,9 +82,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     public Set<ExternalId> getChildrenExternalIdsForParent(final ExternalId parent) {
         final Set<ExternalId> children = new HashSet<>();
         if (relationships.containsKey(parent)) {
-            for (final ExternalId id : relationships.get(parent)) {
-                children.add(id);
-            }
+            children.addAll(relationships.get(parent));
         }
         return children;
     }
@@ -92,8 +90,9 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     @Override
     public Set<ExternalId> getParentExternalIdsForChild(final ExternalId child) {
         final Set<ExternalId> parents = new HashSet<>();
-        for (final ExternalId parentId : relationships.keySet()) {
-            for (final ExternalId childId : relationships.get(parentId)) {
+        for (final Map.Entry<ExternalId, Set<ExternalId>> externalIdSetEntry : relationships.entrySet()) {
+            final ExternalId parentId = externalIdSetEntry.getKey();
+            for (final ExternalId childId : externalIdSetEntry.getValue()) {
                 if (childId.equals(child)) {
                     parents.add(parentId);
                 }
