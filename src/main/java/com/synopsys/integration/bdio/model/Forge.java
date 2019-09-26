@@ -30,10 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.synopsys.integration.util.Stringable;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.synopsys.integration.util.Stringable;
 
 public class Forge extends Stringable {
     // forges that use the slash as the separator
