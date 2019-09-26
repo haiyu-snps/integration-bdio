@@ -72,7 +72,7 @@ public class Forge extends Stringable {
     public static final Forge SOURCEFORGE = new Forge("/", "sourceforge");
     public static final Forge SOURCEFORGE_JP = new Forge("/", "sourceforge_jp");
     public static final Forge UBUNTU = new Forge("/", "ubuntu");
-    public static final Forge YOCTO = new Forge("/", "yocto");
+    public static final Forge YOCTO = new Forge("/", "yocto", true);
 
     // forges that use the colon as the separator
     public static final Forge ANDROID = new Forge(":", "android");
