@@ -2,13 +2,11 @@ package com.synopsys.integration.bdio.graph.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.SimpleBdioFactory;
@@ -32,7 +30,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingExpensiveRecursiveTree() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingExpensiveRecursiveTree() {
         // Here we generate a broad tree - for each new node, it becomes a child of all previous nodes
         // lets do it for [A,B,C,D]
         // after B we have A->B
@@ -88,7 +86,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingBrokenTree() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingBrokenTree() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         Dependency childOne = node("one", "one", "one");
@@ -124,7 +122,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingBrokenTreeLeftHasNodeRightEmpty() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingBrokenTreeLeftHasNodeRightEmpty() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         Dependency childOne = node("one", "one", "one");
@@ -151,17 +149,17 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         boolean found = false;
         for (BdioComponent component : simpleBdioDocument.getComponents()) {
-            if (component.name == "shared") {
+            if ("shared".equals(component.name)) {
                 assertEquals(1, component.relationships.size());
-            } else if (component.name == "one") {
+            } else if ("one".equals(component.name)) {
                 found = true;
             }
         }
-        assertEquals(true, found);
+        assertTrue(found);
     }
 
     @Test
-    public void testTransformingBrokenTreeLeftEmpty() throws URISyntaxException, IOException, JSONException {
+    public void testTransformingBrokenTreeLeftEmpty() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         Dependency childOne = node("one", "one", "one");
@@ -188,17 +186,17 @@ public class DependencyGraphTransformerEdgeCasesTest {
 
         boolean found = false;
         for (BdioComponent component : simpleBdioDocument.getComponents()) {
-            if (component.name == "shared") {
+            if ("shared".equals(component.name)) {
                 assertEquals(1, component.relationships.size());
-            } else if (component.name == "one") {
+            } else if ("one".equals(component.name)) {
                 found = true;
             }
         }
-        assertEquals(true, found);
+        assertTrue(found);
     }
 
     @Test
-    public void testCyclic() throws URISyntaxException, IOException, JSONException {
+    public void testCyclic() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         Dependency one = node("one", "one", "one");
@@ -219,7 +217,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testProjectAsChild() throws URISyntaxException, IOException, JSONException {
+    public void testProjectAsChild() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         Dependency one = node("one", "one", "one");

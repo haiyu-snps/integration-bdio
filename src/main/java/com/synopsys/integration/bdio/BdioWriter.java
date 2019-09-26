@@ -58,7 +58,7 @@ public class BdioWriter implements Closeable {
         final List<BdioNode> bdioNodes = new ArrayList<>();
         bdioNodes.add(simpleBdioDocument.getBillOfMaterials());
         bdioNodes.add(simpleBdioDocument.getProject());
-        if (simpleBdioDocument.getComponents() != null && simpleBdioDocument.getComponents().size() > 0) {
+        if (simpleBdioDocument.getComponents() != null && !simpleBdioDocument.getComponents().isEmpty()) {
             bdioNodes.addAll(simpleBdioDocument.getComponents());
         }
 

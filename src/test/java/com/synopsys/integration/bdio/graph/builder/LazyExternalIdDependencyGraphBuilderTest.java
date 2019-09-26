@@ -86,7 +86,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyAsAlias(aliasId, stringId);
 
         final String expectedMessage = "A dependency ({\"name\":\"parent1\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
+        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
 
         final String expectedMessage = "A dependency ({\"name\":\"child2\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
+        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
     }
 
     @Test

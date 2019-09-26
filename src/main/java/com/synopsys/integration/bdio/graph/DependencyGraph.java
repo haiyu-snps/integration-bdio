@@ -28,30 +28,30 @@ import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public interface DependencyGraph {
-    public Set<Dependency> getRootDependencies();
+    Set<Dependency> getRootDependencies();
 
-    public Set<ExternalId> getRootDependencyExternalIds();
+    Set<ExternalId> getRootDependencyExternalIds();
 
-    public boolean hasDependency(Dependency dependency);
+    boolean hasDependency(Dependency dependency);
 
-    public boolean hasDependency(ExternalId dependency);
+    boolean hasDependency(ExternalId dependency);
 
-    public Dependency getDependency(ExternalId dependency);
+    Dependency getDependency(ExternalId dependency);
 
-    public Set<Dependency> getChildrenForParent(Dependency parent);
+    Set<Dependency> getChildrenForParent(Dependency parent);
 
-    public Set<ExternalId> getChildrenExternalIdsForParent(Dependency parent);
+    Set<ExternalId> getChildrenExternalIdsForParent(Dependency parent);
 
-    public Set<Dependency> getChildrenForParent(ExternalId parent);
+    Set<Dependency> getChildrenForParent(ExternalId parent);
 
-    public Set<ExternalId> getChildrenExternalIdsForParent(ExternalId parent);
+    Set<ExternalId> getChildrenExternalIdsForParent(ExternalId parent);
 
-    public Set<ExternalId> getParentExternalIdsForChild(Dependency child);
+    Set<ExternalId> getParentExternalIdsForChild(Dependency child);
 
-    public Set<Dependency> getParentsForChild(ExternalId child);
+    Set<Dependency> getParentsForChild(ExternalId child);
 
-    public Set<Dependency> getParentsForChild(Dependency child);
+    Set<Dependency> getParentsForChild(Dependency child);
 
-    public Set<ExternalId> getParentExternalIdsForChild(ExternalId child);
+    Set<ExternalId> getParentExternalIdsForChild(ExternalId child);
 
 }

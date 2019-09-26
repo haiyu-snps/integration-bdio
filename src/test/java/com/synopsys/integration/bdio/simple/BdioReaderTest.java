@@ -5,13 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
@@ -25,11 +23,11 @@ public class BdioReaderTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
-    public void testReaderOnSample() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
+    public void testReaderOnSample() throws IOException, URISyntaxException {
         String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
 
         InputStream reader = new ByteArrayInputStream(expectedJson.getBytes(StandardCharsets.UTF_8.name()));
-        SimpleBdioDocument doc = null;
+        SimpleBdioDocument doc;
         try (BdioReader bdioReader = new BdioReader(new Gson(), reader)) {
             doc = bdioReader.readSimpleBdioDocument();
         }

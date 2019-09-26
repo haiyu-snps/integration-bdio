@@ -1,10 +1,11 @@
 package com.synopsys.integration.bdio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -49,10 +50,10 @@ public class SimpleBdioFactoryTest {
         assertNotNull(simpleBdioFactory.getDependencyGraphTransformer());
         assertNotNull(simpleBdioFactory.getExternalIdFactory());
 
-        assertFalse(bdioPropertyHelper == simpleBdioFactory.getBdioPropertyHelper());
-        assertFalse(bdioNodeFactory == simpleBdioFactory.getBdioNodeFactory());
-        assertFalse(dependencyGraphTransformer == simpleBdioFactory.getDependencyGraphTransformer());
-        assertFalse(externalIdFactory == simpleBdioFactory.getExternalIdFactory());
+        assertNotSame(bdioPropertyHelper, simpleBdioFactory.getBdioPropertyHelper());
+        assertNotSame(bdioNodeFactory, simpleBdioFactory.getBdioNodeFactory());
+        assertNotSame(dependencyGraphTransformer, simpleBdioFactory.getDependencyGraphTransformer());
+        assertNotSame(externalIdFactory, simpleBdioFactory.getExternalIdFactory());
     }
 
     @Test
@@ -70,10 +71,10 @@ public class SimpleBdioFactoryTest {
         assertNotNull(simpleBdioFactory.getBdioNodeFactory());
         assertNotNull(simpleBdioFactory.getDependencyGraphTransformer());
 
-        assertTrue(bdioPropertyHelper == simpleBdioFactory.getBdioPropertyHelper());
-        assertTrue(bdioNodeFactory == simpleBdioFactory.getBdioNodeFactory());
-        assertTrue(dependencyGraphTransformer == simpleBdioFactory.getDependencyGraphTransformer());
-        assertTrue(externalIdFactory == simpleBdioFactory.getExternalIdFactory());
+        assertSame(bdioPropertyHelper, simpleBdioFactory.getBdioPropertyHelper());
+        assertSame(bdioNodeFactory, simpleBdioFactory.getBdioNodeFactory());
+        assertSame(dependencyGraphTransformer, simpleBdioFactory.getDependencyGraphTransformer());
+        assertSame(externalIdFactory, simpleBdioFactory.getExternalIdFactory());
     }
 
     @Test

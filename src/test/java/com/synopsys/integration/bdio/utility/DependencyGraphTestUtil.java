@@ -3,6 +3,7 @@ package com.synopsys.integration.bdio.utility;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,10 +55,7 @@ public class DependencyGraphTestUtil {
     }
 
     public static void assertDependencySet(final Set<Dependency> actualDependencies, final Dependency... dependencies) {
-        final Set<Dependency> expectedDependencies = new HashSet<>();
-        for (final Dependency dependency : dependencies) {
-            expectedDependencies.add(dependency);
-        }
+        final Set<Dependency> expectedDependencies = new HashSet<>(Arrays.asList(dependencies));
         assertDependencySet(actualDependencies, expectedDependencies);
     }
 
