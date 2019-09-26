@@ -54,33 +54,33 @@ public class BdioTransformerTest {
         forgeMap.put("maven", Forge.MAVEN);
         BdioTransformer transformer = new BdioTransformer(forgeMap);
 
-        DependencyGraph graph = transformer.transformToDependencyGraph(doc.project, doc.components);
+        DependencyGraph graph = transformer.transformToDependencyGraph(doc.getProject(), doc.getComponents());
 
         assertEquals(1, graph.getRootDependencies().size());
 
         ExternalId projectId = new ExternalId(Forge.MAVEN);
-        projectId.group = "com.blackducksoftware.gradle.test";
-        projectId.name = "gradleTestProject";
-        projectId.version = "99.5-SNAPSHOT";
+        projectId.setGroup("com.blackducksoftware.gradle.test");
+        projectId.setName("gradleTestProject");
+        projectId.setVersion("99.5-SNAPSHOT");
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.project.name, doc.project.version, projectId, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.getProject().name, doc.getProject().version, projectId, graph);
 
-        simpleBdioDocument.billOfMaterials.id = doc.billOfMaterials.id;
-        simpleBdioDocument.billOfMaterials.creationInfo = doc.billOfMaterials.creationInfo;
+        simpleBdioDocument.getBillOfMaterials().id = doc.getBillOfMaterials().id;
+        simpleBdioDocument.getBillOfMaterials().creationInfo = doc.getBillOfMaterials().creationInfo;
 
-        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.billOfMaterials, doc.billOfMaterials));
-        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.project, doc.project, "bdioExternalIdentifier", "relationships"));
+        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.getBillOfMaterials(), doc.getBillOfMaterials()));
+        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.getProject(), doc.getProject(), "bdioExternalIdentifier", "relationships"));
         if (!testEqualityOfMetadata) {
-            simpleBdioDocument.project.bdioExternalIdentifier.externalIdMetaData = null;
+            simpleBdioDocument.getProject().bdioExternalIdentifier.externalIdMetaData = null;
         }
-        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.project.bdioExternalIdentifier, doc.project.bdioExternalIdentifier));
-        assertRelationships(doc.project.relationships, simpleBdioDocument.project.relationships);
+        assertEquals(true, EqualsBuilder.reflectionEquals(simpleBdioDocument.getProject().bdioExternalIdentifier, doc.getProject().bdioExternalIdentifier));
+        assertRelationships(doc.getProject().relationships, simpleBdioDocument.getProject().relationships);
 
-        assertEquals(doc.components.size(), simpleBdioDocument.components.size());
-        for (BdioComponent expected : simpleBdioDocument.components) {
+        assertEquals(doc.getComponents().size(), simpleBdioDocument.getComponents().size());
+        for (BdioComponent expected : simpleBdioDocument.getComponents()) {
             boolean fnd = false;
-            for (BdioComponent actual : doc.components) {
+            for (BdioComponent actual : doc.getComponents()) {
                 if (expected.id.equals(actual.id)) {
                     assertEquals(false, fnd);
                     fnd = true;

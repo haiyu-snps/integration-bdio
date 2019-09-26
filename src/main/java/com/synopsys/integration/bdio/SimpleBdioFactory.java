@@ -117,18 +117,18 @@ public class SimpleBdioFactory {
         BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, project.name, project.version);
 
         SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
-        simpleBdioDocument.billOfMaterials = billOfMaterials;
-        simpleBdioDocument.project = project;
+        simpleBdioDocument.setBillOfMaterials(billOfMaterials);
+        simpleBdioDocument.setProject(project);
 
         return simpleBdioDocument;
     }
 
     public void populateComponents(SimpleBdioDocument simpleBdioDocument, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
         Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
-        existingComponents.put(projectExternalId, simpleBdioDocument.project);
+        existingComponents.put(projectExternalId, simpleBdioDocument.getProject());
 
-        List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(dependencyGraph, simpleBdioDocument.project, dependencyGraph.getRootDependencies(), existingComponents);
-        simpleBdioDocument.components = bdioComponents;
+        List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(dependencyGraph, simpleBdioDocument.getProject(), dependencyGraph.getRootDependencies(), existingComponents);
+        simpleBdioDocument.setComponents(bdioComponents);
     }
 
     public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ExternalId projectExternalId) {

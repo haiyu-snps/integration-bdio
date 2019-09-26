@@ -55,7 +55,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public boolean hasDependency(final Dependency dependency) {
-        return dependencies.containsKey(dependency.externalId);
+        return dependencies.containsKey(dependency.getExternalId());
     }
 
     @Override
@@ -104,22 +104,22 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public Set<Dependency> getChildrenForParent(final Dependency parent) {
-        return getChildrenForParent(parent.externalId);
+        return getChildrenForParent(parent.getExternalId());
     }
 
     @Override
     public Set<Dependency> getParentsForChild(final Dependency child) {
-        return getParentsForChild(child.externalId);
+        return getParentsForChild(child.getExternalId());
     }
 
     @Override
     public Set<ExternalId> getChildrenExternalIdsForParent(final Dependency parent) {
-        return getChildrenExternalIdsForParent(parent.externalId);
+        return getChildrenExternalIdsForParent(parent.getExternalId());
     }
 
     @Override
     public Set<ExternalId> getParentExternalIdsForChild(final Dependency child) {
-        return getParentExternalIdsForChild(child.externalId);
+        return getParentExternalIdsForChild(child.getExternalId());
     }
 
     @Override
@@ -196,7 +196,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     @Override
     public void addChildToRoot(final Dependency child) {
         ensureDependencyExists(child);
-        rootDependencies.add(child.externalId);
+        rootDependencies.add(child.getExternalId());
     }
 
     @Override
@@ -221,20 +221,20 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     private void ensureDependencyExists(final Dependency dependency) {
-        if (!dependencies.containsKey(dependency.externalId)) {
-            dependencies.put(dependency.externalId, dependency);
+        if (!dependencies.containsKey(dependency.getExternalId())) {
+            dependencies.put(dependency.getExternalId(), dependency);
         }
     }
 
     private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
         ensureDependencyExists(dependency);
-        if (!relationships.containsKey(dependency.externalId)) {
-            relationships.put(dependency.externalId, new HashSet<>());
+        if (!relationships.containsKey(dependency.getExternalId())) {
+            relationships.put(dependency.getExternalId(), new HashSet<>());
         }
     }
 
     private void addRelationship(final Dependency parent, final Dependency child) {
-        relationships.get(parent.externalId).add(child.externalId);
+        relationships.get(parent.getExternalId()).add(child.getExternalId());
     }
 
     private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {

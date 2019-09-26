@@ -15,9 +15,9 @@ public class DependencyTest {
     public void testConstructingDependencyNode() {
         ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPMJS, "name", "version");
         Dependency dependencyNode = new Dependency(externalId);
-        assertEquals("npmjs", dependencyNode.externalId.forge.toString(), "npmjs");
-        assertEquals(new BdioId("http:npmjs/name/version"), dependencyNode.externalId.createBdioId());
-        assertEquals("name/version", dependencyNode.externalId.createExternalId());
+        assertEquals("npmjs", dependencyNode.getExternalId().getForge().toString(), "npmjs");
+        assertEquals(new BdioId("http:npmjs/name/version"), dependencyNode.getExternalId().createBdioId());
+        assertEquals("name/version", dependencyNode.getExternalId().createExternalId());
     }
 
     @Test

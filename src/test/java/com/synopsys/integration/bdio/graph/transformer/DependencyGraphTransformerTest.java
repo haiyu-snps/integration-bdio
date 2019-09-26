@@ -41,10 +41,10 @@ public class DependencyGraphTransformerTest {
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(null, "projectName", "projectVersion", projectExternalId, dependencyGraph);
 
         // we are overriding the default value of a new creation info just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.creationInfo = null;
+        simpleBdioDocument.getBillOfMaterials().creationInfo = null;
 
         // we are overriding the default value of a new uuid just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("123");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         String expectedJson = jsonTestUtils.getExpectedJson("transformer.jsonld");
 

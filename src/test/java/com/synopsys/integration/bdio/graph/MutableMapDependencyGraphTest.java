@@ -1,6 +1,7 @@
 package com.synopsys.integration.bdio.graph;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -106,10 +107,10 @@ public class MutableMapDependencyGraphTest {
         graph.addParentWithChildren(parent1, child1);
         graph.addChildrenToRoot(parent1);
 
-        assertNull(graph.getDependency(parent2.externalId));
+        assertNull(graph.getDependency(parent2.getExternalId()));
         assertFalse(graph.hasDependency(parent2));
 
-        assertNull(graph.getDependency(child2.externalId));
+        assertNull(graph.getDependency(child2.getExternalId()));
         assertFalse(graph.hasDependency(child2));
 
     }

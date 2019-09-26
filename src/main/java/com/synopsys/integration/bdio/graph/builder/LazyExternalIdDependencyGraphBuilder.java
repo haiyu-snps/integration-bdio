@@ -36,13 +36,53 @@ import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class LazyExternalIdDependencyGraphBuilder {
-    private class LazyDependencyInfo {
-        public Set<DependencyId> children = new HashSet<>();
+    private static class LazyDependencyInfo {
+        private Set<DependencyId> children = new HashSet<>();
 
-        public DependencyId aliasId;
-        public ExternalId externalId;
-        public String name;
-        public String version;
+        private DependencyId aliasId;
+        private ExternalId externalId;
+        private String name;
+        private String version;
+
+        public Set<DependencyId> getChildren() {
+            return children;
+        }
+
+        public void setChildren(Set<DependencyId> children) {
+            this.children = children;
+        }
+
+        public DependencyId getAliasId() {
+            return aliasId;
+        }
+
+        public void setAliasId(DependencyId aliasId) {
+            this.aliasId = aliasId;
+        }
+
+        public ExternalId getExternalId() {
+            return externalId;
+        }
+
+        public void setExternalId(ExternalId externalId) {
+            this.externalId = externalId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
     }
 
     private final Set<DependencyId> rootDependencyIds = new HashSet<>();
@@ -148,9 +188,7 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public void addChildWithParent(final DependencyId child, final DependencyId parent) {
-        ensureDependencyInfoExists(child);
-        ensureDependencyInfoExists(parent);
-        dependencyInfo.get(parent).children.add(child);
+        addParentWithChild(parent, child);
     }
 
     public void addChildWithParents(final DependencyId child, final List<DependencyId> parents) {

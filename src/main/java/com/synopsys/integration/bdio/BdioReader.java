@@ -54,10 +54,10 @@ public class BdioReader implements Closeable {
 
     public SimpleBdioDocument readSimpleBdioDocument() throws IOException {
         final SimpleBdioDocument document = new SimpleBdioDocument();
-        document.billOfMaterials = readBillOfMaterials();
-        document.project = readProject();
+        document.setBillOfMaterials(readBillOfMaterials());
+        document.setProject(readProject());
         while (jsonReader.hasNext()) {
-            document.components.add(readComponent());
+            document.getComponents().add(readComponent());
         }
         return document;
     }

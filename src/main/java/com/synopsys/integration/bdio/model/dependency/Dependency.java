@@ -30,9 +30,9 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class Dependency {
-    public String name;
-    public String version;
-    public ExternalId externalId;
+    private String name;
+    private String version;
+    private ExternalId externalId;
 
     public Dependency(final String name, final String version, final ExternalId externalId) {
         this.name = name;
@@ -63,4 +63,27 @@ public class Dependency {
         return ReflectionToStringBuilder.toString(this, RecursiveToStringStyle.JSON_STYLE);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public ExternalId getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(ExternalId externalId) {
+        this.externalId = externalId;
+    }
 }

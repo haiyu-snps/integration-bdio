@@ -1,6 +1,7 @@
 package com.synopsys.integration.bdio.graph.transformer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -68,14 +69,14 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("123");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         int found = 0;
-        for (BdioComponent component : simpleBdioDocument.components) {
+        for (BdioComponent component : simpleBdioDocument.getComponents()) {
             Dependency node = null;
             for (Dependency candidate : generated) {
-                if (component.name == candidate.name) {
-                    assertEquals(null, node);
+                if (component.name.equals(candidate.getName())) {
+                    assertNull(node);
                     node = candidate;
                     found++;
                 }
@@ -112,9 +113,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("123");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
-        for (BdioComponent component : simpleBdioDocument.components) {
+        for (BdioComponent component : simpleBdioDocument.getComponents()) {
             if (component.name == "shared") {
                 assertEquals(component.relationships.size(), 2);
             }
@@ -146,10 +147,10 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("123");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         boolean found = false;
-        for (BdioComponent component : simpleBdioDocument.components) {
+        for (BdioComponent component : simpleBdioDocument.getComponents()) {
             if (component.name == "shared") {
                 assertEquals(1, component.relationships.size());
             } else if (component.name == "one") {
@@ -183,10 +184,10 @@ public class DependencyGraphTransformerEdgeCasesTest {
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("123");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         boolean found = false;
-        for (BdioComponent component : simpleBdioDocument.components) {
+        for (BdioComponent component : simpleBdioDocument.getComponents()) {
             if (component.name == "shared") {
                 assertEquals(1, component.relationships.size());
             } else if (component.name == "one") {
@@ -212,9 +213,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(one);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.name, project.version, project.externalId, graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
 
-        assertEquals(simpleBdioDocumentRecursive.components.size(), 3);
+        assertEquals(simpleBdioDocumentRecursive.getComponents().size(), 3);
     }
 
     @Test
@@ -232,9 +233,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(project);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.name, project.version, project.externalId, graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
 
-        assertEquals(simpleBdioDocumentRecursive.components.size(), 2);
+        assertEquals(simpleBdioDocumentRecursive.getComponents().size(), 2);
     }
 
 }

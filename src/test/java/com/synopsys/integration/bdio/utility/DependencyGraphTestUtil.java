@@ -18,21 +18,21 @@ public class DependencyGraphTestUtil {
     public static void assertGraphChildren(final DependencyGraph graph, final Dependency node, final Dependency... dependencies) {
         final Set<Dependency> actualChildren = new HashSet<>(graph.getChildrenForParent(node));
         assertDependencySet(actualChildren, dependencies);
-        assertExternalIdSet(graph.getChildrenExternalIdsForParent(node.externalId), extractExternalIds(dependencies));
+        assertExternalIdSet(graph.getChildrenExternalIdsForParent(node.getExternalId()), extractExternalIds(dependencies));
         assertExternalIdSet(graph.getChildrenExternalIdsForParent(node), extractExternalIds(dependencies));
     }
 
     public static void assertGraphParents(final DependencyGraph graph, final Dependency node, final Dependency... dependencies) {
         final Set<Dependency> actualParents = new HashSet<>(graph.getParentsForChild(node));
         assertDependencySet(actualParents, dependencies);
-        assertExternalIdSet(graph.getParentExternalIdsForChild(node.externalId), extractExternalIds(dependencies));
+        assertExternalIdSet(graph.getParentExternalIdsForChild(node.getExternalId()), extractExternalIds(dependencies));
         assertExternalIdSet(graph.getParentExternalIdsForChild(node), extractExternalIds(dependencies));
     }
 
     public static Set<ExternalId> extractExternalIds(final Set<Dependency> dependencies) {
         final Set<ExternalId> ids = new HashSet<>();
         for (final Dependency dependency : dependencies) {
-            ids.add(dependency.externalId);
+            ids.add(dependency.getExternalId());
         }
         return ids;
     }
@@ -40,7 +40,7 @@ public class DependencyGraphTestUtil {
     public static Set<ExternalId> extractExternalIds(final Dependency... dependencies) {
         final Set<ExternalId> ids = new HashSet<>();
         for (final Dependency dependency : dependencies) {
-            ids.add(dependency.externalId);
+            ids.add(dependency.getExternalId());
         }
         return ids;
     }
@@ -48,8 +48,8 @@ public class DependencyGraphTestUtil {
     public static void assertGraphHas(final DependencyGraph graph, final Dependency... dependencies) {
         for (final Dependency dependency : dependencies) {
             assertTrue(graph.hasDependency(dependency));
-            assertTrue(graph.hasDependency(dependency.externalId));
-            assertEquals(graph.getDependency(dependency.externalId), dependency);
+            assertTrue(graph.hasDependency(dependency.getExternalId()));
+            assertEquals(graph.getDependency(dependency.getExternalId()), dependency);
         }
     }
 

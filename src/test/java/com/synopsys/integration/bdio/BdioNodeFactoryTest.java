@@ -1,6 +1,8 @@
 package com.synopsys.integration.bdio;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -150,9 +152,9 @@ public class BdioNodeFactoryTest {
         bdioComponents.add(commonsCollections);
         bdioComponents.add(commonsLang);
 
-        simpleBdioDocument.billOfMaterials = bdioBillOfMaterials;
-        simpleBdioDocument.project = bdioProject;
-        simpleBdioDocument.components = bdioComponents;
+        simpleBdioDocument.setBillOfMaterials(bdioBillOfMaterials);
+        simpleBdioDocument.setProject(bdioProject);
+        simpleBdioDocument.setComponents(bdioComponents);
 
         return simpleBdioDocument;
     }

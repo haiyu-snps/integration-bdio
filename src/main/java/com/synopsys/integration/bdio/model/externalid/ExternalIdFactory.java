@@ -27,43 +27,43 @@ import com.synopsys.integration.bdio.model.Forge;
 public class ExternalIdFactory {
     public ExternalId createNameVersionExternalId(final Forge forge, final String name, final String version) {
         final ExternalId externalId = new ExternalId(forge);
-        externalId.name = name;
-        externalId.version = version;
+        externalId.setName(name);
+        externalId.setVersion(version);
         checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createYoctoExternalId(final String layer, final String name, final String version) {
         final ExternalId externalId = createNameVersionExternalId(Forge.YOCTO, name, version);
-        externalId.layer = layer;
+        externalId.setLayer(layer);
         checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createMavenExternalId(final String group, final String name, final String version) {
         final ExternalId externalId = createNameVersionExternalId(Forge.MAVEN, name, version);
-        externalId.group = group;
+        externalId.setGroup(group);
         checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createArchitectureExternalId(final Forge forge, final String name, final String version, final String architecture) {
         final ExternalId externalId = createNameVersionExternalId(forge, name, version);
-        externalId.architecture = architecture;
+        externalId.setArchitecture(architecture);
         checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createModuleNamesExternalId(final Forge forge, final String... moduleNames) {
         final ExternalId externalId = new ExternalId(forge);
-        externalId.moduleNames = moduleNames;
+        externalId.setModuleNames(moduleNames);
         checkForValidity(externalId);
         return externalId;
     }
 
     public ExternalId createPathExternalId(final Forge forge, final String path) {
         final ExternalId externalId = new ExternalId(forge);
-        externalId.path = path;
+        externalId.setPath(path);
         checkForValidity(externalId);
         return externalId;
     }

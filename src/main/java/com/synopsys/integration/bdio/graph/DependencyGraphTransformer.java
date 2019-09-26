@@ -48,24 +48,24 @@ public class DependencyGraphTransformer {
     public List<BdioComponent> transformDependencyGraph(DependencyGraph graph, BdioNode currentNode, Set<Dependency> dependencies, Map<ExternalId, BdioNode> existingComponents) {
         List<BdioComponent> addedComponents = new ArrayList<>();
         for (Dependency dependency : dependencies) {
-            if (!existingComponents.containsKey(dependency.externalId)) {
+            if (!existingComponents.containsKey(dependency.getExternalId())) {
                 BdioComponent addedNode = componentFromDependency(dependency);
                 addedComponents.add(addedNode);
-                existingComponents.put(dependency.externalId, addedNode);
+                existingComponents.put(dependency.getExternalId(), addedNode);
                 List<BdioComponent> addedChildren = transformDependencyGraph(graph, addedNode, graph.getChildrenForParent(dependency), existingComponents);
                 addedComponents.addAll(addedChildren);
             }
-            bdioPropertyHelper.addRelationship(currentNode, existingComponents.get(dependency.externalId));
+            bdioPropertyHelper.addRelationship(currentNode, existingComponents.get(dependency.getExternalId()));
         }
 
         return addedComponents;
     }
 
     private BdioComponent componentFromDependency(Dependency dependency) {
-        String componentName = dependency.name;
-        String componentVersion = dependency.version;
-        BdioId componentId = dependency.externalId.createBdioId();
-        BdioExternalIdentifier componentExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(dependency.externalId);
+        String componentName = dependency.getName();
+        String componentVersion = dependency.getVersion();
+        BdioId componentId = dependency.getExternalId().createBdioId();
+        BdioExternalIdentifier componentExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(dependency.getExternalId());
 
         BdioComponent component = bdioNodeFactory.createComponent(componentName, componentVersion, componentId, componentExternalIdentifier);
         return component;
