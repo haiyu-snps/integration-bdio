@@ -38,7 +38,6 @@ import com.synopsys.integration.bdio.model.externalid.ExternalId;
 public class LazyExternalIdDependencyGraphBuilder {
     private static class LazyDependencyInfo {
         private Set<DependencyId> children = new HashSet<>();
-
         private DependencyId aliasId;
         private ExternalId externalId;
         private String name;
@@ -90,8 +89,8 @@ public class LazyExternalIdDependencyGraphBuilder {
 
     private LazyDependencyInfo infoForId(final DependencyId id) {
         LazyDependencyInfo info = dependencyInfo.get(id);
-        if (info.aliasId != null) {
-            info = dependencyInfo.get(info.aliasId);
+        if (info.getAliasId() != null) {
+            info = dependencyInfo.get(info.getAliasId());
         }
         return info;
     }
@@ -101,21 +100,21 @@ public class LazyExternalIdDependencyGraphBuilder {
 
         for (final DependencyId dependencyId : dependencyInfo.keySet()) {
             final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
-            if (lazyDependencyInfo.externalId == null) {
+            if (lazyDependencyInfo.getExternalId() == null) {
                 throw new IllegalStateException(String.format("A dependency (%s) in a relationship in the graph never had it's external id set.", dependencyId.toString()));
             }
         }
 
         for (final DependencyId dependencyId : dependencyInfo.keySet()) {
             final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
-            final Dependency dependency = new Dependency(lazyDependencyInfo.name, lazyDependencyInfo.version, lazyDependencyInfo.externalId);
+            final Dependency dependency = new Dependency(lazyDependencyInfo.getName(), lazyDependencyInfo.getVersion(), lazyDependencyInfo.getExternalId());
 
-            for (final DependencyId child : lazyDependencyInfo.children) {
+            for (final DependencyId child : lazyDependencyInfo.getChildren()) {
                 final LazyDependencyInfo childInfo = infoForId(child);
-                mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.name, childInfo.version, childInfo.externalId));
+                mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.getName(), childInfo.getVersion(), childInfo.getExternalId()));
             }
 
-            if (rootDependencyIds.contains(dependencyId) || rootDependencyIds.contains(lazyDependencyInfo.aliasId)) {
+            if (rootDependencyIds.contains(dependencyId) || rootDependencyIds.contains(lazyDependencyInfo.getAliasId())) {
                 mutableDependencyGraph.addChildToRoot(dependency);
             }
         }
@@ -133,39 +132,39 @@ public class LazyExternalIdDependencyGraphBuilder {
         ensureDependencyInfoExists(realDependencyId);
         ensureDependencyInfoExists(fakeDependencyId);
         final LazyDependencyInfo info = dependencyInfo.get(fakeDependencyId);
-        info.aliasId = realDependencyId;
+        info.setAliasId(realDependencyId);
     }
 
     public void setDependencyInfo(final DependencyId id, final String name, final String version, final ExternalId externalId) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
-        info.name = name;
-        info.version = version;
-        info.externalId = externalId;
+        info.setName(name);
+        info.setVersion(version);
+        info.setExternalId(externalId);
     }
 
     public void setDependencyName(final DependencyId id, final String name) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
-        info.name = name;
+        info.setName(name);
     }
 
     public void setDependencyVersion(final DependencyId id, final String version) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
-        info.version = version;
+        info.setVersion(version);
     }
 
     public void setDependencyExternalId(final DependencyId id, final ExternalId externalId) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
-        info.externalId = externalId;
+        info.setExternalId(externalId);
     }
 
     public void addParentWithChild(final DependencyId parent, final DependencyId child) {
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
-        dependencyInfo.get(parent).children.add(child);
+        dependencyInfo.get(parent).getChildren().add(child);
 
     }
 
