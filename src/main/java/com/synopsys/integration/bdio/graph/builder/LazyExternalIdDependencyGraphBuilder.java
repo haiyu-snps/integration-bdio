@@ -36,7 +36,7 @@ import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class LazyExternalIdDependencyGraphBuilder {
-    private static class LazyDependencyInfo {
+    static class LazyDependencyInfo {
         private Set<DependencyId> children = new HashSet<>();
         private DependencyId aliasId;
         private ExternalId externalId;
@@ -95,13 +95,24 @@ public class LazyExternalIdDependencyGraphBuilder {
         return info;
     }
 
-    public DependencyGraph build() {
+    public DependencyGraph build() throws MissingExternalIdException {
+        return build(lazyDependencyInfo -> {
+            throw new MissingExternalIdException(lazyDependencyInfo.aliasId);
+        });
+    }
+
+    public DependencyGraph build(LazyBuilderMissingExternalIdHandler lazyBuilderHandler) throws MissingExternalIdException {
         final MutableDependencyGraph mutableDependencyGraph = new MutableMapDependencyGraph();
 
         for (final DependencyId dependencyId : dependencyInfo.keySet()) {
             final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
             if (lazyDependencyInfo.getExternalId() == null) {
-                throw new IllegalStateException(String.format("A dependency (%s) in a relationship in the graph never had it's external id set.", dependencyId.toString()));
+                final ExternalId handledExternalId = lazyBuilderHandler.handleMissingExternalId(lazyDependencyInfo);
+                if (handledExternalId == null) {
+                    throw new MissingExternalIdException(dependencyId);
+                } else {
+                    lazyDependencyInfo.setExternalId(handledExternalId);
+                }
             }
         }
 
