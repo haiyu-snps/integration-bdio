@@ -33,14 +33,14 @@ import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.util.Stringable;
 
 public class ExternalId extends Stringable {
-    public final Forge forge;
-    public String layer;
-    public String group;
-    public String name;
-    public String version;
-    public String architecture;
-    public String[] moduleNames;
-    public String path;
+    private final Forge forge;
+    private String layer;
+    private String group;
+    private String name;
+    private String version;
+    private String architecture;
+    private String[] moduleNames;
+    private String path;
 
     public ExternalId(Forge forge) {
         this.forge = forge;
@@ -107,4 +107,63 @@ public class ExternalId extends Stringable {
         return StringUtils.join(getExternalIdPieces(), forge.getSeparator());
     }
 
+    public Forge getForge() {
+        return forge;
+    }
+
+    public String getLayer() {
+        return layer;
+    }
+
+    public void setLayer(String layer) {
+        this.layer = layer;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getArchitecture() {
+        return architecture;
+    }
+
+    public void setArchitecture(String architecture) {
+        this.architecture = architecture;
+    }
+
+    public String[] getModuleNames() {
+        return moduleNames;
+    }
+
+    public void setModuleNames(String[] moduleNames) {
+        this.moduleNames = moduleNames;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

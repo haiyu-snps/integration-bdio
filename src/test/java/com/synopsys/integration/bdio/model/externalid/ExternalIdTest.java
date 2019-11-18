@@ -53,7 +53,7 @@ public class ExternalIdTest {
     @Test
     public void testWithoutEnoughState() {
         ExternalId externalId = new ExternalId(Forge.MAVEN);
-        externalId.name = "bundler";
+        externalId.setName("bundler");
         String[] pieces = externalId.getExternalIdPieces();
         assertEquals(1, pieces.length);
         assertEquals("bundler", pieces[0]);
@@ -62,8 +62,8 @@ public class ExternalIdTest {
     @Test
     public void testCreateBdioId() {
         ExternalId externalId = new ExternalId(Forge.MAVEN);
-        externalId.name = "testName";
-        externalId.version = "testVersion";
+        externalId.setName("testName");
+        externalId.setVersion("testVersion");
         assertEquals(new BdioId("http:maven/testName/testVersion"), externalId.createBdioId());
     }
 
@@ -100,8 +100,8 @@ public class ExternalIdTest {
     @Test
     public void testUnexpectedState() {
         ExternalId externalId = new ExternalId(Forge.PYPI);
-        externalId.version = "1.0.0";
-        externalId.architecture = "i586";
+        externalId.setVersion("1.0.0");
+        externalId.setArchitecture("i586");
         assertEquals("1.0.0/i586", externalId.createExternalId());
         assertEquals(new BdioId("http:pypi/1_0_0/i586"), externalId.createBdioId());
     }

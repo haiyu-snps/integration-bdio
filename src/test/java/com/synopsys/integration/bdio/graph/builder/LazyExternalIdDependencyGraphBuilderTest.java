@@ -45,14 +45,14 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(stringId);
-        builder.setDependencyInfo(stringId, "test1", "test2", stringDep.externalId);
+        builder.setDependencyInfo(stringId, "test1", "test2", stringDep.getExternalId());
 
         final DependencyGraph graph = builder.build();
 
-        final Dependency dep = graph.getDependency(stringDep.externalId);
+        final Dependency dep = graph.getDependency(stringDep.getExternalId());
 
-        assertEquals("test1", dep.name);
-        assertEquals("test2", dep.version);
+        assertEquals("test1", dep.getName());
+        assertEquals("test2", dep.getVersion());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
 
@@ -63,15 +63,15 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(aliasId);
-        builder.setDependencyInfo(stringId, "test1", "test2", stringDep.externalId);
+        builder.setDependencyInfo(stringId, "test1", "test2", stringDep.getExternalId());
         builder.setDependencyAsAlias(stringId, aliasId);
 
         final DependencyGraph graph = builder.build();
 
-        final Dependency dep = graph.getDependency(stringDep.externalId);
+        final Dependency dep = graph.getDependency(stringDep.getExternalId());
 
-        assertEquals("test1", dep.name);
-        assertEquals("test2", dep.version);
+        assertEquals("test1", dep.getName());
+        assertEquals("test2", dep.getVersion());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
 
@@ -86,7 +86,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyAsAlias(aliasId, stringId);
 
         final String expectedMessage = "A dependency ({\"name\":\"parent1\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
+        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
     }
 
     @Test
@@ -97,11 +97,11 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.addChildWithParent(childId1, parentId1);
         builder.addChildWithParent(childId2, parentId1);
 
-        builder.setDependencyInfo(parentId1, parent1.name, parent1.version, parent1.externalId);
-        builder.setDependencyInfo(childId1, child1.name, child1.version, child1.externalId);
+        builder.setDependencyInfo(parentId1, parent1.getName(), parent1.getVersion(), parent1.getExternalId());
+        builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
 
         final String expectedMessage = "A dependency ({\"name\":\"child2\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, () -> builder.build(), expectedMessage);
+        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
     }
 
     @Test
@@ -111,14 +111,14 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.addChildToRoot(stringId);
         builder.setDependencyName(stringId, "test1");
         builder.setDependencyVersion(stringId, "test2");
-        builder.setDependencyExternalId(stringId, stringDep.externalId);
+        builder.setDependencyExternalId(stringId, stringDep.getExternalId());
 
         final DependencyGraph graph = builder.build();
 
-        final Dependency dep = graph.getDependency(stringDep.externalId);
+        final Dependency dep = graph.getDependency(stringDep.getExternalId());
 
-        assertEquals("test1", dep.name);
-        assertEquals("test2", dep.version);
+        assertEquals("test1", dep.getName());
+        assertEquals("test2", dep.getVersion());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
     }
@@ -133,11 +133,11 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.addChildWithParents(childId3, DependencyIdTestUtil.asList(parentId1));
         builder.addChildWithParents(childId4, DependencyIdTestUtil.asSet(parentId1));
 
-        builder.setDependencyInfo(parentId1, parent1.name, parent1.version, parent1.externalId);
-        builder.setDependencyInfo(childId1, child1.name, child1.version, child1.externalId);
-        builder.setDependencyInfo(childId2, child2.name, child2.version, child2.externalId);
-        builder.setDependencyInfo(childId3, child3.name, child3.version, child3.externalId);
-        builder.setDependencyInfo(childId4, child4.name, child4.version, child4.externalId);
+        builder.setDependencyInfo(parentId1, parent1.getName(), parent1.getVersion(), parent1.getExternalId());
+        builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
+        builder.setDependencyInfo(childId2, child2.getName(), child2.getVersion(), child2.getExternalId());
+        builder.setDependencyInfo(childId3, child3.getName(), child3.getVersion(), child3.getExternalId());
+        builder.setDependencyInfo(childId4, child4.getName(), child4.getVersion(), child4.getExternalId());
         final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1);
@@ -158,11 +158,11 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.addParentWithChildren(parentId3, DependencyIdTestUtil.asList(childId1));
         builder.addParentWithChildren(parentId4, DependencyIdTestUtil.asSet(childId1));
 
-        builder.setDependencyInfo(parentId1, parent1.name, parent1.version, parent1.externalId);
-        builder.setDependencyInfo(parentId2, parent2.name, parent2.version, parent2.externalId);
-        builder.setDependencyInfo(parentId3, parent3.name, parent3.version, parent3.externalId);
-        builder.setDependencyInfo(parentId4, parent4.name, parent4.version, parent4.externalId);
-        builder.setDependencyInfo(childId1, child1.name, child1.version, child1.externalId);
+        builder.setDependencyInfo(parentId1, parent1.getName(), parent1.getVersion(), parent1.getExternalId());
+        builder.setDependencyInfo(parentId2, parent2.getName(), parent2.getVersion(), parent2.getExternalId());
+        builder.setDependencyInfo(parentId3, parent3.getName(), parent3.getVersion(), parent3.getExternalId());
+        builder.setDependencyInfo(parentId4, parent4.getName(), parent4.getVersion(), parent4.getExternalId());
+        builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
         final DependencyGraph graph = builder.build();
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, parent1, parent2, parent3, parent4);

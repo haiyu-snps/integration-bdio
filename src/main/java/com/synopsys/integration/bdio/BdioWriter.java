@@ -56,10 +56,10 @@ public class BdioWriter implements Closeable {
 
     public void writeSimpleBdioDocument(final SimpleBdioDocument simpleBdioDocument) {
         final List<BdioNode> bdioNodes = new ArrayList<>();
-        bdioNodes.add(simpleBdioDocument.billOfMaterials);
-        bdioNodes.add(simpleBdioDocument.project);
-        if (simpleBdioDocument.components != null && simpleBdioDocument.components.size() > 0) {
-            bdioNodes.addAll(simpleBdioDocument.components);
+        bdioNodes.add(simpleBdioDocument.getBillOfMaterials());
+        bdioNodes.add(simpleBdioDocument.getProject());
+        if (simpleBdioDocument.getComponents() != null && !simpleBdioDocument.getComponents().isEmpty()) {
+            bdioNodes.addAll(simpleBdioDocument.getComponents());
         }
 
         writeBdioNodes(bdioNodes);

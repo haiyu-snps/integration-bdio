@@ -1,15 +1,15 @@
 package com.synopsys.integration.bdio.simple;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
@@ -23,44 +23,44 @@ public class BdioReaderTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
-    public void testReaderOnSample() throws FileNotFoundException, IOException, URISyntaxException, JSONException {
+    public void testReaderOnSample() throws IOException, URISyntaxException {
         String expectedJson = jsonTestUtils.getExpectedJson("sample.jsonld");
 
         InputStream reader = new ByteArrayInputStream(expectedJson.getBytes(StandardCharsets.UTF_8.name()));
-        SimpleBdioDocument doc = null;
+        SimpleBdioDocument doc;
         try (BdioReader bdioReader = new BdioReader(new Gson(), reader)) {
             doc = bdioReader.readSimpleBdioDocument();
         }
 
         assertNotNull(doc);
 
-        assertNotNull(doc.billOfMaterials);
-        assertNotNull(doc.billOfMaterials.relationships);
-        assertEquals("1.1.0", doc.billOfMaterials.bdioSpecificationVersion);
-        assertEquals(BdioId.createFromUUID("45772d33-5353-44f1-8681-3d8a15540646"), doc.billOfMaterials.id);
-        assertEquals("BillOfMaterials", doc.billOfMaterials.type);
-        assertTrue(doc.billOfMaterials.creationInfo.getCreator().contains("Tool: integration-bdio-test-0.0.1-SNAPSHOT"));
-        assertEquals("gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export", doc.billOfMaterials.spdxName);
-        assertEquals(0, doc.billOfMaterials.relationships.size());
+        assertNotNull(doc.getBillOfMaterials());
+        assertNotNull(doc.getBillOfMaterials().relationships);
+        assertEquals("1.1.0", doc.getBillOfMaterials().bdioSpecificationVersion);
+        assertEquals(BdioId.createFromUUID("45772d33-5353-44f1-8681-3d8a15540646"), doc.getBillOfMaterials().id);
+        assertEquals("BillOfMaterials", doc.getBillOfMaterials().type);
+        assertTrue(doc.getBillOfMaterials().creationInfo.getCreator().contains("Tool: integration-bdio-test-0.0.1-SNAPSHOT"));
+        assertEquals("gradleTestProject/99.5-SNAPSHOT Black Duck I/O Export", doc.getBillOfMaterials().spdxName);
+        assertEquals(0, doc.getBillOfMaterials().relationships.size());
 
-        assertNotNull(doc.project);
-        assertNotNull(doc.project.bdioExternalIdentifier);
-        assertNotNull(doc.project.relationships);
-        assertEquals("99.5-SNAPSHOT", doc.project.version);
-        assertEquals(new BdioId("http:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT"), doc.project.id);
-        assertEquals("Project", doc.project.type);
-        assertEquals("gradleTestProject", doc.project.name);
-        assertEquals("maven", doc.project.bdioExternalIdentifier.forge);
-        assertEquals("com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT", doc.project.bdioExternalIdentifier.externalId);
+        assertNotNull(doc.getProject());
+        assertNotNull(doc.getProject().bdioExternalIdentifier);
+        assertNotNull(doc.getProject().relationships);
+        assertEquals("99.5-SNAPSHOT", doc.getProject().version);
+        assertEquals(new BdioId("http:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT"), doc.getProject().id);
+        assertEquals("Project", doc.getProject().type);
+        assertEquals("gradleTestProject", doc.getProject().name);
+        assertEquals("maven", doc.getProject().bdioExternalIdentifier.forge);
+        assertEquals("com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT", doc.getProject().bdioExternalIdentifier.externalId);
 
-        assertEquals(1, doc.project.relationships.size());
-        assertEquals(new BdioId("http:maven/org_apache_cxf/cxf_bundle/2_7_7"), doc.project.relationships.get(0).related);
-        assertEquals("DYNAMIC_LINK", doc.project.relationships.get(0).relationshipType);
+        assertEquals(1, doc.getProject().relationships.size());
+        assertEquals(new BdioId("http:maven/org_apache_cxf/cxf_bundle/2_7_7"), doc.getProject().relationships.get(0).related);
+        assertEquals("DYNAMIC_LINK", doc.getProject().relationships.get(0).relationshipType);
 
-        assertNotNull(doc.components);
-        assertEquals(4, doc.components.size());
+        assertNotNull(doc.getComponents());
+        assertEquals(4, doc.getComponents().size());
 
-        BdioComponent first = doc.components.get(0);
+        BdioComponent first = doc.getComponents().get(0);
 
         assertNotNull(first);
         assertNotNull(first.bdioExternalIdentifier);

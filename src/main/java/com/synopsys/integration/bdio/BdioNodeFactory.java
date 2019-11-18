@@ -73,8 +73,11 @@ public class BdioNodeFactory {
         billOfMaterials.creationInfo.created = Instant.now().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
         String version = BdioNodeFactory.UNKNOWN_LIBRARY_VERSION;
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BdioNodeFactory.VERSION_RESOURCE_PATH)) {
-            version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            if (inputStream != null) {
+                version = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            }
+        } catch (IOException ignored) {
+            // Library version is not critical to BdioBillOfMaterials creation.
         }
         billOfMaterials.creationInfo.addSpdxCreator(SpdxCreator.createToolSpdxCreator("IntegrationBdio", version));
 

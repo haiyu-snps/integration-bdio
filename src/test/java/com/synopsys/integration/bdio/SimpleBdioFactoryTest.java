@@ -1,6 +1,13 @@
 package com.synopsys.integration.bdio;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,10 +50,10 @@ public class SimpleBdioFactoryTest {
         assertNotNull(simpleBdioFactory.getDependencyGraphTransformer());
         assertNotNull(simpleBdioFactory.getExternalIdFactory());
 
-        assertFalse(bdioPropertyHelper == simpleBdioFactory.getBdioPropertyHelper());
-        assertFalse(bdioNodeFactory == simpleBdioFactory.getBdioNodeFactory());
-        assertFalse(dependencyGraphTransformer == simpleBdioFactory.getDependencyGraphTransformer());
-        assertFalse(externalIdFactory == simpleBdioFactory.getExternalIdFactory());
+        assertNotSame(bdioPropertyHelper, simpleBdioFactory.getBdioPropertyHelper());
+        assertNotSame(bdioNodeFactory, simpleBdioFactory.getBdioNodeFactory());
+        assertNotSame(dependencyGraphTransformer, simpleBdioFactory.getDependencyGraphTransformer());
+        assertNotSame(externalIdFactory, simpleBdioFactory.getExternalIdFactory());
     }
 
     @Test
@@ -64,10 +71,10 @@ public class SimpleBdioFactoryTest {
         assertNotNull(simpleBdioFactory.getBdioNodeFactory());
         assertNotNull(simpleBdioFactory.getDependencyGraphTransformer());
 
-        assertTrue(bdioPropertyHelper == simpleBdioFactory.getBdioPropertyHelper());
-        assertTrue(bdioNodeFactory == simpleBdioFactory.getBdioNodeFactory());
-        assertTrue(dependencyGraphTransformer == simpleBdioFactory.getDependencyGraphTransformer());
-        assertTrue(externalIdFactory == simpleBdioFactory.getExternalIdFactory());
+        assertSame(bdioPropertyHelper, simpleBdioFactory.getBdioPropertyHelper());
+        assertSame(bdioNodeFactory, simpleBdioFactory.getBdioNodeFactory());
+        assertSame(dependencyGraphTransformer, simpleBdioFactory.getDependencyGraphTransformer());
+        assertSame(externalIdFactory, simpleBdioFactory.getExternalIdFactory());
     }
 
     @Test
@@ -120,7 +127,7 @@ public class SimpleBdioFactoryTest {
         assertEquals(0, bdioFile.length());
 
         // overriding default UUID so the expected value matches the actual value
-        simpleBdioDocument.billOfMaterials.id = BdioId.createFromUUID("static-uuid-for-testing");
+        simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("static-uuid-for-testing");
         simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
 
         assertNotEquals(0, bdioFile.length());
@@ -137,12 +144,12 @@ public class SimpleBdioFactoryTest {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("code location name", "project name", "project version name");
 
-        assertEquals("code location name", simpleBdioDocument.billOfMaterials.spdxName);
-        assertEquals("project name", simpleBdioDocument.project.name);
-        assertEquals("project version name", simpleBdioDocument.project.version);
-        assertEquals(new BdioId("http:project_name/project_version_name"), simpleBdioDocument.project.id);
-        assertTrue(simpleBdioDocument.project.relationships.isEmpty());
-        assertNull(simpleBdioDocument.project.bdioExternalIdentifier);
+        assertEquals("code location name", simpleBdioDocument.getBillOfMaterials().spdxName);
+        assertEquals("project name", simpleBdioDocument.getProject().name);
+        assertEquals("project version name", simpleBdioDocument.getProject().version);
+        assertEquals(new BdioId("http:project_name/project_version_name"), simpleBdioDocument.getProject().id);
+        assertTrue(simpleBdioDocument.getProject().relationships.isEmpty());
+        assertNull(simpleBdioDocument.getProject().bdioExternalIdentifier);
     }
 
     private SimpleBdioDocument createSimpleBdioDocument(SimpleBdioFactory simpleBdioFactory) {
@@ -157,7 +164,7 @@ public class SimpleBdioFactoryTest {
         mutableDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
 
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("test code location", "integration-bdio", "0.0.1",
-                simpleBdioFactory.createMavenExternalId("com.blackducksoftware.integration", "integration-bdio", "0.0.1"), mutableDependencyGraph);
+            simpleBdioFactory.createMavenExternalId("com.blackducksoftware.integration", "integration-bdio", "0.0.1"), mutableDependencyGraph);
         return simpleBdioDocument;
     }
 

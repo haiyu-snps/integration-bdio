@@ -1,6 +1,7 @@
 package com.synopsys.integration.bdio.utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,18 +17,12 @@ public class DependencyTestUtil {
     }
 
     public static Set<Dependency> asSet(final Dependency... dependencies) {
-        final Set<Dependency> set = new HashSet<>();
-        for (final Dependency dependency : dependencies) {
-            set.add(dependency);
-        }
+        final Set<Dependency> set = new HashSet<>(Arrays.asList(dependencies));
         return set;
     }
 
     public static List<Dependency> asList(final Dependency... dependencies) {
-        final List<Dependency> list = new ArrayList<>();
-        for (final Dependency dependency : dependencies) {
-            list.add(dependency);
-        }
+        final List<Dependency> list = new ArrayList<>(Arrays.asList(dependencies));
         return list;
     }
 

@@ -28,32 +28,32 @@ import java.util.Set;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 
 public interface MutableDependencyGraph extends DependencyGraph {
-    public void addGraphAsChildrenToRoot(DependencyGraph sourceGraph);
+    void addGraphAsChildrenToRoot(DependencyGraph sourceGraph);
 
-    public void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph);
+    void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph);
 
-    public void addParentWithChild(final Dependency parent, final Dependency child);
+    void addParentWithChild(final Dependency parent, final Dependency child);
 
-    public void addParentWithChildren(final Dependency parent, final List<Dependency> children);
+    void addParentWithChildren(final Dependency parent, final List<Dependency> children);
 
-    public void addParentWithChildren(final Dependency parent, final Set<Dependency> children);
+    void addParentWithChildren(final Dependency parent, final Set<Dependency> children);
 
-    public void addParentWithChildren(final Dependency parent, final Dependency... children);
+    void addParentWithChildren(final Dependency parent, final Dependency... children);
 
-    public void addChildWithParent(final Dependency child, final Dependency parent);
+    void addChildWithParent(final Dependency child, final Dependency parent);
 
-    public void addChildWithParents(final Dependency child, final List<Dependency> parents);
+    void addChildWithParents(final Dependency child, final List<Dependency> parents);
 
-    public void addChildWithParents(final Dependency child, final Set<Dependency> parents);
+    void addChildWithParents(final Dependency child, final Set<Dependency> parents);
 
-    public void addChildWithParents(final Dependency child, final Dependency... parents);
+    void addChildWithParents(final Dependency child, final Dependency... parents);
 
-    public void addChildToRoot(final Dependency child);
+    void addChildToRoot(final Dependency child);
 
-    public void addChildrenToRoot(final List<Dependency> children);
+    void addChildrenToRoot(final List<Dependency> children);
 
-    public void addChildrenToRoot(final Set<Dependency> children);
+    void addChildrenToRoot(final Set<Dependency> children);
 
-    public void addChildrenToRoot(final Dependency... children);
+    void addChildrenToRoot(final Dependency... children);
 
 }

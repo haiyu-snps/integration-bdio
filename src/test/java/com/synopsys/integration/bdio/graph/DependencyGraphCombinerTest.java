@@ -1,7 +1,5 @@
 package com.synopsys.integration.bdio.graph;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
@@ -9,13 +7,13 @@ import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
 public class DependencyGraphCombinerTest {
-    Dependency dep1 = DependencyTestUtil.newMavenDependency("first", "1.0", "children");
-    Dependency dep2 = DependencyTestUtil.newMavenDependency("second", "2.0", "children");
-    Dependency dep3 = DependencyTestUtil.newMavenDependency("third", "3.0", "children");
-    Dependency dep4 = DependencyTestUtil.newMavenDependency("fourth", "4.0", "children");
-    Dependency dep5 = DependencyTestUtil.newMavenDependency("first", "1.0", "subChild");
-    Dependency dep6 = DependencyTestUtil.newMavenDependency("second", "2.0", "subChild");
-    Dependency dep7 = DependencyTestUtil.newMavenDependency("third", "3.0", "subChild");
+    private Dependency dep1 = DependencyTestUtil.newMavenDependency("first", "1.0", "children");
+    private Dependency dep2 = DependencyTestUtil.newMavenDependency("second", "2.0", "children");
+    private Dependency dep3 = DependencyTestUtil.newMavenDependency("third", "3.0", "children");
+    private Dependency dep4 = DependencyTestUtil.newMavenDependency("fourth", "4.0", "children");
+    private Dependency dep5 = DependencyTestUtil.newMavenDependency("first", "1.0", "subChild");
+    private Dependency dep6 = DependencyTestUtil.newMavenDependency("second", "2.0", "subChild");
+    private Dependency dep7 = DependencyTestUtil.newMavenDependency("third", "3.0", "subChild");
 
     @Test
     public void testAddChildWithParents() {

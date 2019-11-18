@@ -23,11 +23,18 @@
 package com.synopsys.integration.bdio.model.dependencyid;
 
 public class NameVersionDependencyId extends NameDependencyId {
-    public String version;
+    private String version;
 
     public NameVersionDependencyId(final String name, final String version) {
         super(name);
         this.version = version;
     }
 
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }

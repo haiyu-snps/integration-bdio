@@ -23,10 +23,17 @@
 package com.synopsys.integration.bdio.model.dependencyid;
 
 public class NameDependencyId extends DependencyId {
-    public String name;
+    private String name;
 
     public NameDependencyId(final String name) {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
