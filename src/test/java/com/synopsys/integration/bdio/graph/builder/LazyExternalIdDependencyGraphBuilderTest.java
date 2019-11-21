@@ -41,7 +41,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
     DependencyId childId4 = new NameDependencyId("child4");
 
     @Test
-    public void testSetInfo() {
+    public void testSetInfo() throws MissingExternalIdException {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(stringId);
@@ -59,7 +59,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
     }
 
     @Test
-    public void testAlias() {
+    public void testAlias() throws MissingExternalIdException {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(aliasId);
@@ -86,7 +86,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyAsAlias(aliasId, stringId);
 
         final String expectedMessage = "A dependency ({\"name\":\"parent1\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
+        assertThrows(MissingExternalIdException.class, builder::build, expectedMessage);
     }
 
     @Test
@@ -101,11 +101,11 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
 
         final String expectedMessage = "A dependency ({\"name\":\"child2\"}) in a relationship in the graph never had it's external id set.";
-        assertThrows(IllegalStateException.class, builder::build, expectedMessage);
+        assertThrows(MissingExternalIdException.class, builder::build, expectedMessage);
     }
 
     @Test
-    public void testSetPieces() {
+    public void testSetPieces() throws MissingExternalIdException {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(stringId);
@@ -124,7 +124,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
     }
 
     @Test
-    public void testAddChild() {
+    public void testAddChild() throws MissingExternalIdException {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(parentId1);
@@ -145,7 +145,7 @@ public class LazyExternalIdDependencyGraphBuilderTest {
     }
 
     @Test
-    public void testAddParent() {
+    public void testAddParent() throws MissingExternalIdException {
         final LazyExternalIdDependencyGraphBuilder builder = new LazyExternalIdDependencyGraphBuilder();
 
         builder.addChildToRoot(parentId1);
