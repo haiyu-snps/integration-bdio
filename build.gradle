@@ -20,7 +20,7 @@ versionFile.delete()
 versionFile << version
 
 dependencies {
-    api 'com.blackducksoftware.integration:integration-common:18.0.0'
+    api 'com.blackducksoftware.integration:integration-common:18.0.1'
 
     testImplementation 'org.mockito:mockito-core:2.18.3'
     testImplementation 'org.skyscreamer:jsonassert:1.5.0'
