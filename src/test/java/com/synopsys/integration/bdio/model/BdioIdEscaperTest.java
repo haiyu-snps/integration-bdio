@@ -32,12 +32,12 @@ public class BdioIdEscaperTest {
     }
 
     @Test
-    public void testDifferentSpecialCharactersStillDistinct_old() {
+    public void testDifferentSpecialCharactersNotDistinctWithPoorEscaping() {
         final IntegrationEscapeUtil bdioIdEscaper = new IntegrationEscapeUtil();
         String nameWithAnUnderscore = "a-b-c";
         String nameWithAPeriod = "a.b.c";
 
-        assertNotEquals(bdioIdEscaper.escapeForUri(nameWithAnUnderscore), bdioIdEscaper.escapeForUri(nameWithAPeriod));
+        assertEquals(bdioIdEscaper.escapeForUri(nameWithAnUnderscore), bdioIdEscaper.escapeForUri(nameWithAPeriod));
     }
 
 }
