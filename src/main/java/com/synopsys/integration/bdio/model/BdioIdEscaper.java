@@ -1,5 +1,7 @@
 package com.synopsys.integration.bdio.model;
 
+import com.synopsys.integration.util.IntegrationEscapeUtil;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -7,6 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BdioIdEscaper {
+    private IntegrationEscapeUtil integrationEscapeUtil;
+
+    public BdioIdEscaper() {
+        this.integrationEscapeUtil = new IntegrationEscapeUtil();
+    }
+
+    public BdioIdEscaper(IntegrationEscapeUtil integrationEscapeUtil) {
+        this.integrationEscapeUtil = new IntegrationEscapeUtil();
+    }
+
     public List<String> escapePiecesForUri(final List<String> pieces) {
         final List<String> escapedPieces = new ArrayList<>(pieces.size());
         for (final String piece : pieces) {
@@ -30,7 +42,7 @@ public class BdioIdEscaper {
     }
 
     private String poorManEscaping(String s) {
-        return s.replaceAll("[^A-Za-z0-9]", "_");
+        return integrationEscapeUtil.escapeForUri(s);
     }
 
 }

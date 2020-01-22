@@ -35,12 +35,12 @@ import com.synopsys.integration.util.IntegrationEscapeUtil;
 public class BdioId {
     public static final String BDIO_ID_SEPARATOR = "/";
 
-    private static final IntegrationEscapeUtil integrationEscapeUtil = new IntegrationEscapeUtil();
+    private static final BdioIdEscaper bdioIdEscaper = new BdioIdEscaper();
 
     private final String id;
 
     public static BdioId createFromPieces(List<String> pieces) {
-        return new BdioId("http:" + StringUtils.join(BdioId.integrationEscapeUtil.escapePiecesForUri(pieces), BdioId.BDIO_ID_SEPARATOR));
+        return new BdioId("http:" + StringUtils.join(BdioId.bdioIdEscaper.escapePiecesForUri(pieces), BdioId.BDIO_ID_SEPARATOR));
     }
 
     public static BdioId createFromPieces(String... pieces) {
