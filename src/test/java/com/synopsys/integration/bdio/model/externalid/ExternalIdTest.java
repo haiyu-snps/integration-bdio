@@ -46,7 +46,7 @@ public class ExternalIdTest {
     @Test
     public void testEscapingBadUriCharacters() {
         ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.NPMJS, "name with spaces", "version with a - and a # and spaces");
-        assertEquals(new BdioId("http:npmjs/name_with_spaces/version_with_a___and_a___and_spaces"), nameVersionExternalId.createBdioId());
+        assertEquals(new BdioId("http:npmjs/name+with+spaces/version+with+a+-+and+a+%23+and+spaces"), nameVersionExternalId.createBdioId());
         assertEquals("name with spaces/version with a - and a # and spaces", nameVersionExternalId.createExternalId());
     }
 
@@ -103,7 +103,7 @@ public class ExternalIdTest {
         externalId.setVersion("1.0.0");
         externalId.setArchitecture("i586");
         assertEquals("1.0.0/i586", externalId.createExternalId());
-        assertEquals(new BdioId("http:pypi/1_0_0/i586"), externalId.createBdioId());
+        assertEquals(new BdioId("http:pypi/1.0.0/i586"), externalId.createBdioId());
     }
 
 }

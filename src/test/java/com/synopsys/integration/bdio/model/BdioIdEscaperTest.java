@@ -37,7 +37,7 @@ public class BdioIdEscaperTest {
         String nameWithAnUnderscore = "a-b-c";
         String nameWithAPeriod = "a.b.c";
 
-        assertEquals(bdioIdEscaper.escapeForUri(nameWithAnUnderscore), bdioIdEscaper.escapeForUri(nameWithAPeriod));
+        assertEquals(bdioIdEscaper.replaceWithUnderscore(nameWithAnUnderscore), bdioIdEscaper.replaceWithUnderscore(nameWithAPeriod));
     }
 
 }

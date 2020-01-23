@@ -9,7 +9,7 @@
   {
     "name": "integration-bdio",
     "revision": "0.0.1",
-    "@id": "http:maven/com_blackducksoftware_integration/integration_bdio/0_0_1",
+    "@id": "http:maven/com.blackducksoftware.integration/integration-bdio/0.0.1",
     "@type": "Project",
     "externalIdentifier": {
       "externalSystemTypeId": "maven",
@@ -26,11 +26,11 @@
     },
     "relationship": [
       {
-        "related": "http:maven/com_blackducksoftware_integration/bdio_test/1_1_2",
+        "related": "http:maven/com.blackducksoftware.integration/bdio-test/1.1.2",
         "relationshipType": "DYNAMIC_LINK"
       },
       {
-        "related": "http:maven/com_blackducksoftware_integration/bdio_reader/1_2_0",
+        "related": "http:maven/com.blackducksoftware.integration/bdio-reader/1.2.0",
         "relationshipType": "DYNAMIC_LINK"
       }
     ]
@@ -38,7 +38,7 @@
   {
     "name": "bdio-test",
     "revision": "1.1.2",
-    "@id": "http:maven/com_blackducksoftware_integration/bdio_test/1_1_2",
+    "@id": "http:maven/com.blackducksoftware.integration/bdio-test/1.1.2",
     "@type": "Component",
     "externalIdentifier": {
       "externalSystemTypeId": "maven",
@@ -58,7 +58,7 @@
   {
     "name": "bdio-reader",
     "revision": "1.2.0",
-    "@id": "http:maven/com_blackducksoftware_integration/bdio_reader/1_2_0",
+    "@id": "http:maven/com.blackducksoftware.integration/bdio-reader/1.2.0",
     "@type": "Component",
     "externalIdentifier": {
       "externalSystemTypeId": "maven",
@@ -75,7 +75,7 @@
     },
     "relationship": [
       {
-        "related": "http:maven/org_apache_commons/commons_lang3/3_6",
+        "related": "http:maven/org.apache.commons/commons-lang3/3.6",
         "relationshipType": "DYNAMIC_LINK"
       }
     ]
@@ -83,7 +83,7 @@
   {
     "name": "commons-lang3",
     "revision": "3.6",
-    "@id": "http:maven/org_apache_commons/commons_lang3/3_6",
+    "@id": "http:maven/org.apache.commons/commons-lang3/3.6",
     "@type": "Component",
     "externalIdentifier": {
       "externalSystemTypeId": "maven",

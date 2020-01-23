@@ -47,14 +47,14 @@ public class BdioReaderTest {
         assertNotNull(doc.getProject().bdioExternalIdentifier);
         assertNotNull(doc.getProject().relationships);
         assertEquals("99.5-SNAPSHOT", doc.getProject().version);
-        assertEquals(new BdioId("http:maven/com_blackducksoftware_gradle_test/gradleTestProject/99_5_SNAPSHOT"), doc.getProject().id);
+        assertEquals(new BdioId("http:maven/com.blackducksoftware.gradle.test/gradleTestProject/99.5-SNAPSHOT"), doc.getProject().id);
         assertEquals("Project", doc.getProject().type);
         assertEquals("gradleTestProject", doc.getProject().name);
         assertEquals("maven", doc.getProject().bdioExternalIdentifier.forge);
         assertEquals("com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT", doc.getProject().bdioExternalIdentifier.externalId);
 
         assertEquals(1, doc.getProject().relationships.size());
-        assertEquals(new BdioId("http:maven/org_apache_cxf/cxf_bundle/2_7_7"), doc.getProject().relationships.get(0).related);
+        assertEquals(new BdioId("http:maven/org.apache.cxf/cxf-bundle/2.7.7"), doc.getProject().relationships.get(0).related);
         assertEquals("DYNAMIC_LINK", doc.getProject().relationships.get(0).relationshipType);
 
         assertNotNull(doc.getComponents());
@@ -68,16 +68,16 @@ public class BdioReaderTest {
 
         assertEquals("cxf-bundle", first.name);
         assertEquals("2.7.7", first.version);
-        assertEquals(new BdioId("http:maven/org_apache_cxf/cxf_bundle/2_7_7"), first.id);
+        assertEquals(new BdioId("http:maven/org.apache.cxf/cxf-bundle/2.7.7"), first.id);
         assertEquals("Component", first.type);
 
         assertEquals("maven", first.bdioExternalIdentifier.forge);
         assertEquals("org.apache.cxf:cxf-bundle:2.7.7", first.bdioExternalIdentifier.externalId);
 
         assertEquals(2, first.relationships.size());
-        assertEquals(new BdioId("http:maven/org_apache_velocity/velocity/1_7"), first.relationships.get(0).related);
+        assertEquals(new BdioId("http:maven/org.apache.velocity/velocity/1.7"), first.relationships.get(0).related);
         assertEquals("DYNAMIC_LINK", first.relationships.get(0).relationshipType);
-        assertEquals(new BdioId("http:maven/commons_lang/commons_lang/2_6"), first.relationships.get(1).related);
+        assertEquals(new BdioId("http:maven/commons-lang/commons-lang/2.6"), first.relationships.get(1).related);
         assertEquals("DYNAMIC_LINK", first.relationships.get(1).relationshipType);
     }
 

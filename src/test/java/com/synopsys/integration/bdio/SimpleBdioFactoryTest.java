@@ -147,7 +147,7 @@ public class SimpleBdioFactoryTest {
         assertEquals("code location name", simpleBdioDocument.getBillOfMaterials().spdxName);
         assertEquals("project name", simpleBdioDocument.getProject().name);
         assertEquals("project version name", simpleBdioDocument.getProject().version);
-        assertEquals(new BdioId("http:project_name/project_version_name"), simpleBdioDocument.getProject().id);
+        assertEquals(new BdioId("http:project+name/project+version+name"), simpleBdioDocument.getProject().id);
         assertTrue(simpleBdioDocument.getProject().relationships.isEmpty());
         assertNull(simpleBdioDocument.getProject().bdioExternalIdentifier);
     }
