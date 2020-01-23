@@ -3,13 +3,13 @@ buildscript {
         mavenCentral()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
-    dependencies { classpath "com.synopsys.integration:common-gradle-plugin:1.0.0" }
+    dependencies { classpath "com.synopsys.integration:common-gradle-plugin:0.0.+" }
 }
 
 project.ext.moduleName = 'com.synopsys.integration.integration-bdio'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '19.0.0'
+version = '19.0.1-SNAPSHOT'
 description = 'A library to allow for easy and clear creation of Black Duck I/O (bdio) documents.'
 
 apply plugin: 'com.synopsys.integration.library'
