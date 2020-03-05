@@ -36,7 +36,7 @@ import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class LazyExternalIdDependencyGraphBuilder {
-    static class LazyDependencyInfo {
+    public static class LazyDependencyInfo {
         private Set<DependencyId> children = new HashSet<>();
         private DependencyId aliasId;
         private ExternalId externalId;
