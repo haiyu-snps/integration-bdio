@@ -96,11 +96,11 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public DependencyGraph build() throws MissingExternalIdException {
-        return build(lazyDependencyInfo -> {
+        return build((dependencyId, lazyDependencyInfo) -> {
             if (lazyDependencyInfo != null && lazyDependencyInfo.aliasId != null) {
                 throw new MissingExternalIdException(lazyDependencyInfo.aliasId);
             } else {
-                throw new MissingExternalIdException(null);
+                throw new MissingExternalIdException(dependencyId);
             }
         });
     }
@@ -111,7 +111,7 @@ public class LazyExternalIdDependencyGraphBuilder {
         for (final DependencyId dependencyId : dependencyInfo.keySet()) {
             final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
             if (lazyDependencyInfo.getExternalId() == null) {
-                final ExternalId handledExternalId = lazyBuilderHandler.handleMissingExternalId(lazyDependencyInfo);
+                final ExternalId handledExternalId = lazyBuilderHandler.handleMissingExternalId(dependencyId, lazyDependencyInfo);
                 if (handledExternalId == null || dependencyId == null) {
                     throw new MissingExternalIdException(dependencyId);
                 } else {
