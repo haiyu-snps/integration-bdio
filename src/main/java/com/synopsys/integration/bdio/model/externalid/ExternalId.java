@@ -22,33 +22,115 @@
  */
 package com.synopsys.integration.bdio.model.externalid;
 
+import com.synopsys.integration.bdio.model.BdioId;
+import com.synopsys.integration.bdio.model.Forge;
+import com.synopsys.integration.util.NameVersion;
+import com.synopsys.integration.util.Stringable;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.synopsys.integration.bdio.model.BdioId;
-import com.synopsys.integration.bdio.model.Forge;
-import com.synopsys.integration.util.Stringable;
-
+/**
+ * A forge is always required. The other fields to populate depend on what external id type you need.
+ * <p>
+ * The supported types are:
+ * - a path
+ * - a list of moduleNames
+ * - a name
+ * - a name/version
+ * - a name/version/architecture
+ * - a name/architecture
+ * - a group/name/version
+ * - a group/name
+ * - a layer/name/version
+ * - a layer/name
+ */
 public class ExternalId extends Stringable {
+    private static final int NAME_POSITION = 0;
+    private static final int VERSION_POSITION = 1;
+
     private final Forge forge;
-    private String layer;
-    private String group;
-    private String name;
-    private String version;
-    private String architecture;
-    private String[] moduleNames;
-    private String path;
+    private List<String> pieces = new ArrayList<>();
+    private String prefix;
+    private String suffix;
+
+    public static ExternalId createFromExternalId(Forge forge, String fullExternalId, String name, String version) {
+        List<String> unknownPieces = Arrays.asList(StringUtils.split(fullExternalId, forge.getSeparator()))
+                .stream()
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
+
+        ExternalId externalId = new ExternalId(forge);
+        if (unknownPieces.isEmpty()) {
+            return externalId;
+        }
+
+        //TODO use optional/stream to clean this up
+        if (unknownPieces.size() == 1) {
+            // the external id is either a path, or it only includes the name
+            String firstPiece = unknownPieces.get(0);
+            if (firstPiece.equals(name)) {
+                externalId.setName(firstPiece);
+            } else {
+                externalId.setPath(firstPiece);
+            }
+
+            return externalId;
+        }
+
+        if (!unknownPieces.contains(name)) {
+            // without the name, the best we can do moduleNames
+            externalId.setModuleNames(unknownPieces.toArray(new String[0]));
+
+            return externalId;
+        }
+
+        // we know that name is involved now
+        int indexToConsider = 0;
+        if (unknownPieces.get(indexToConsider).equals(name)) {
+            externalId.setName(name);
+            indexToConsider++;
+        } else {
+            externalId.prefix = unknownPieces.get(indexToConsider++);
+            externalId.setName(unknownPieces.get(indexToConsider++));
+        }
+
+        indexToConsider = considerVersion(version, externalId, unknownPieces, indexToConsider);
+
+        if (unknownPieces.size() >= indexToConsider + 1) {
+            externalId.suffix = unknownPieces.get(indexToConsider++);
+        }
+
+        // we may still have a case where we must use moduleNames - if there is content in unknown pieces
+        // we haven't addressed, just reset and use all the pieces as moduleNames
+        if (unknownPieces.size() >= indexToConsider + 1) {
+            externalId.setModuleNames(unknownPieces.toArray(new String[0]));
+        }
+
+        return externalId;
+    }
+
+    private static int considerVersion(String version, ExternalId externalId, List<String> unknownPieces, int indexToConsider) {
+        if (unknownPieces.size() >= indexToConsider + 1 && unknownPieces.get(indexToConsider).equals(version)) {
+            externalId.setVersion(version);
+            indexToConsider++;
+        }
+
+        return indexToConsider;
+    }
 
     public ExternalId(Forge forge) {
         this.forge = forge;
+        pieces.add(NAME_POSITION, null);
+        pieces.add(VERSION_POSITION, null);
     }
 
     /**
-     * A forge is always required. The other fields to populate depend on what
-     * external id type you need. The currently supported types are:
+     * The currently supported types are:
      * "name/version": populate name and version (if version is blank, only name is included)
      * "architecture": populate name, version, and architecture (if version is blank, only name is included)
      * "layer": populate name, version, and layer (if version is blank, only name is included)
@@ -57,42 +139,21 @@ public class ExternalId extends Stringable {
      * "path": populate path
      */
     public String[] getExternalIdPieces() {
-        if (StringUtils.isNotBlank(path)) {
-            return new String[] { path };
-        } else if (moduleNames != null && moduleNames.length > 0) {
-            return moduleNames;
-        } else if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(version)) {
-            if (StringUtils.isNotBlank(group)) {
-                return new String[] { group, name, version };
-            } else if (StringUtils.isNotBlank(architecture)) {
-                return new String[] { name, version, architecture };
-            } else if (StringUtils.isNotBlank(layer)) {
-                return new String[] { layer, name, version };
-            } else {
-                return new String[] { name, version };
-            }
-        } else if (StringUtils.isNotBlank(name)) {
-            //Black Duck now (2019.6.0) supports version-less components
-            if (StringUtils.isNotBlank(group)) {
-                return new String[] { group, name };
-            } else if (StringUtils.isNotBlank(layer)) {
-                return new String[] { layer, name };
-            } else {
-                return new String[] { name };
-            }
+        List<String> externalIdPieces = new ArrayList<>();
+        if (StringUtils.isNotBlank(prefix)) {
+            externalIdPieces.add(prefix);
         }
 
-        // if we can't be positive about what kind of external id we are, just give everything we have in a reasonable order
-        List<String> bestGuessPieces = new ArrayList<>();
+        pieces
+                .stream()
+                .filter(StringUtils::isNotBlank)
+                .forEach(externalIdPieces::add);
 
-        final List<String> bestGuessCandidates = Arrays.asList(layer, group, name, version, architecture);
-        for (String candidate : bestGuessCandidates) {
-            if (StringUtils.isNotBlank(candidate)) {
-                bestGuessPieces.add(candidate);
-            }
+        if (StringUtils.isNotBlank(suffix)) {
+            externalIdPieces.add(suffix);
         }
 
-        return bestGuessPieces.toArray(new String[0]);
+        return externalIdPieces.toArray(new String[0]);
     }
 
     public BdioId createBdioId() {
@@ -112,58 +173,70 @@ public class ExternalId extends Stringable {
     }
 
     public String getLayer() {
-        return layer;
+        return prefix;
     }
 
     public void setLayer(String layer) {
-        this.layer = layer;
+        this.prefix = layer;
     }
 
     public String getGroup() {
-        return group;
+        return prefix;
     }
 
     public void setGroup(String group) {
-        this.group = group;
+        this.prefix = group;
     }
 
     public String getName() {
-        return name;
+        return pieces.get(NAME_POSITION);
     }
 
     public void setName(String name) {
-        this.name = name;
+        pieces.set(NAME_POSITION, name);
     }
 
     public String getVersion() {
-        return version;
+        return pieces.get(VERSION_POSITION);
     }
 
     public void setVersion(String version) {
-        this.version = version;
+        pieces.set(VERSION_POSITION, version);
     }
 
     public String getArchitecture() {
-        return architecture;
+        return suffix;
     }
 
     public void setArchitecture(String architecture) {
-        this.architecture = architecture;
+        this.suffix = architecture;
     }
 
     public String[] getModuleNames() {
-        return moduleNames;
+        return pieces.toArray(new String[0]);
     }
 
     public void setModuleNames(String[] moduleNames) {
-        this.moduleNames = moduleNames;
+        prefix = null;
+        suffix = null;
+        pieces.set(NAME_POSITION, null);
+        pieces.set(VERSION_POSITION, null);
+
+        Arrays
+                .stream(moduleNames)
+                .filter(StringUtils::isNotBlank)
+                .forEach(pieces::add);
     }
 
     public String getPath() {
-        return path;
+        return pieces.get(NAME_POSITION);
     }
 
     public void setPath(String path) {
-        this.path = path;
+        prefix = null;
+        suffix = null;
+        pieces.set(NAME_POSITION, path);
+        pieces.set(VERSION_POSITION, null);
     }
+
 }

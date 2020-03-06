@@ -55,7 +55,6 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         assertEquals("test2", dep.getVersion());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
-
     }
 
     @Test
@@ -74,7 +73,6 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         assertEquals("test2", dep.getVersion());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, stringDep);
-
     }
 
     @Test

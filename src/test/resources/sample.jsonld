@@ -19,12 +19,11 @@
     "externalId": "com.blackducksoftware.gradle.test:gradleTestProject:99.5-SNAPSHOT",
     "externalIdMetaData": {
       "forge": {
-          "name": "maven",
-          "separator": ":"
-        },
-        "group": "com.blackducksoftware.gradle.test",
-        "name": "gradleTestProject",
-        "version": "99.5-SNAPSHOT"
+        "name": "maven",
+        "separator": ":"
+      },
+      "prefix": "com.blackducksoftware.gradle.test",
+      "pieces": ["gradleTestProject","99.5-SNAPSHOT"]
     }
   },
   "relationship": [
@@ -44,12 +43,11 @@
     "externalId": "org.apache.cxf:cxf-bundle:2.7.7",
     "externalIdMetaData": {
       "forge": {
-          "name": "maven",
-          "separator": ":"
-        },
-        "group": "org.apache.cxf",
-        "name": "cxf-bundle",
-        "version": "2.7.7"
+        "name": "maven",
+        "separator": ":"
+      },
+      "prefix": "org.apache.cxf",
+      "pieces": ["cxf-bundle","2.7.7"]
     }
   },
   "relationship": [
@@ -73,13 +71,13 @@
     "externalId": "org.apache.velocity:velocity:1.7",
     "externalIdMetaData": {
       "forge": {
-          "name": "maven",
-          "separator": ":"
-        },
-        "group": "org.apache.velocity",
-        "name": "velocity",
-        "version": "1.7"
+        "name": "maven",
+        "separator": ":"
+      },
+      "prefix": "org.apache.velocity",
+      "pieces": ["velocity","1.7"]
     }
+
   },
   "relationship": [
     {
@@ -102,13 +100,13 @@
     "externalId": "commons-collections:commons-collections:3.2.1",
     "externalIdMetaData": {
       "forge": {
-          "name": "maven",
-          "separator": ":"
-        },
-        "group": "commons-collections",
-        "name": "commons-collections",
-        "version": "3.2.1"
+        "name": "maven",
+        "separator": ":"
+      },
+      "prefix": "commons-collections",
+      "pieces": ["commons-collections","3.2.1"]
     }
+
   },
   "relationship": []
 },
@@ -122,13 +120,13 @@
     "externalId": "commons-lang:commons-lang:2.6",
     "externalIdMetaData": {
       "forge": {
-          "name": "maven",
-          "separator": ":"
-        },
-        "group": "commons-lang",
-        "name": "commons-lang",
-        "version": "2.6"
+        "name": "maven",
+        "separator": ":"
+      },
+      "prefix": "commons-lang",
+      "pieces": ["commons-lang","2.6"]
     }
+
   },
   "relationship": []
 }

@@ -76,8 +76,8 @@ public class BdioTransformerTest {
         if (!testEqualityOfMetadata) {
             simpleBdioDocument.getProject().bdioExternalIdentifier.externalIdMetaData = null;
         }
-        assertTrue(EqualsBuilder.reflectionEquals(simpleBdioDocument.getProject().bdioExternalIdentifier, doc.getProject().bdioExternalIdentifier));
-        assertRelationships(doc.getProject().relationships, simpleBdioDocument.getProject().relationships);
+        assertEquals(simpleBdioDocument.getProject().bdioExternalIdentifier.externalId, doc.getProject().bdioExternalIdentifier.externalId, "externalIdMetaData");
+        assertRelationships(simpleBdioDocument.getProject().relationships, doc.getProject().relationships);
 
         assertEquals(doc.getComponents().size(), simpleBdioDocument.getComponents().size());
         for (BdioComponent expected : simpleBdioDocument.getComponents()) {
@@ -91,14 +91,13 @@ public class BdioTransformerTest {
                     if (!testEqualityOfMetadata) {
                         expected.bdioExternalIdentifier.externalIdMetaData = null;
                     }
-                    assertTrue(EqualsBuilder.reflectionEquals(expected.bdioExternalIdentifier, actual.bdioExternalIdentifier, "externalIdMetaData"));
+                    assertEquals(expected.bdioExternalIdentifier.externalId, actual.bdioExternalIdentifier.externalId, "externalIdMetaData");
                     assertRelationships(expected.relationships, actual.relationships);
 
                 }
             }
             assertTrue(fnd, expected.id.toString());
         }
-
     }
 
     private void assertRelationships(List<BdioRelationship> expectedList, List<BdioRelationship> actualList) {

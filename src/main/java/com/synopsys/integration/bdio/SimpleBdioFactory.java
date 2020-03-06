@@ -151,28 +151,44 @@ public class SimpleBdioFactory {
         return simpleBdioDocument;
     }
 
-    public ExternalId createNameVersionExternalId(Forge forge, String name, String version) {
-        return externalIdFactory.createNameVersionExternalId(forge, name, version);
-    }
-
-    public ExternalId createYoctoExternalId(String layer, String name, String version) {
-        return externalIdFactory.createYoctoExternalId(layer, name, version);
-    }
-
-    public ExternalId createMavenExternalId(String group, String name, String version) {
-        return externalIdFactory.createMavenExternalId(group, name, version);
-    }
-
-    public ExternalId createArchitectureExternalId(Forge forge, String name, String version, String architecture) {
-        return externalIdFactory.createArchitectureExternalId(forge, name, version, architecture);
+    public ExternalId createPathExternalId(Forge forge, String path) {
+        return externalIdFactory.createPathExternalId(forge, path);
     }
 
     public ExternalId createModuleNamesExternalId(Forge forge, String... moduleNames) {
         return externalIdFactory.createModuleNamesExternalId(forge, moduleNames);
     }
 
-    public ExternalId createPathExternalId(Forge forge, String path) {
-        return externalIdFactory.createPathExternalId(forge, path);
+    public ExternalId createNameVersionExternalId(Forge forge, String name, String version) {
+        return externalIdFactory.createNameVersionExternalId(forge, name, version);
+    }
+
+    public ExternalId createNameVersionExternalId(Forge forge, String name) {
+        return externalIdFactory.createNameVersionExternalId(forge, name);
+    }
+
+    public ExternalId createYoctoExternalId(String layer, String name, String version) {
+        return externalIdFactory.createYoctoExternalId(layer, name, version);
+    }
+
+    public ExternalId createYoctoExternalId(String layer, String name) {
+        return externalIdFactory.createYoctoExternalId(layer, name);
+    }
+
+    public ExternalId createMavenExternalId(String group, String name, String version) {
+        return externalIdFactory.createMavenExternalId(group, name, version);
+    }
+
+    public ExternalId createMavenExternalId(String group, String name) {
+        return externalIdFactory.createMavenExternalId(group, name);
+    }
+
+    public ExternalId createArchitectureExternalId(Forge forge, String name, String version, String architecture) {
+        return externalIdFactory.createArchitectureExternalId(forge, name, version, architecture);
+    }
+
+    public ExternalId createArchitectureExternalId(Forge forge, String name, String architecture) {
+        return externalIdFactory.createArchitectureExternalId(forge, name, architecture);
     }
 
     public BdioPropertyHelper getBdioPropertyHelper() {

@@ -58,7 +58,7 @@ public class BdioTransformer {
             if (externalId == null) {
                 // if the integration has not set the metadata, try our best to guess it
                 Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
-                externalId = recreateExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
+                externalId = ExternalId.createFromExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
             }
             Dependency dependency = new Dependency(component.name, component.version, externalId);
             bdioIdToDependencyMap.put(component.id, dependency);
@@ -76,40 +76,6 @@ public class BdioTransformer {
         }
 
         return dependencyGraph;
-    }
-
-    private ExternalId recreateExternalId(Forge forge, String fullExternalId, String name, String revision) {
-        String[] pieces = StringUtils.split(fullExternalId, forge.getSeparator());
-        ExternalId id = new ExternalId(forge);
-
-        if (pieces.length == 1) {
-            // assume path but could be a 1 length moduleNames id...le sigh
-            id.setPath(pieces[0]);
-        } else if (pieces.length == 2 || pieces.length == 3) {
-            if (pieces[0].equals(name)) {
-                id.setName(pieces[0]);
-                id.setVersion(pieces[1]);
-                if (pieces.length > 2) {
-                    id.setArchitecture(pieces[2]);
-                }
-            } else if (pieces[1].equals(name) && pieces[2].equals(revision)) {
-                if (Forge.YOCTO.equals(forge)) {
-                    id.setLayer(pieces[0]);
-                    id.setName(pieces[1]);
-                    id.setVersion(pieces[2]);
-                } else {
-                    id.setGroup(pieces[0]);
-                    id.setName(pieces[1]);
-                    id.setVersion(pieces[2]);
-                }
-            } else {
-                id.setModuleNames(pieces);
-            }
-        } else {
-            id.setModuleNames(pieces);
-        }
-
-        return id;
     }
 
 }

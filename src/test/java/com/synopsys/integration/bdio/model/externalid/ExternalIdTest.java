@@ -8,6 +8,8 @@ import com.synopsys.integration.bdio.SimpleBdioFactory;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.Forge;
 
+import java.util.function.Function;
+
 public class ExternalIdTest {
     private final SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
@@ -18,29 +20,27 @@ public class ExternalIdTest {
 
     @Test
     public void testCreatingExternalIds() {
-        ExternalId architectureExternalId = simpleBdioFactory.createArchitectureExternalId(Forge.CENTOS, "name", "version", "architecture");
-        assertEquals(new BdioId("http:centos/name/version/architecture"), architectureExternalId.createBdioId());
-        assertEquals("name/version/architecture", architectureExternalId.createExternalId());
+        assertExternalIdOkay(Forge.GOGET, (forge -> simpleBdioFactory.createPathExternalId(forge, "name")), "name", null, "http:goget/name", "name");
 
-        ExternalId mavenExternalId = simpleBdioFactory.createMavenExternalId("group", "artifact", "version");
-        assertEquals(new BdioId("http:maven/group/artifact/version"), mavenExternalId.createBdioId());
-        assertEquals("group:artifact:version", mavenExternalId.createExternalId());
+        assertExternalIdOkay(Forge.CPAN, (forge -> simpleBdioFactory.createModuleNamesExternalId(forge, "name", "version", "something", "else")), "name", "version", "http:cpan/name/version/something/else", "name/version/something/else");
 
-        ExternalId moduleNamesExternalId = simpleBdioFactory.createModuleNamesExternalId(Forge.CPAN, "name", "version", "something", "else");
-        assertEquals(new BdioId("http:cpan/name/version/something/else"), moduleNamesExternalId.createBdioId());
-        assertEquals("name/version/something/else", moduleNamesExternalId.createExternalId());
+        assertExternalIdOkay(Forge.CENTOS, (forge -> simpleBdioFactory.createArchitectureExternalId(forge, "name", "version", "architecture")), "name", "version", "http:centos/name/version/architecture", "name/version/architecture");
 
-        ExternalId nameVersionExternalId = simpleBdioFactory.createNameVersionExternalId(Forge.PYPI, "name", "version");
-        assertEquals(new BdioId("http:pypi/name/version"), nameVersionExternalId.createBdioId());
-        assertEquals("name/version", nameVersionExternalId.createExternalId());
+        assertExternalIdOkay(Forge.PYPI, (forge -> simpleBdioFactory.createNameVersionExternalId(forge, "name", "version")), "name", "version", "http:pypi/name/version", "name/version");
+        assertExternalIdOkay(Forge.RUBYGEMS, (forge -> simpleBdioFactory.createNameVersionExternalId(forge, "name")), "name", null, "http:rubygems/name", "name");
 
-        ExternalId pathExternalId = simpleBdioFactory.createPathExternalId(Forge.GOGET, "name");
-        assertEquals(new BdioId("http:goget/name"), pathExternalId.createBdioId());
-        assertEquals("name", pathExternalId.createExternalId());
+        assertExternalIdOkay(Forge.MAVEN, (forge -> simpleBdioFactory.createMavenExternalId("group", "artifact", "version")), "artifact", "version", "http:maven/group/artifact/version", "group:artifact:version");
+        assertExternalIdOkay(Forge.MAVEN, (forge -> simpleBdioFactory.createMavenExternalId("group", "artifact")), "artifact", null, "http:maven/group/artifact", "group:artifact");
 
-        ExternalId yoctoExternalId = simpleBdioFactory.createYoctoExternalId("layer", "name", "version");
-        assertEquals(new BdioId("http:yocto/layer/name/version"), yoctoExternalId.createBdioId());
-        assertEquals("layer/name/version", yoctoExternalId.createExternalId());
+        assertExternalIdOkay(Forge.YOCTO, (forge -> simpleBdioFactory.createYoctoExternalId("layer", "name", "version")), "name", "version", "http:yocto/layer/name/version", "layer/name/version");
+        assertExternalIdOkay(Forge.YOCTO, (forge -> simpleBdioFactory.createYoctoExternalId("layer", "name")), "name", null, "http:yocto/layer/name", "layer/name");
+    }
+
+    private void assertExternalIdOkay(Forge forge, Function<Forge, ExternalId> externalIdCreator, String name, String version, String expectedBdioId, String expectedExternalId) {
+        ExternalId externalId = externalIdCreator.apply(forge);
+        assertEquals(new BdioId(expectedBdioId), externalId.createBdioId());
+        assertEquals(expectedExternalId, externalId.createExternalId());
+        assertEquals(externalId, ExternalId.createFromExternalId(forge, externalId.createExternalId(), name, version));
     }
 
     @Test

@@ -19,9 +19,8 @@
           "name": "maven",
           "separator": ":"
         },
-        "group": "projectGroup",
-        "name": "projectName",
-        "version": "projectVersion"
+        "prefix": "projectGroup",
+        "pieces": ["projectName","projectVersion"]
       }
     },
     "relationship": [
@@ -44,9 +43,8 @@
           "name": "maven",
           "separator": ":"
         },
-        "group": "componentGroup1",
-        "name": "componentArtifact1",
-        "version": "1.0.0"
+        "prefix": "componentGroup1",
+        "pieces": ["componentArtifact1","1.0.0"]
       }
     },
     "relationship": [
@@ -69,9 +67,8 @@
           "name": "maven",
           "separator": ":"
         },
-        "group": "transitiveGroup",
-        "name": "transitiveArtifact",
-        "version": "2.1.0"
+        "prefix": "transitiveGroup",
+        "pieces": ["transitiveArtifact","2.1.0"]
       }
     },
     "relationship": []
