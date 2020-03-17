@@ -69,7 +69,6 @@ public class ExternalId extends Stringable {
             return externalId;
         }
 
-        //TODO use optional/stream to clean this up
         if (unknownPieces.size() == 1) {
             // the external id is either a path, or it only includes the name
             String firstPiece = unknownPieces.get(0);
@@ -173,7 +172,7 @@ public class ExternalId extends Stringable {
     }
 
     public String getLayer() {
-        return prefix;
+        return getPrefix();
     }
 
     public void setLayer(String layer) {
@@ -181,7 +180,7 @@ public class ExternalId extends Stringable {
     }
 
     public String getGroup() {
-        return prefix;
+        return getPrefix();
     }
 
     public void setGroup(String group) {
@@ -205,7 +204,7 @@ public class ExternalId extends Stringable {
     }
 
     public String getArchitecture() {
-        return suffix;
+        return getSuffix();
     }
 
     public void setArchitecture(String architecture) {
@@ -237,6 +236,15 @@ public class ExternalId extends Stringable {
         suffix = null;
         pieces.set(NAME_POSITION, path);
         pieces.set(VERSION_POSITION, null);
+    }
+
+    // these methods should not really be considered part of this class's public API - they are meant to serve as common accessors for the other methods that ARE part of the public API
+    protected String getPrefix() {
+        return prefix;
+    }
+
+    protected String getSuffix() {
+        return suffix;
     }
 
 }
