@@ -59,8 +59,7 @@ public class ExternalId extends Stringable {
     private String suffix;
 
     public static ExternalId createFromExternalId(Forge forge, String fullExternalId, String name, String version) {
-        List<String> unknownPieces = Arrays.asList(StringUtils.split(fullExternalId, forge.getSeparator()))
-                .stream()
+        List<String> unknownPieces = Arrays.stream(StringUtils.split(fullExternalId, forge.getSeparator()))
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
 
