@@ -22,6 +22,7 @@
  */
 package com.synopsys.integration.bdio.model.dependency;
 
+import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.RecursiveToStringStyle;
@@ -29,7 +30,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
-public class Dependency {
+public class Dependency extends DependencyId {
     private String name;
     private String version;
     private ExternalId externalId;
@@ -46,21 +47,6 @@ public class Dependency {
 
     public Dependency(final ExternalId externalId) {
         this(null, externalId);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, RecursiveToStringStyle.JSON_STYLE);
     }
 
     public String getName() {
