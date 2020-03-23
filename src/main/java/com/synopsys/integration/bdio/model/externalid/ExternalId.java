@@ -28,10 +28,8 @@ import com.synopsys.integration.util.NameVersion;
 import com.synopsys.integration.util.Stringable;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -69,7 +67,6 @@ public class ExternalId extends Stringable {
         }
 
         if (unknownPieces.size() == 1) {
-            // the external id is either a path, or it only includes the name
             String firstPiece = unknownPieces.get(0);
             if (firstPiece.equals(name)) {
                 externalId.setName(firstPiece);
