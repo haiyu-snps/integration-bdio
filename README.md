@@ -14,4 +14,3 @@ You can download the latest release from Maven Central.
 
 ## Documentation ##
 All documentation for integration-bdio can be found on the base project: https://github.com/blackducksoftware/integration-bdio/wiki
-trigger build?
