@@ -42,6 +42,7 @@ public class Forge extends Stringable {
     public static final Forge BITBUCKET = new Forge("/", "bitbucket");
     public static final Forge BOWER = new Forge("/", "bower");
     public static final Forge BUSYBOX = new Forge("/", "busybox");
+    public static final Forge CRATES = new Forge("/", "crates");
     public static final Forge CENTOS = new Forge("/", "centos");
     public static final Forge CODEPLEX = new Forge("/", "codeplex");
     public static final Forge CODEPLEX_GROUP = new Forge("/", "codeplex_group");
