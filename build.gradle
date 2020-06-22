@@ -1,12 +1,15 @@
 buildscript {
     apply from: 'https://raw.githubusercontent.com/blackducksoftware/integration-resources/master/gradle_common/buildscript-repositories.gradle', to: buildscript
-    apply from: 'https://raw.githubusercontent.com/blackducksoftware/integration-resources/master/gradle_common/buildscript-dependencies.gradle', to: buildscript
+    ////////// START BUILDSCRIPT DEPENDENCY //////////
+dependencies { classpath "com.synopsys.integration:common-gradle-plugin:1.6.1" }
+
+////////// END BUILDSCRIPT DEPENDENCY //////////
 }
 
 project.ext.moduleName = 'com.synopsys.integration.integration-bdio'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '21.1.1-SNAPSHOT'
+version = '21.1.1'
 description = 'A library to allow for easy and clear creation of Black Duck I/O (bdio) documents.'
 
 apply plugin: 'com.synopsys.integration.library'
