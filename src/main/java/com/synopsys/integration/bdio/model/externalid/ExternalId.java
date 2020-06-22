@@ -1,8 +1,8 @@
 /**
  * integration-bdio
- *
+ * <p>
  * Copyright (c) 2020 Synopsys, Inc.
- *
+ * <p>
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
@@ -10,9 +10,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,12 +24,13 @@ package com.synopsys.integration.bdio.model.externalid;
 
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.Forge;
-import com.synopsys.integration.util.NameVersion;
 import com.synopsys.integration.util.Stringable;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +49,10 @@ import java.util.stream.Collectors;
  * - a layer/name
  */
 public class ExternalId extends Stringable {
+    public static final Comparator<ExternalId> ARE_SAME = (externalId1, externalId2) -> {
+        return externalId1.createExternalId().compareTo(externalId2.createExternalId());
+    };
+
     private static final int NAME_POSITION = 0;
     private static final int VERSION_POSITION = 1;
 
