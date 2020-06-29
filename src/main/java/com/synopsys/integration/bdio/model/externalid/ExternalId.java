@@ -49,9 +49,7 @@ import java.util.stream.Collectors;
  * - a layer/name
  */
 public class ExternalId extends Stringable {
-    public static final Comparator<ExternalId> ARE_SAME = (externalId1, externalId2) -> {
-        return externalId1.createExternalId().compareTo(externalId2.createExternalId());
-    };
+    public static final Comparator<ExternalId> ARE_SAME = Comparator.comparing(ExternalId::createExternalId);
 
     private static final int NAME_POSITION = 0;
     private static final int VERSION_POSITION = 1;
