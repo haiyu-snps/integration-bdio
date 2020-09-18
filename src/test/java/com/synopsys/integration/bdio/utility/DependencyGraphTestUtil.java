@@ -82,4 +82,5 @@ public class DependencyGraphTestUtil {
         assertEquals("Expected graph not to have extra dependencies.", 0, missingExpected.size());
         assertEquals("Expected graph not to be missing dependencies.", 0, extraActual.size());
     }
+
 }

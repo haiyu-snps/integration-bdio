@@ -31,6 +31,8 @@ import com.synopsys.integration.bdio.graph.MutableDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.DependencyFactory;
+import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 import com.synopsys.integration.bdio.utility.JsonTestUtils;
 
@@ -62,19 +64,18 @@ public class SimpleBdioFactoryTest {
         BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
         ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+        DependencyFactory dependencyFactory = new DependencyFactory(externalIdFactory);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory(bdioPropertyHelper, bdioNodeFactory, dependencyGraphTransformer, externalIdFactory, gson);
+        SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory(bdioPropertyHelper, bdioNodeFactory, dependencyGraphTransformer, externalIdFactory, dependencyFactory, gson);
 
         assertNotNull(simpleBdioFactory);
-        assertNotNull(simpleBdioFactory.getBdioPropertyHelper());
-        assertNotNull(simpleBdioFactory.getBdioNodeFactory());
-        assertNotNull(simpleBdioFactory.getDependencyGraphTransformer());
 
         assertSame(bdioPropertyHelper, simpleBdioFactory.getBdioPropertyHelper());
         assertSame(bdioNodeFactory, simpleBdioFactory.getBdioNodeFactory());
         assertSame(dependencyGraphTransformer, simpleBdioFactory.getDependencyGraphTransformer());
         assertSame(externalIdFactory, simpleBdioFactory.getExternalIdFactory());
+        assertSame(dependencyFactory, simpleBdioFactory.getDependencyFactory());
     }
 
     @Test
@@ -154,17 +155,20 @@ public class SimpleBdioFactoryTest {
 
     private SimpleBdioDocument createSimpleBdioDocument(SimpleBdioFactory simpleBdioFactory) {
         MutableDependencyGraph mutableDependencyGraph = simpleBdioFactory.createMutableDependencyGraph();
+        ExternalIdFactory externalIdFactory = simpleBdioFactory.getExternalIdFactory();
+        DependencyFactory dependencyFactory = simpleBdioFactory.getDependencyFactory();
 
-        Dependency bdioTestDependency = simpleBdioFactory.createDependency("bdio-test", "1.1.2", simpleBdioFactory.getExternalIdFactory().createMavenExternalId("com.blackducksoftware.integration", "bdio-test", "1.1.2"));
-        Dependency bdioReaderDependency = simpleBdioFactory.createDependency("bdio-reader", "1.2.0", simpleBdioFactory.getExternalIdFactory().createMavenExternalId("com.blackducksoftware.integration", "bdio-reader", "1.2.0"));
-        Dependency commonsLangDependency = simpleBdioFactory.createDependency("commons-lang3", "3.6", simpleBdioFactory.getExternalIdFactory().createMavenExternalId("org.apache.commons", "commons-lang3", "3.6"));
+        Dependency bdioTestDependency = dependencyFactory.createMavenDependency("com.blackducksoftware.integration", "bdio-test", "1.1.2");
+        Dependency bdioReaderDependency = dependencyFactory.createMavenDependency("com.blackducksoftware.integration", "bdio-reader", "1.2.0");
+        Dependency commonsLangDependency = dependencyFactory.createMavenDependency("org.apache.commons", "commons-lang3", "3.6");
 
         mutableDependencyGraph.addChildrenToRoot(bdioTestDependency);
         mutableDependencyGraph.addChildrenToRoot(bdioReaderDependency);
         mutableDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
 
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("test code location", "integration-bdio", "0.0.1",
-            simpleBdioFactory.createMavenExternalId("com.blackducksoftware.integration", "integration-bdio", "0.0.1"), mutableDependencyGraph);
+        ExternalId projectExternalId = externalIdFactory.createMavenExternalId("com.blackducksoftware.integration", "integration-bdio", "0.0.1");
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("test code location", "integration-bdio", "0.0.1", projectExternalId, mutableDependencyGraph);
+
         return simpleBdioDocument;
     }
 

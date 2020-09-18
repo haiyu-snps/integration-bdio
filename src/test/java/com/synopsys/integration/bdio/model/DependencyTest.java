@@ -18,6 +18,18 @@ public class DependencyTest {
         assertEquals("npmjs", dependencyNode.getExternalId().getForge().toString(), "npmjs");
         assertEquals(new BdioId("http:npmjs/name/version"), dependencyNode.getExternalId().createBdioId());
         assertEquals("name/version", dependencyNode.getExternalId().createExternalId());
+        assertEquals("name", dependencyNode.getName());
+        assertEquals("version", dependencyNode.getVersion());
+    }
+
+    @Test
+    public void testPathDependency() {
+        String path = "some-path-that-might-be-long";
+        ExternalId pathExternalId = externalIdFactory.createPathExternalId(Forge.CPAN, path);
+        Dependency pathDependency = new Dependency(pathExternalId);
+        assertEquals(path, pathDependency.getExternalId().createExternalId());
+        assertEquals(path, pathDependency.getName());
+        assertEquals(null, pathDependency.getVersion());
     }
 
     @Test

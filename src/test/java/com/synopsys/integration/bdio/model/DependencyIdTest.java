@@ -10,7 +10,6 @@ import com.synopsys.integration.bdio.model.dependencyid.NameVersionDependencyId;
 import com.synopsys.integration.bdio.model.dependencyid.StringDependencyId;
 
 public class DependencyIdTest {
-
     @Test
     public void testStringDependencyId() {
         final DependencyId id1 = new StringDependencyId("hello");
@@ -23,7 +22,6 @@ public class DependencyIdTest {
         assertNotEquals(id1.hashCode(), idDiff.hashCode());
         assertEquals(id1.toString(), id2.toString());
         assertNotEquals(id1.toString(), idDiff.toString());
-
     }
 
     @Test
@@ -71,7 +69,6 @@ public class DependencyIdTest {
         assertNotEquals(id2, id3);
         assertNotEquals(id2.hashCode(), id3.hashCode());
         assertNotEquals(id2.toString(), id3.toString());
-
     }
 
 }

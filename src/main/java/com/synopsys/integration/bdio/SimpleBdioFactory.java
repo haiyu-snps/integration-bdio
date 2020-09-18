@@ -46,6 +46,7 @@ import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.DependencyFactory;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 
@@ -54,6 +55,7 @@ public class SimpleBdioFactory {
     private final BdioNodeFactory bdioNodeFactory;
     private final DependencyGraphTransformer dependencyGraphTransformer;
     private final ExternalIdFactory externalIdFactory;
+    private final DependencyFactory dependencyFactory;
     private final Gson gson;
 
     public SimpleBdioFactory() {
@@ -61,23 +63,21 @@ public class SimpleBdioFactory {
         bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
         externalIdFactory = new ExternalIdFactory();
+        dependencyFactory = new DependencyFactory(externalIdFactory);
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public SimpleBdioFactory(BdioPropertyHelper bdioPropertyHelper, BdioNodeFactory bdioNodeFactory, DependencyGraphTransformer dependencyGraphTransformer, ExternalIdFactory externalIdFactory, Gson gson) {
+    public SimpleBdioFactory(BdioPropertyHelper bdioPropertyHelper, BdioNodeFactory bdioNodeFactory, DependencyGraphTransformer dependencyGraphTransformer, ExternalIdFactory externalIdFactory, DependencyFactory dependencyFactory, Gson gson) {
         this.bdioPropertyHelper = bdioPropertyHelper;
         this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
         this.externalIdFactory = externalIdFactory;
+        this.dependencyFactory = dependencyFactory;
         this.gson = gson;
     }
 
     public MutableDependencyGraph createMutableDependencyGraph() {
         return new MutableMapDependencyGraph();
-    }
-
-    public Dependency createDependency(String name, String version, ExternalId externalId) {
-        return new Dependency(name, version, externalId);
     }
 
     public BdioWriter createBdioWriter(Writer writer) throws IOException {
@@ -151,46 +151,6 @@ public class SimpleBdioFactory {
         return simpleBdioDocument;
     }
 
-    public ExternalId createPathExternalId(Forge forge, String path) {
-        return externalIdFactory.createPathExternalId(forge, path);
-    }
-
-    public ExternalId createModuleNamesExternalId(Forge forge, String... moduleNames) {
-        return externalIdFactory.createModuleNamesExternalId(forge, moduleNames);
-    }
-
-    public ExternalId createNameVersionExternalId(Forge forge, String name, String version) {
-        return externalIdFactory.createNameVersionExternalId(forge, name, version);
-    }
-
-    public ExternalId createNameVersionExternalId(Forge forge, String name) {
-        return externalIdFactory.createNameVersionExternalId(forge, name);
-    }
-
-    public ExternalId createYoctoExternalId(String layer, String name, String version) {
-        return externalIdFactory.createYoctoExternalId(layer, name, version);
-    }
-
-    public ExternalId createYoctoExternalId(String layer, String name) {
-        return externalIdFactory.createYoctoExternalId(layer, name);
-    }
-
-    public ExternalId createMavenExternalId(String group, String name, String version) {
-        return externalIdFactory.createMavenExternalId(group, name, version);
-    }
-
-    public ExternalId createMavenExternalId(String group, String name) {
-        return externalIdFactory.createMavenExternalId(group, name);
-    }
-
-    public ExternalId createArchitectureExternalId(Forge forge, String name, String version, String architecture) {
-        return externalIdFactory.createArchitectureExternalId(forge, name, version, architecture);
-    }
-
-    public ExternalId createArchitectureExternalId(Forge forge, String name, String architecture) {
-        return externalIdFactory.createArchitectureExternalId(forge, name, architecture);
-    }
-
     public BdioPropertyHelper getBdioPropertyHelper() {
         return bdioPropertyHelper;
     }
@@ -206,4 +166,9 @@ public class SimpleBdioFactory {
     public ExternalIdFactory getExternalIdFactory() {
         return externalIdFactory;
     }
+
+    public DependencyFactory getDependencyFactory() {
+        return dependencyFactory;
+    }
+
 }
