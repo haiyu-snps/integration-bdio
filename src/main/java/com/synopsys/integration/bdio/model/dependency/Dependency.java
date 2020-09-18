@@ -46,7 +46,7 @@ public class Dependency extends DependencyId {
     }
 
     public Dependency(final ExternalId externalId) {
-        this(externalId.getName(), externalId.getVersion(), externalId);
+        this(externalId.getName(), externalId);
     }
 
     public String getName() {
