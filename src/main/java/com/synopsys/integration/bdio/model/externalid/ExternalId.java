@@ -22,16 +22,17 @@
  */
 package com.synopsys.integration.bdio.model.externalid;
 
-import com.synopsys.integration.bdio.model.BdioId;
-import com.synopsys.integration.bdio.model.Forge;
-import com.synopsys.integration.util.Stringable;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.synopsys.integration.bdio.model.BdioId;
+import com.synopsys.integration.bdio.model.Forge;
+import com.synopsys.integration.util.Stringable;
 
 /**
  * A forge is always required. The other fields to populate depend on what external id type you need.
@@ -61,8 +62,8 @@ public class ExternalId extends Stringable {
 
     public static ExternalId createFromExternalId(Forge forge, String fullExternalId, String name, String version) {
         List<String> unknownPieces = Arrays.stream(StringUtils.split(fullExternalId, forge.getSeparator()))
-                .filter(StringUtils::isNotBlank)
-                .collect(Collectors.toList());
+                                         .filter(StringUtils::isNotBlank)
+                                         .collect(Collectors.toList());
 
         ExternalId externalId = new ExternalId(forge);
         if (unknownPieces.isEmpty()) {
@@ -143,9 +144,9 @@ public class ExternalId extends Stringable {
         }
 
         pieces
-                .stream()
-                .filter(StringUtils::isNotBlank)
-                .forEach(externalIdPieces::add);
+            .stream()
+            .filter(StringUtils::isNotBlank)
+            .forEach(externalIdPieces::add);
 
         if (StringUtils.isNotBlank(suffix)) {
             externalIdPieces.add(suffix);
@@ -221,9 +222,9 @@ public class ExternalId extends Stringable {
         pieces.set(VERSION_POSITION, null);
 
         Arrays
-                .stream(moduleNames)
-                .filter(StringUtils::isNotBlank)
-                .forEach(pieces::add);
+            .stream(moduleNames)
+            .filter(StringUtils::isNotBlank)
+            .forEach(pieces::add);
     }
 
     public String getPath() {

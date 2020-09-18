@@ -12,7 +12,7 @@ public class DependencyTest {
     private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
     @Test
-    public void testConstructingDependencyNode() {
+    public void testDependencyApi() {
         ExternalId externalId = externalIdFactory.createNameVersionExternalId(Forge.NPMJS, "name", "version");
         Dependency dependencyNode = new Dependency(externalId);
         assertEquals("npmjs", dependencyNode.getExternalId().getForge().toString(), "npmjs");
@@ -20,6 +20,17 @@ public class DependencyTest {
         assertEquals("name/version", dependencyNode.getExternalId().createExternalId());
         assertEquals("name", dependencyNode.getName());
         assertEquals("version", dependencyNode.getVersion());
+
+        dependencyNode.setName("different");
+        dependencyNode.setVersion("still different");
+        assertEquals("name/version", dependencyNode.getExternalId().createExternalId());
+        assertEquals("different", dependencyNode.getName());
+        assertEquals("still different", dependencyNode.getVersion());
+
+        dependencyNode.setExternalId(externalId);
+        assertEquals("name/version", dependencyNode.getExternalId().createExternalId());
+        assertEquals("different", dependencyNode.getName());
+        assertEquals("still different", dependencyNode.getVersion());
     }
 
     @Test
