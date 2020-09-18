@@ -42,15 +42,11 @@ public class Dependency extends DependencyId {
     }
 
     public Dependency(final String name, final ExternalId externalId) {
-        this.name = name;
-        this.version = externalId.getVersion();
-        this.externalId = externalId;
+        this(name, externalId.getVersion(), externalId);
     }
 
     public Dependency(final ExternalId externalId) {
-        this.name = externalId.getName();
-        this.version = externalId.getVersion();
-        this.externalId = externalId;
+        this(externalId.getName(), externalId.getVersion(), externalId);
     }
 
     public String getName() {
