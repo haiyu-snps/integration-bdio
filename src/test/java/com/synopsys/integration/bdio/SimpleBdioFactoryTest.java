@@ -125,13 +125,13 @@ public class SimpleBdioFactoryTest {
         File bdioFile = File.createTempFile("bdio", "jsonld");
         bdioFile.deleteOnExit();
 
-        assertEquals(0, bdioFile.length());
+        assertEquals(0L, bdioFile.length());
 
         // overriding default UUID so the expected value matches the actual value
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("static-uuid-for-testing");
         simpleBdioFactory.writeSimpleBdioDocumentToFile(bdioFile, simpleBdioDocument);
 
-        assertNotEquals(0, bdioFile.length());
+        assertNotEquals(0L, bdioFile.length());
 
         JsonTestUtils jsonTestUtils = new JsonTestUtils();
         String expectedJson = jsonTestUtils.getExpectedJson("simple-bdio-factory-integration-test-output.jsonld");
