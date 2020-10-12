@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.DependencyFactory;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 
@@ -50,6 +51,9 @@ public class DependencyTest {
         assertEquals(nodeA, nodeB);
         assertEquals(nodeA.hashCode(), nodeB.hashCode());
         assertEquals(nodeA.toString(), nodeB.toString());
+        ExternalIdFactory externalIdFactory = new ExternalIdFactory();
+        DependencyFactory dependencyFactory = new DependencyFactory(externalIdFactory);
+        Dependency commonsLangDependency = dependencyFactory.createMavenDependency("org.apache.commons", "commons-lang3", "3.6");
     }
 
 }
