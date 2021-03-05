@@ -6,7 +6,7 @@ buildscript {
 project.ext.moduleName = 'com.synopsys.integration.integration-bdio'
 project.ext.javaUseAutoModuleName = 'true'
 
-version = '22.0.2-SNAPSHOT'
+version = '22.0.3-SNAPSHOT'
 description = 'A library to allow for easy and clear creation of Black Duck I/O (bdio) documents.'
 
 apply plugin: 'com.synopsys.integration.library'
@@ -17,7 +17,7 @@ versionFile.delete()
 versionFile << version
 
 dependencies {
-    api 'com.synopsys.integration:integration-common:25.0.0-SNAPSHOT'
+    api 'com.synopsys.integration:integration-common:24.2.1'
 
     testImplementation 'org.mockito:mockito-core:2.18.3'
     testImplementation 'org.skyscreamer:jsonassert:1.5.0'
