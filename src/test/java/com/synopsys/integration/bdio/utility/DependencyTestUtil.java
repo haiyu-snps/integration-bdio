@@ -12,8 +12,9 @@ import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 public class DependencyTestUtil {
     public static ExternalIdFactory factory = new ExternalIdFactory();
 
-    public static Dependency newMavenDependency(final String name, final String version, final String org) {
-        return new Dependency(name, version, factory.createMavenExternalId(org, name, version));
+    public static Dependency newMavenDependency(String gav) {
+        String[] pieces = gav.split(":");
+        return new Dependency(pieces[1], pieces[2], factory.createMavenExternalId(pieces[0], pieces[1], pieces[2]));
     }
 
     public static Set<Dependency> asSet(final Dependency... dependencies) {

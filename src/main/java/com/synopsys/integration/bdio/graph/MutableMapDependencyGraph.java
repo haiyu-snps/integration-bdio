@@ -18,10 +18,19 @@ import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class MutableMapDependencyGraph implements MutableDependencyGraph {
+    private final Dependency rootDependency;
     private final Set<ExternalId> rootDependencies = new HashSet<>();
     private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
     private final DependencyGraphCombiner dependencyGraphCombiner = new DependencyGraphCombiner();
+
+    public MutableMapDependencyGraph() {
+        rootDependency = null;
+    }
+
+    public MutableMapDependencyGraph(Dependency rootDependency) {
+        this.rootDependency = rootDependency;
+    }
 
     @Override
     public void addGraphAsChildrenToRoot(final DependencyGraph sourceGraph) {
@@ -30,7 +39,11 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public void addGraphAsChildrenToParent(final Dependency parent, final DependencyGraph sourceGraph) {
-        dependencyGraphCombiner.addGraphAsChildrenToParent(this, parent, sourceGraph);
+        if (isRoot(parent)) {
+            addGraphAsChildrenToRoot(sourceGraph);
+        } else {
+            dependencyGraphCombiner.addGraphAsChildrenToParent(this, parent, sourceGraph);
+        }
     }
 
     @Override
@@ -205,20 +218,24 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     private void ensureDependencyExists(final Dependency dependency) {
-        if (!dependencies.containsKey(dependency.getExternalId())) {
+        if (!isRoot(dependency) && !dependencies.containsKey(dependency.getExternalId())) {
             dependencies.put(dependency.getExternalId(), dependency);
         }
     }
 
     private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
         ensureDependencyExists(dependency);
-        if (!relationships.containsKey(dependency.getExternalId())) {
+        if (!isRoot(dependency) && !relationships.containsKey(dependency.getExternalId())) {
             relationships.put(dependency.getExternalId(), new HashSet<>());
         }
     }
 
     private void addRelationship(final Dependency parent, final Dependency child) {
-        relationships.get(parent.getExternalId()).add(child.getExternalId());
+        if (isRoot(parent)) {
+            addChildToRoot(child);
+        } else {
+            relationships.get(parent.getExternalId()).add(child.getExternalId());
+        }
     }
 
     private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
@@ -229,6 +246,10 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
             }
         }
         return foundDependencies;
+    }
+
+    private boolean isRoot(final Dependency dependency) {
+        return null != rootDependency && rootDependency.equals(dependency);
     }
 
 }
