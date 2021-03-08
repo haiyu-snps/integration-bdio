@@ -17,18 +17,18 @@ import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
 public class LazyExternalIdDependencyGraphBuilderTest {
     DependencyId stringId = new StringDependencyId("id1");
-    Dependency stringDep = DependencyTestUtil.newMavenDependency("test1", "test2", "org");
+    Dependency stringDep = DependencyTestUtil.newMavenDependency("org:test1:test2");
     DependencyId aliasId = new StringDependencyId("alias1");
 
-    Dependency parent1 = DependencyTestUtil.newMavenDependency("parent1", "1.0", "parents");
-    Dependency parent2 = DependencyTestUtil.newMavenDependency("parent2", "1.0", "parents");
-    Dependency parent3 = DependencyTestUtil.newMavenDependency("parent3", "1.0", "parents");
-    Dependency parent4 = DependencyTestUtil.newMavenDependency("parent4", "1.0", "parents");
+    Dependency parent1 = DependencyTestUtil.newMavenDependency("parents:parent1:1.0");
+    Dependency parent2 = DependencyTestUtil.newMavenDependency("parents:parent2:1.0");
+    Dependency parent3 = DependencyTestUtil.newMavenDependency("parents:parent3:1.0");
+    Dependency parent4 = DependencyTestUtil.newMavenDependency("parents:parent4:1.0");
 
-    Dependency child1 = DependencyTestUtil.newMavenDependency("child1", "1.0", "childs");
-    Dependency child2 = DependencyTestUtil.newMavenDependency("child2", "1.0", "childs");
-    Dependency child3 = DependencyTestUtil.newMavenDependency("child3", "1.0", "childs");
-    Dependency child4 = DependencyTestUtil.newMavenDependency("child4", "1.0", "childs");
+    Dependency child1 = DependencyTestUtil.newMavenDependency("childs:child1:1.0");
+    Dependency child2 = DependencyTestUtil.newMavenDependency("childs:child2:1.0");
+    Dependency child3 = DependencyTestUtil.newMavenDependency("childs:child3:1.0");
+    Dependency child4 = DependencyTestUtil.newMavenDependency("childs:child4:1.0");
 
     DependencyId parentId1 = new NameDependencyId("parent1");
     DependencyId parentId2 = new NameVersionDependencyId("parent2", "1.0");
