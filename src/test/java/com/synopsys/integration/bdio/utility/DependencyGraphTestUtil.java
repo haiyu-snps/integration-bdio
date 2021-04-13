@@ -1,7 +1,7 @@
 package com.synopsys.integration.bdio.utility;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -60,27 +60,27 @@ public class DependencyGraphTestUtil {
     }
 
     public static void assertDependencySet(final Set<Dependency> actualDependencies, final Set<Dependency> expectedDependencies) {
-        assertEquals("Expected graph children size to equal given children size.", actualDependencies.size(), expectedDependencies.size());
+        assertEquals(actualDependencies.size(), expectedDependencies.size(), "Expected graph children size to equal given children size.");
 
         final Set<Dependency> missingExpected = new HashSet<>(expectedDependencies);
         final Set<Dependency> extraActual = new HashSet<>(actualDependencies);
         missingExpected.removeAll(actualDependencies);
         extraActual.removeAll(expectedDependencies);
 
-        assertEquals("Expected graph not to have extra dependencies.", 0, missingExpected.size());
-        assertEquals("Expected graph not to be missing dependencies.", 0, extraActual.size());
+        assertEquals(0, missingExpected.size(), "Expected graph not to have extra dependencies.");
+        assertEquals(0, extraActual.size(), "Expected graph not to be missing dependencies.");
     }
 
     public static void assertExternalIdSet(final Set<ExternalId> actualDependencies, final Set<ExternalId> expectedDependencies) {
-        assertEquals("Expected graph children size to equal given children size.", actualDependencies.size(), expectedDependencies.size());
+        assertEquals(actualDependencies.size(), expectedDependencies.size(), "Expected graph children size to equal given children size.");
 
         final Set<ExternalId> missingExpected = new HashSet<>(expectedDependencies);
         final Set<ExternalId> extraActual = new HashSet<>(actualDependencies);
         missingExpected.removeAll(actualDependencies);
         extraActual.removeAll(expectedDependencies);
 
-        assertEquals("Expected graph not to have extra dependencies.", 0, missingExpected.size());
-        assertEquals("Expected graph not to be missing dependencies.", 0, extraActual.size());
+        assertEquals(0, missingExpected.size(), "Expected graph not to have extra dependencies.");
+        assertEquals(0, extraActual.size(), "Expected graph not to be missing dependencies.");
     }
 
 }
