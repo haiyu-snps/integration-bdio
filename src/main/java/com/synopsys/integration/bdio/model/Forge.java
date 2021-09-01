@@ -33,6 +33,7 @@ public class Forge extends Stringable {
     public static final Forge CODEPLEX_GROUP = new Forge("/", "codeplex_group");
     public static final Forge CPAN = new Forge("/", "cpan");
     public static final Forge CRAN = new Forge("/", "cran");
+    public static final Forge DART = new Forge("/", "dart");
     public static final Forge DEBIAN = new Forge("/", "debian");
     public static final Forge FEDORA = new Forge("/", "fedora");
     public static final Forge FREEDESKTOP_ORG = new Forge("/", "freedesktop_org");
