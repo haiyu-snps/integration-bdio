@@ -1,20 +1,17 @@
 package com.synopsys.integration.bdio.model;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.synopsys.integration.bdio.graph.builder.LazyId;
 import org.junit.jupiter.api.Test;
 
-import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.NameDependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.NameVersionDependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.StringDependencyId;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class DependencyIdTest {
+public class LazyIdTest {
     @Test
     public void testStringDependencyId() {
-        final DependencyId id1 = new StringDependencyId("hello");
-        final DependencyId id2 = new StringDependencyId("hello");
-        final DependencyId idDiff = new StringDependencyId("goodbye");
+        final LazyId id1 = LazyId.fromString("hello");
+        final LazyId id2 = LazyId.fromString("hello");
+        final LazyId idDiff = LazyId.fromString("goodbye");
 
         assertEquals(id1, id2);
         assertNotEquals(id1, idDiff);
@@ -26,9 +23,9 @@ public class DependencyIdTest {
 
     @Test
     public void testNameDependencyId() {
-        final DependencyId id1 = new NameDependencyId("hello");
-        final DependencyId id2 = new NameDependencyId("hello");
-        final DependencyId idDiff = new NameDependencyId("goodbye");
+        final LazyId id1 = LazyId.fromName("hello");
+        final LazyId id2 = LazyId.fromName("hello");
+        final LazyId idDiff = LazyId.fromName("goodbye");
 
         assertEquals(id1, id2);
         assertNotEquals(id1, idDiff);
@@ -40,9 +37,9 @@ public class DependencyIdTest {
 
     @Test
     public void testNameVersionDependencyId() {
-        final DependencyId id1 = new NameVersionDependencyId("hello", "hi");
-        final DependencyId id2 = new NameVersionDependencyId("hello", "hi");
-        final DependencyId idDiff = new NameVersionDependencyId("hello", "bye");
+        final LazyId id1 = LazyId.fromNameAndVersion("hello", "hi");
+        final LazyId id2 = LazyId.fromNameAndVersion("hello", "hi");
+        final LazyId idDiff = LazyId.fromNameAndVersion("hello", "bye");
 
         assertEquals(id1, id2);
         assertNotEquals(id1, idDiff);
@@ -54,9 +51,9 @@ public class DependencyIdTest {
 
     @Test
     public void testDiffDependencyId() {
-        final DependencyId id1 = new NameDependencyId("hello");
-        final DependencyId id2 = new NameVersionDependencyId("hello", "hi");
-        final DependencyId id3 = new NameDependencyId("goodbye");
+        final LazyId id1 = LazyId.fromName("hello");
+        final LazyId id2 = LazyId.fromNameAndVersion("hello", "hi");
+        final LazyId id3 = LazyId.fromName("goodbye");
 
         assertNotEquals(id1, id2);
         assertNotEquals(id1.hashCode(), id2.hashCode());

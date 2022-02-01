@@ -5,10 +5,11 @@
  *
  * Use subject to the terms and conditions of the Synopsys End User Software License and Maintenance Agreement. All rights reserved worldwide.
  */
-package com.synopsys.integration.bdio.model.dependencyid;
+package com.synopsys.integration.bdio.graph.builder;
 
-import com.synopsys.integration.util.Stringable;
-import org.apache.commons.lang3.builder.*;
+public enum LazyIdSource {
+    NAME,
+    NAME_VERSION,
+    STRING;
 
-public abstract class DependencyId extends Stringable {
 }
