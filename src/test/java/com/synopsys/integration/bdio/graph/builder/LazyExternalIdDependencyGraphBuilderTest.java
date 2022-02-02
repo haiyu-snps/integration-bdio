@@ -1,24 +1,19 @@
 package com.synopsys.integration.bdio.graph.builder;
 
+import com.synopsys.integration.bdio.graph.DependencyGraph;
+import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
+import com.synopsys.integration.bdio.utility.LazyIdTestUtil;
+import com.synopsys.integration.bdio.utility.DependencyTestUtil;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.Test;
-
-import com.synopsys.integration.bdio.graph.DependencyGraph;
-import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.NameDependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.NameVersionDependencyId;
-import com.synopsys.integration.bdio.model.dependencyid.StringDependencyId;
-import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
-import com.synopsys.integration.bdio.utility.DependencyIdTestUtil;
-import com.synopsys.integration.bdio.utility.DependencyTestUtil;
-
 public class LazyExternalIdDependencyGraphBuilderTest {
-    DependencyId stringId = new StringDependencyId("id1");
+    LazyId stringId = LazyId.fromString("id1");
     Dependency stringDep = DependencyTestUtil.newMavenDependency("org:test1:test2");
-    DependencyId aliasId = new StringDependencyId("alias1");
+    LazyId aliasId = LazyId.fromString("alias1");
 
     Dependency parent1 = DependencyTestUtil.newMavenDependency("parents:parent1:1.0");
     Dependency parent2 = DependencyTestUtil.newMavenDependency("parents:parent2:1.0");
@@ -30,15 +25,15 @@ public class LazyExternalIdDependencyGraphBuilderTest {
     Dependency child3 = DependencyTestUtil.newMavenDependency("childs:child3:1.0");
     Dependency child4 = DependencyTestUtil.newMavenDependency("childs:child4:1.0");
 
-    DependencyId parentId1 = new NameDependencyId("parent1");
-    DependencyId parentId2 = new NameVersionDependencyId("parent2", "1.0");
-    DependencyId parentId3 = new StringDependencyId("parent3");
-    DependencyId parentId4 = new StringDependencyId("parent4");
+    LazyId parentId1 = LazyId.fromName("parent1");
+    LazyId parentId2 = LazyId.fromNameAndVersion("parent2", "1.0");
+    LazyId parentId3 = LazyId.fromString("parent3");
+    LazyId parentId4 = LazyId.fromString("parent4");
 
-    DependencyId childId1 = new NameDependencyId("child1");
-    DependencyId childId2 = new NameDependencyId("child2");
-    DependencyId childId3 = new NameDependencyId("child3");
-    DependencyId childId4 = new NameDependencyId("child4");
+    LazyId childId1 = LazyId.fromName("child1");
+    LazyId childId2 = LazyId.fromName("child2");
+    LazyId childId3 = LazyId.fromName("child3");
+    LazyId childId4 = LazyId.fromName("child4");
 
     @Test
     public void testSetInfo() throws MissingExternalIdException {
@@ -128,8 +123,8 @@ public class LazyExternalIdDependencyGraphBuilderTest {
         builder.addChildToRoot(parentId1);
         builder.addChildWithParent(childId1, parentId1);
         builder.addChildWithParents(childId2, parentId1);
-        builder.addChildWithParents(childId3, DependencyIdTestUtil.asList(parentId1));
-        builder.addChildWithParents(childId4, DependencyIdTestUtil.asSet(parentId1));
+        builder.addChildWithParents(childId3, LazyIdTestUtil.asList(parentId1));
+        builder.addChildWithParents(childId4, LazyIdTestUtil.asSet(parentId1));
 
         builder.setDependencyInfo(parentId1, parent1.getName(), parent1.getVersion(), parent1.getExternalId());
         builder.setDependencyInfo(childId1, child1.getName(), child1.getVersion(), child1.getExternalId());
@@ -148,13 +143,13 @@ public class LazyExternalIdDependencyGraphBuilderTest {
 
         builder.addChildToRoot(parentId1);
         builder.addChildrenToRoot(parentId2);
-        builder.addChildrenToRoot(DependencyIdTestUtil.asList(parentId3));
-        builder.addChildrenToRoot(DependencyIdTestUtil.asSet(parentId4));
+        builder.addChildrenToRoot(LazyIdTestUtil.asList(parentId3));
+        builder.addChildrenToRoot(LazyIdTestUtil.asSet(parentId4));
 
         builder.addParentWithChild(parentId1, childId1);
         builder.addParentWithChildren(parentId2, childId1);
-        builder.addParentWithChildren(parentId3, DependencyIdTestUtil.asList(childId1));
-        builder.addParentWithChildren(parentId4, DependencyIdTestUtil.asSet(childId1));
+        builder.addParentWithChildren(parentId3, LazyIdTestUtil.asList(childId1));
+        builder.addParentWithChildren(parentId4, LazyIdTestUtil.asSet(childId1));
 
         builder.setDependencyInfo(parentId1, parent1.getName(), parent1.getVersion(), parent1.getExternalId());
         builder.setDependencyInfo(parentId2, parent2.getName(), parent2.getVersion(), parent2.getExternalId());

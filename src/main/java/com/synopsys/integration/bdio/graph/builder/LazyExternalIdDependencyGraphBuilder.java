@@ -7,40 +7,35 @@
  */
 package com.synopsys.integration.bdio.graph.builder;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.synopsys.integration.bdio.graph.DependencyGraph;
 import com.synopsys.integration.bdio.graph.MutableDependencyGraph;
 import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
+
+import java.util.*;
 
 public class LazyExternalIdDependencyGraphBuilder {
     public static class LazyDependencyInfo {
-        private Set<DependencyId> children = new HashSet<>();
-        private DependencyId aliasId;
+        private Set<LazyId> children = new HashSet<>();
+        private LazyId aliasId;
         private ExternalId externalId;
         private String name;
         private String version;
 
-        public Set<DependencyId> getChildren() {
+        public Set<LazyId> getChildren() {
             return children;
         }
 
-        public void setChildren(Set<DependencyId> children) {
+        public void setChildren(Set<LazyId> children) {
             this.children = children;
         }
 
-        public DependencyId getAliasId() {
+        public LazyId getAliasId() {
             return aliasId;
         }
 
-        public void setAliasId(DependencyId aliasId) {
+        public void setAliasId(LazyId aliasId) {
             this.aliasId = aliasId;
         }
 
@@ -69,10 +64,10 @@ public class LazyExternalIdDependencyGraphBuilder {
         }
     }
 
-    private final Set<DependencyId> rootDependencyIds = new HashSet<>();
-    private final Map<DependencyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
+    private final Set<LazyId> rootLazyIds = new HashSet<>();
+    private final Map<LazyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
 
-    private LazyDependencyInfo infoForId(final DependencyId id) {
+    private LazyDependencyInfo infoForId(final LazyId id) {
         LazyDependencyInfo info = dependencyInfo.get(id);
         if (info.getAliasId() != null) {
             info = dependencyInfo.get(info.getAliasId());
@@ -81,11 +76,11 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     public DependencyGraph build() throws MissingExternalIdException {
-        return build((dependencyId, lazyDependencyInfo) -> {
+        return build((lazyId, lazyDependencyInfo) -> {
             if (lazyDependencyInfo != null && lazyDependencyInfo.aliasId != null) {
                 throw new MissingExternalIdException(lazyDependencyInfo.aliasId);
             } else {
-                throw new MissingExternalIdException(dependencyId);
+                throw new MissingExternalIdException(lazyId);
             }
         });
     }
@@ -93,28 +88,28 @@ public class LazyExternalIdDependencyGraphBuilder {
     public DependencyGraph build(LazyBuilderMissingExternalIdHandler lazyBuilderHandler) throws MissingExternalIdException {
         final MutableDependencyGraph mutableDependencyGraph = new MutableMapDependencyGraph();
 
-        for (final DependencyId dependencyId : dependencyInfo.keySet()) {
-            final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
+        for (final LazyId lazyId : dependencyInfo.keySet()) {
+            final LazyDependencyInfo lazyDependencyInfo = infoForId(lazyId);
             if (lazyDependencyInfo.getExternalId() == null) {
-                final ExternalId handledExternalId = lazyBuilderHandler.handleMissingExternalId(dependencyId, lazyDependencyInfo);
-                if (handledExternalId == null || dependencyId == null) {
-                    throw new MissingExternalIdException(dependencyId);
+                final ExternalId handledExternalId = lazyBuilderHandler.handleMissingExternalId(lazyId, lazyDependencyInfo);
+                if (handledExternalId == null || lazyId == null) {
+                    throw new MissingExternalIdException(lazyId);
                 } else {
                     lazyDependencyInfo.setExternalId(handledExternalId);
                 }
             }
         }
 
-        for (final DependencyId dependencyId : dependencyInfo.keySet()) {
-            final LazyDependencyInfo lazyDependencyInfo = infoForId(dependencyId);
+        for (final LazyId lazyId : dependencyInfo.keySet()) {
+            final LazyDependencyInfo lazyDependencyInfo = infoForId(lazyId);
             final Dependency dependency = new Dependency(lazyDependencyInfo.getName(), lazyDependencyInfo.getVersion(), lazyDependencyInfo.getExternalId());
 
-            for (final DependencyId child : lazyDependencyInfo.getChildren()) {
+            for (final LazyId child : lazyDependencyInfo.getChildren()) {
                 final LazyDependencyInfo childInfo = infoForId(child);
                 mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.getName(), childInfo.getVersion(), childInfo.getExternalId()));
             }
 
-            if (rootDependencyIds.contains(dependencyId) || rootDependencyIds.contains(lazyDependencyInfo.getAliasId())) {
+            if (rootLazyIds.contains(lazyId) || rootLazyIds.contains(lazyDependencyInfo.getAliasId())) {
                 mutableDependencyGraph.addChildToRoot(dependency);
             }
         }
@@ -122,20 +117,20 @@ public class LazyExternalIdDependencyGraphBuilder {
         return mutableDependencyGraph;
     }
 
-    private void ensureDependencyInfoExists(final DependencyId dependencyId) {
-        if (!dependencyInfo.containsKey(dependencyId)) {
-            dependencyInfo.put(dependencyId, new LazyDependencyInfo());
+    private void ensureDependencyInfoExists(final LazyId lazyId) {
+        if (!dependencyInfo.containsKey(lazyId)) {
+            dependencyInfo.put(lazyId, new LazyDependencyInfo());
         }
     }
 
-    public void setDependencyAsAlias(final DependencyId realDependencyId, final DependencyId fakeDependencyId) {
-        ensureDependencyInfoExists(realDependencyId);
-        ensureDependencyInfoExists(fakeDependencyId);
-        final LazyDependencyInfo info = dependencyInfo.get(fakeDependencyId);
-        info.setAliasId(realDependencyId);
+    public void setDependencyAsAlias(final LazyId realLazyId, final LazyId fakeLazyId) {
+        ensureDependencyInfoExists(realLazyId);
+        ensureDependencyInfoExists(fakeLazyId);
+        final LazyDependencyInfo info = dependencyInfo.get(fakeLazyId);
+        info.setAliasId(realLazyId);
     }
 
-    public void setDependencyInfo(final DependencyId id, final String name, final String version, final ExternalId externalId) {
+    public void setDependencyInfo(final LazyId id, final String name, final String version, final ExternalId externalId) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
         info.setName(name);
@@ -143,90 +138,90 @@ public class LazyExternalIdDependencyGraphBuilder {
         info.setExternalId(externalId);
     }
 
-    public void setDependencyName(final DependencyId id, final String name) {
+    public void setDependencyName(final LazyId id, final String name) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
         info.setName(name);
     }
 
-    public void setDependencyVersion(final DependencyId id, final String version) {
+    public void setDependencyVersion(final LazyId id, final String version) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
         info.setVersion(version);
     }
 
-    public void setDependencyExternalId(final DependencyId id, final ExternalId externalId) {
+    public void setDependencyExternalId(final LazyId id, final ExternalId externalId) {
         ensureDependencyInfoExists(id);
         final LazyDependencyInfo info = dependencyInfo.get(id);
         info.setExternalId(externalId);
     }
 
-    public void addParentWithChild(final DependencyId parent, final DependencyId child) {
+    public void addParentWithChild(final LazyId parent, final LazyId child) {
         ensureDependencyInfoExists(child);
         ensureDependencyInfoExists(parent);
         dependencyInfo.get(parent).getChildren().add(child);
 
     }
 
-    public void addParentWithChildren(final DependencyId parent, final List<DependencyId> children) {
-        for (final DependencyId child : children) {
+    public void addParentWithChildren(final LazyId parent, final List<LazyId> children) {
+        for (final LazyId child : children) {
             addParentWithChild(parent, child);
         }
     }
 
-    public void addParentWithChildren(final DependencyId parent, final Set<DependencyId> children) {
-        for (final DependencyId child : children) {
+    public void addParentWithChildren(final LazyId parent, final Set<LazyId> children) {
+        for (final LazyId child : children) {
             addParentWithChild(parent, child);
         }
     }
 
-    public void addParentWithChildren(final DependencyId parent, final DependencyId... children) {
-        for (final DependencyId child : children) {
+    public void addParentWithChildren(final LazyId parent, final LazyId... children) {
+        for (final LazyId child : children) {
             addParentWithChild(parent, child);
         }
     }
 
-    public void addChildWithParent(final DependencyId child, final DependencyId parent) {
+    public void addChildWithParent(final LazyId child, final LazyId parent) {
         addParentWithChild(parent, child);
     }
 
-    public void addChildWithParents(final DependencyId child, final List<DependencyId> parents) {
-        for (final DependencyId parent : parents) {
+    public void addChildWithParents(final LazyId child, final List<LazyId> parents) {
+        for (final LazyId parent : parents) {
             addChildWithParent(child, parent);
         }
     }
 
-    public void addChildWithParents(final DependencyId child, final Set<DependencyId> parents) {
-        for (final DependencyId parent : parents) {
+    public void addChildWithParents(final LazyId child, final Set<LazyId> parents) {
+        for (final LazyId parent : parents) {
             addChildWithParent(child, parent);
         }
     }
 
-    public void addChildWithParents(final DependencyId child, final DependencyId... parents) {
-        for (final DependencyId parent : parents) {
+    public void addChildWithParents(final LazyId child, final LazyId... parents) {
+        for (final LazyId parent : parents) {
             addChildWithParent(child, parent);
         }
     }
 
-    public void addChildToRoot(final DependencyId child) {
+    public void addChildToRoot(final LazyId child) {
         ensureDependencyInfoExists(child);
-        rootDependencyIds.add(child);
+        rootLazyIds.add(child);
     }
 
-    public void addChildrenToRoot(final List<DependencyId> children) {
-        for (final DependencyId child : children) {
+    public void addChildrenToRoot(final List<LazyId> children) {
+        for (final LazyId child : children) {
             addChildToRoot(child);
         }
     }
 
-    public void addChildrenToRoot(final Set<DependencyId> children) {
-        for (final DependencyId child : children) {
+    public void addChildrenToRoot(final Set<LazyId> children) {
+        for (final LazyId child : children) {
             addChildToRoot(child);
         }
     }
 
-    public void addChildrenToRoot(final DependencyId... children) {
-        for (final DependencyId child : children) {
+    public void addChildrenToRoot(final LazyId... children) {
+        for (final LazyId child : children) {
             addChildToRoot(child);
         }
     }

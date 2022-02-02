@@ -7,15 +7,10 @@
  */
 package com.synopsys.integration.bdio.model.dependency;
 
-import com.synopsys.integration.bdio.model.dependencyid.DependencyId;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.RecursiveToStringStyle;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
+import com.synopsys.integration.util.Stringable;
 
-public class Dependency extends DependencyId {
+public class Dependency extends Stringable {
     private String name;
     private String version;
     private ExternalId externalId;
