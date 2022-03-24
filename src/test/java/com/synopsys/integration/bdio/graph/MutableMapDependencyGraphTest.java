@@ -1,6 +1,7 @@
 package com.synopsys.integration.bdio.graph;
 
 import static com.synopsys.integration.bdio.utility.DependencyTestUtil.newMavenDependency;
+import static com.synopsys.integration.bdio.utility.DependencyTestUtil.newProjectDependency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -9,15 +10,20 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
-public class MutableMapDependencyGraphTest {
+class MutableMapDependencyGraphTest {
+    private final ProjectDependency rootDependency = newProjectDependency(Forge.MAVEN, "root", "1.2.3");
+    private final ProjectDependency subProjectDependency = newProjectDependency(Forge.MAVEN, "sub-project", "x.y.z");
+    private final ProjectDependency anotherSubProjectDependency = newProjectDependency(Forge.MAVEN, "another-sub-project", "a.b.c");
+
     private final Dependency parent1 = newMavenDependency("parents:parent1:1.0");
     private final Dependency parent2 = newMavenDependency("parents:parent2:1.0");
     private final Dependency parent3 = newMavenDependency("parents:parent3:1.0");
-    private final Dependency parent4 = newMavenDependency("parents:parent4:1.0");
 
     private final Dependency child1 = newMavenDependency("children:child1:1.0");
     private final Dependency child2 = newMavenDependency("children:child2:1.0");
@@ -26,11 +32,27 @@ public class MutableMapDependencyGraphTest {
 
     private final Dependency grandchild1 = newMavenDependency("grandchildren:grandchild1:1.0");
     private final Dependency grandchild2 = newMavenDependency("grandchildren:grandchild2:1.0");
-    private final Dependency grandchild3 = newMavenDependency("grandchildren:grandchild3:1.0");
-    private final Dependency grandchild4 = newMavenDependency("grandchildren:grandchild4:1.0");
 
     @Test
-    public void testAddChildWithParents() {
+    void testProjectNodes() {
+        MutableDependencyGraph graph = new MutableMapDependencyGraph(rootDependency);
+        graph.addChildToRoot(child1);
+
+        MutableDependencyGraph subProjectGraph = new MutableMapDependencyGraph(subProjectDependency);
+        subProjectGraph.addChildToRoot(grandchild1);
+        graph.addGraphAsChildrenToRoot(subProjectGraph);
+
+        MutableDependencyGraph anotherSubProjectGraph = new MutableMapDependencyGraph(anotherSubProjectDependency);
+        anotherSubProjectGraph.addChildToRoot(grandchild2);
+        graph.addGraphAsChildrenToParent(subProjectDependency, anotherSubProjectGraph);
+
+        DependencyGraphTestUtil.assertGraphRootChildren(graph, child1, subProjectDependency);
+        DependencyGraphTestUtil.assertGraphChildren(graph, subProjectDependency, grandchild1, anotherSubProjectDependency);
+        DependencyGraphTestUtil.assertGraphChildren(graph, anotherSubProjectDependency, grandchild2);
+    }
+
+    @Test
+    void testAddChildWithParents() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addChildWithParent(child1, parent1);
         graph.addChildWithParents(grandchild2, parent1, child1);
@@ -53,7 +75,7 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testRootAdd() {
+    void testRootAdd() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
 
         graph.addChildToRoot(parent1);
@@ -65,7 +87,7 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testAddParentsWithChildren() {
+    void testAddParentsWithChildren() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addParentWithChild(parent1, child1);
         graph.addParentWithChildren(child1, DependencyTestUtil.asSet(grandchild1, grandchild2));
@@ -80,7 +102,7 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testAddToSameParent() {
+    void testAddToSameParent() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addParentWithChildren(parent1, child1);
         graph.addParentWithChildren(parent1, child2);
@@ -91,7 +113,7 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testHas() {
+    void testHas() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addParentWithChildren(parent1, child1);
         graph.addChildrenToRoot(parent1);
@@ -100,7 +122,7 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testDoesNotHas() {
+    void testDoesNotHas() {
         MutableDependencyGraph graph = new MutableMapDependencyGraph();
         graph.addParentWithChildren(parent1, child1);
         graph.addChildrenToRoot(parent1);
@@ -113,23 +135,21 @@ public class MutableMapDependencyGraphTest {
     }
 
     @Test
-    public void testGraphWithProvidedRoot() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph(parent1);
+    void testGraphWithProvidedRoot() {
+        MutableDependencyGraph graph = new MutableMapDependencyGraph(new ProjectDependency(parent1));
         graph.addParentWithChild(parent1, child1);
         graph.addParentWithChild(parent1, child2);
         graph.addParentWithChild(child2, child3);
         graph.addParentWithChild(child2, child4);
 
-        DependencyGraph completeGraph = graph;
-
-        Set<Dependency> rootDependencies = completeGraph.getRootDependencies();
+        Set<Dependency> rootDependencies = graph.getRootDependencies();
         assertEquals(2, rootDependencies.size());
 
-        assertEquals(0, completeGraph.getChildrenForParent(parent1).size());
-        assertEquals(0, completeGraph.getChildrenForParent(child1).size());
-        assertEquals(2, completeGraph.getChildrenForParent(child2).size());
-        assertEquals(0, completeGraph.getChildrenForParent(child3).size());
-        assertEquals(0, completeGraph.getChildrenForParent(child4).size());
+        assertEquals(0, graph.getChildrenForParent(parent1).size());
+        assertEquals(0, graph.getChildrenForParent(child1).size());
+        assertEquals(2, graph.getChildrenForParent(child2).size());
+        assertEquals(0, graph.getChildrenForParent(child3).size());
+        assertEquals(0, graph.getChildrenForParent(child4).size());
 
         DependencyGraphTestUtil.assertGraphRootChildren(graph, child1, child2);
         DependencyGraphTestUtil.assertGraphChildren(graph, child2, child3, child4);

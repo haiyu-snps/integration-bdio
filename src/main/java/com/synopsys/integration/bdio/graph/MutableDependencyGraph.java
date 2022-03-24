@@ -17,28 +17,28 @@ public interface MutableDependencyGraph extends DependencyGraph {
 
     void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph);
 
-    void addParentWithChild(final Dependency parent, final Dependency child);
+    void addParentWithChild(Dependency parent, Dependency child);
 
-    void addParentWithChildren(final Dependency parent, final List<Dependency> children);
+    void addParentWithChildren(Dependency parent, List<Dependency> children);
 
-    void addParentWithChildren(final Dependency parent, final Set<Dependency> children);
+    void addParentWithChildren(Dependency parent, Set<Dependency> children);
 
-    void addParentWithChildren(final Dependency parent, final Dependency... children);
+    void addParentWithChildren(Dependency parent, Dependency... children);
 
-    void addChildWithParent(final Dependency child, final Dependency parent);
+    void addChildWithParent(Dependency child, Dependency parent);
 
-    void addChildWithParents(final Dependency child, final List<Dependency> parents);
+    void addChildWithParents(Dependency child, List<Dependency> parents);
 
-    void addChildWithParents(final Dependency child, final Set<Dependency> parents);
+    void addChildWithParents(Dependency child, Set<Dependency> parents);
 
-    void addChildWithParents(final Dependency child, final Dependency... parents);
+    void addChildWithParents(Dependency child, Dependency... parents);
 
-    void addChildToRoot(final Dependency child);
+    void addChildToRoot(Dependency child);
 
-    void addChildrenToRoot(final List<Dependency> children);
+    void addChildrenToRoot(List<Dependency> children);
 
-    void addChildrenToRoot(final Set<Dependency> children);
+    void addChildrenToRoot(Set<Dependency> children);
 
-    void addChildrenToRoot(final Dependency... children);
+    void addChildrenToRoot(Dependency... children);
 
 }

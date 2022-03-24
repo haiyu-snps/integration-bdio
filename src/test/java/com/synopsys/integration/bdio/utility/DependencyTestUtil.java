@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyTestUtil {
@@ -17,14 +19,16 @@ public class DependencyTestUtil {
         return new Dependency(pieces[1], pieces[2], factory.createMavenExternalId(pieces[0], pieces[1], pieces[2]));
     }
 
-    public static Set<Dependency> asSet(final Dependency... dependencies) {
-        final Set<Dependency> set = new HashSet<>(Arrays.asList(dependencies));
-        return set;
+    public static ProjectDependency newProjectDependency(Forge forge, String name, String version) {
+        return new ProjectDependency(name, version, factory.createNameVersionExternalId(forge, name, version));
     }
 
-    public static List<Dependency> asList(final Dependency... dependencies) {
-        final List<Dependency> list = new ArrayList<>(Arrays.asList(dependencies));
-        return list;
+    public static Set<Dependency> asSet(Dependency... dependencies) {
+        return new HashSet<>(Arrays.asList(dependencies));
+    }
+
+    public static List<Dependency> asList(Dependency... dependencies) {
+        return new ArrayList<>(Arrays.asList(dependencies));
     }
 
 }

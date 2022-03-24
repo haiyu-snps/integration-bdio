@@ -8,29 +8,57 @@
 package com.synopsys.integration.bdio.graph;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 
 public class DependencyGraphCombiner {
-    public void addGraphAsChildrenToRoot(final MutableDependencyGraph destinationGraph, final DependencyGraph sourceGraph) {
-        final Set<Dependency> encountered = new HashSet<>();
-        for (final Dependency dependency : sourceGraph.getRootDependencies()) {
-            destinationGraph.addChildToRoot(dependency);
-            copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
+    public void addGraphAsChildrenToRoot(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
+        Optional<ProjectDependency> rootDependency = sourceGraph.getRootDependency();
+        if (rootDependency.isPresent()) {
+            destinationGraph.addChildToRoot(rootDependency.get());
+            copyRootDependenciesToParent(destinationGraph, sourceGraph, rootDependency.get());
+        } else {
+            copyRootDependencies(destinationGraph, sourceGraph);
         }
+
     }
 
-    public void addGraphAsChildrenToParent(final MutableDependencyGraph destinationGraph, final Dependency parent, final DependencyGraph sourceGraph) {
-        final Set<Dependency> encountered = new HashSet<>();
-        for (final Dependency dependency : sourceGraph.getRootDependencies()) {
+    public void copyRootDependenciesToParent(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph, Dependency parent) {
+        Set<Dependency> encountered = new HashSet<>();
+        for (Dependency dependency : sourceGraph.getRootDependencies()) {
             destinationGraph.addChildWithParent(dependency, parent);
             copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
         }
     }
 
-    public void copyDependencyFromGraph(final MutableDependencyGraph destinationGraph, final Dependency parentDependency, final DependencyGraph sourceGraph, final Set<Dependency> encountered) {
-        for (final Dependency dependency : sourceGraph.getChildrenForParent(parentDependency)) {
+    public void copyRootDependencies(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
+        Set<Dependency> encountered = new HashSet<>();
+        for (Dependency dependency : sourceGraph.getRootDependencies()) {
+            destinationGraph.addChildToRoot(dependency);
+            copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
+        }
+    }
+
+    public void addGraphAsChildrenToParent(MutableDependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
+        Optional<ProjectDependency> projectDependency = sourceGraph.getRootDependency();
+        Dependency actualParent = parent;
+        if (projectDependency.isPresent()) {
+            actualParent = projectDependency.get();
+            destinationGraph.addParentWithChild(parent, actualParent);
+        }
+        copyRootDependenciesToParent(destinationGraph, sourceGraph, actualParent);
+    }
+
+    public void copyDependencyFromGraph(
+        MutableDependencyGraph destinationGraph,
+        Dependency parentDependency,
+        DependencyGraph sourceGraph,
+        Set<Dependency> encountered
+    ) {
+        for (Dependency dependency : sourceGraph.getChildrenForParent(parentDependency)) {
             if (!encountered.contains(dependency)) {
                 encountered.add(dependency);
 

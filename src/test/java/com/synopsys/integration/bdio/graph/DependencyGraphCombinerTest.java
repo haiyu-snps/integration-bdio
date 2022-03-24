@@ -2,11 +2,13 @@ package com.synopsys.integration.bdio.graph;
 
 import org.junit.jupiter.api.Test;
 
+import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
-public class DependencyGraphCombinerTest {
+class DependencyGraphCombinerTest {
     private final Dependency dep1 = DependencyTestUtil.newMavenDependency("children:first:1.0");
     private final Dependency dep2 = DependencyTestUtil.newMavenDependency("children:second:2.0");
     private final Dependency dep3 = DependencyTestUtil.newMavenDependency("children:third:3.0");
@@ -15,11 +17,32 @@ public class DependencyGraphCombinerTest {
     private final Dependency dep6 = DependencyTestUtil.newMavenDependency("subChild:second:2.0");
     private final Dependency dep7 = DependencyTestUtil.newMavenDependency("subChild:third:3.0");
 
+    private final ProjectDependency parentProject = DependencyTestUtil.newProjectDependency(Forge.MAVEN, "parent-project", "1");
+    private final ProjectDependency childProject1 = DependencyTestUtil.newProjectDependency(Forge.MAVEN, "child-project1", "1");
+
     @Test
-    public void testAddChildWithParents() {
-        final MutableDependencyGraph first = new MutableMapDependencyGraph();
-        final MutableDependencyGraph second = new MutableMapDependencyGraph();
-        final MutableDependencyGraph combined = new MutableMapDependencyGraph();
+    void testSubProjects() {
+        MutableDependencyGraph parent = new MutableMapDependencyGraph(parentProject);
+        MutableDependencyGraph child1 = new MutableMapDependencyGraph(childProject1);
+        MutableDependencyGraph noProjectGraph = new MutableMapDependencyGraph();
+
+        noProjectGraph.addChildToRoot(dep3);
+
+        child1.addChildToRoot(dep2);
+        child1.addGraphAsChildrenToRoot(noProjectGraph);
+
+        parent.addChildToRoot(dep1);
+        parent.addGraphAsChildrenToRoot(child1);
+
+        DependencyGraphTestUtil.assertGraphRootChildren(parent, childProject1, dep1);
+        DependencyGraphTestUtil.assertGraphRootChildren(child1, dep2, dep3);
+    }
+
+    @Test
+    void testAddChildWithParents() {
+        MutableDependencyGraph first = new MutableMapDependencyGraph();
+        MutableDependencyGraph second = new MutableMapDependencyGraph();
+        MutableDependencyGraph combined = new MutableMapDependencyGraph();
 
         first.addChildToRoot(dep1);
         first.addChildWithParent(dep2, dep1);

@@ -7,12 +7,16 @@
  */
 package com.synopsys.integration.bdio.graph;
 
+import java.util.Optional;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public interface DependencyGraph {
+    Optional<ProjectDependency> getRootDependency();
+
     Set<Dependency> getRootDependencies();
 
     Set<ExternalId> getRootDependencyExternalIds();

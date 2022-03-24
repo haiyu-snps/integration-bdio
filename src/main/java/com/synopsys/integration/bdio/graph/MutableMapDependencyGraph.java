@@ -12,33 +12,43 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class MutableMapDependencyGraph implements MutableDependencyGraph {
-    private final Dependency rootDependency;
+    @Nullable
+    private final ProjectDependency rootDependency;
     private final Set<ExternalId> rootDependencies = new HashSet<>();
     private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
     private final DependencyGraphCombiner dependencyGraphCombiner = new DependencyGraphCombiner();
 
     public MutableMapDependencyGraph() {
-        rootDependency = null;
+        this(null);
     }
 
-    public MutableMapDependencyGraph(Dependency rootDependency) {
+    public MutableMapDependencyGraph(@Nullable ProjectDependency rootDependency) {
         this.rootDependency = rootDependency;
     }
 
     @Override
-    public void addGraphAsChildrenToRoot(final DependencyGraph sourceGraph) {
+    public Optional<ProjectDependency> getRootDependency() {
+        return Optional.ofNullable(rootDependency);
+    }
+
+    @Override
+    public void addGraphAsChildrenToRoot(DependencyGraph sourceGraph) {
         dependencyGraphCombiner.addGraphAsChildrenToRoot(this, sourceGraph);
     }
 
     @Override
-    public void addGraphAsChildrenToParent(final Dependency parent, final DependencyGraph sourceGraph) {
+    public void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph) {
         if (isRoot(parent)) {
             addGraphAsChildrenToRoot(sourceGraph);
         } else {
@@ -47,17 +57,17 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public boolean hasDependency(final ExternalId dependency) {
+    public boolean hasDependency(ExternalId dependency) {
         return dependencies.containsKey(dependency);
     }
 
     @Override
-    public boolean hasDependency(final Dependency dependency) {
+    public boolean hasDependency(Dependency dependency) {
         return dependencies.containsKey(dependency.getExternalId());
     }
 
     @Override
-    public Dependency getDependency(final ExternalId dependency) {
+    public Dependency getDependency(ExternalId dependency) {
         if (dependencies.containsKey(dependency)) {
             return dependencies.get(dependency);
         }
@@ -65,20 +75,20 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Set<Dependency> getChildrenForParent(final ExternalId parent) {
-        final Set<ExternalId> childIds = getChildrenExternalIdsForParent(parent);
+    public Set<Dependency> getChildrenForParent(ExternalId parent) {
+        Set<ExternalId> childIds = getChildrenExternalIdsForParent(parent);
         return dependenciesFromExternalIds(childIds);
     }
 
     @Override
-    public Set<Dependency> getParentsForChild(final ExternalId child) {
-        final Set<ExternalId> parentIds = getParentExternalIdsForChild(child);
+    public Set<Dependency> getParentsForChild(ExternalId child) {
+        Set<ExternalId> parentIds = getParentExternalIdsForChild(child);
         return dependenciesFromExternalIds(parentIds);
     }
 
     @Override
-    public Set<ExternalId> getChildrenExternalIdsForParent(final ExternalId parent) {
-        final Set<ExternalId> children = new HashSet<>();
+    public Set<ExternalId> getChildrenExternalIdsForParent(ExternalId parent) {
+        Set<ExternalId> children = new HashSet<>();
         if (relationships.containsKey(parent)) {
             children.addAll(relationships.get(parent));
         }
@@ -86,11 +96,11 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Set<ExternalId> getParentExternalIdsForChild(final ExternalId child) {
-        final Set<ExternalId> parents = new HashSet<>();
-        for (final Map.Entry<ExternalId, Set<ExternalId>> externalIdSetEntry : relationships.entrySet()) {
-            final ExternalId parentId = externalIdSetEntry.getKey();
-            for (final ExternalId childId : externalIdSetEntry.getValue()) {
+    public Set<ExternalId> getParentExternalIdsForChild(ExternalId child) {
+        Set<ExternalId> parents = new HashSet<>();
+        for (Map.Entry<ExternalId, Set<ExternalId>> externalIdSetEntry : relationships.entrySet()) {
+            ExternalId parentId = externalIdSetEntry.getKey();
+            for (ExternalId childId : externalIdSetEntry.getValue()) {
                 if (childId.equals(child)) {
                     parents.add(parentId);
                 }
@@ -100,50 +110,50 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public Set<Dependency> getChildrenForParent(final Dependency parent) {
+    public Set<Dependency> getChildrenForParent(Dependency parent) {
         return getChildrenForParent(parent.getExternalId());
     }
 
     @Override
-    public Set<Dependency> getParentsForChild(final Dependency child) {
+    public Set<Dependency> getParentsForChild(Dependency child) {
         return getParentsForChild(child.getExternalId());
     }
 
     @Override
-    public Set<ExternalId> getChildrenExternalIdsForParent(final Dependency parent) {
+    public Set<ExternalId> getChildrenExternalIdsForParent(Dependency parent) {
         return getChildrenExternalIdsForParent(parent.getExternalId());
     }
 
     @Override
-    public Set<ExternalId> getParentExternalIdsForChild(final Dependency child) {
+    public Set<ExternalId> getParentExternalIdsForChild(Dependency child) {
         return getParentExternalIdsForChild(child.getExternalId());
     }
 
     @Override
-    public void addParentWithChild(final Dependency parent, final Dependency child) {
+    public void addParentWithChild(Dependency parent, Dependency child) {
         ensureDependencyAndRelationshipExists(parent);
         ensureDependencyExists(child);
         addRelationship(parent, child);
     }
 
     @Override
-    public void addChildWithParent(final Dependency child, final Dependency parent) {
+    public void addChildWithParent(Dependency child, Dependency parent) {
         addParentWithChild(parent, child);
     }
 
     @Override
-    public void addParentWithChildren(final Dependency parent, final List<Dependency> children) {
+    public void addParentWithChildren(Dependency parent, List<Dependency> children) {
         ensureDependencyAndRelationshipExists(parent);
-        for (final Dependency child : children) {
+        for (Dependency child : children) {
             ensureDependencyExists(child);
             addRelationship(parent, child);
         }
     }
 
     @Override
-    public void addChildWithParents(final Dependency child, final List<Dependency> parents) {
+    public void addChildWithParents(Dependency child, List<Dependency> parents) {
         ensureDependencyExists(child);
-        for (final Dependency parent : parents) {
+        for (Dependency parent : parents) {
             ensureDependencyAndRelationshipExists(parent);
             addRelationship(parent, child);
         }
@@ -151,36 +161,36 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public void addParentWithChildren(final Dependency parent, final Set<Dependency> children) {
+    public void addParentWithChildren(Dependency parent, Set<Dependency> children) {
         ensureDependencyAndRelationshipExists(parent);
-        for (final Dependency child : children) {
+        for (Dependency child : children) {
             ensureDependencyExists(child);
             addRelationship(parent, child);
         }
     }
 
     @Override
-    public void addChildWithParents(final Dependency child, final Set<Dependency> parents) {
+    public void addChildWithParents(Dependency child, Set<Dependency> parents) {
         ensureDependencyExists(child);
-        for (final Dependency parent : parents) {
+        for (Dependency parent : parents) {
             ensureDependencyAndRelationshipExists(parent);
             addRelationship(parent, child);
         }
     }
 
     @Override
-    public void addParentWithChildren(final Dependency parent, final Dependency... children) {
+    public void addParentWithChildren(Dependency parent, Dependency... children) {
         addParentWithChildren(parent, Arrays.asList(children));
     }
 
     @Override
-    public void addChildWithParents(final Dependency child, final Dependency... parents) {
+    public void addChildWithParents(Dependency child, Dependency... parents) {
         addChildWithParents(child, Arrays.asList(parents));
     }
 
     @Override
     public Set<ExternalId> getRootDependencyExternalIds() {
-        final HashSet<ExternalId> copy = new HashSet<>();
+        HashSet<ExternalId> copy = new HashSet<>();
         copy.addAll(rootDependencies);
         return copy;
     }
@@ -191,46 +201,46 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
-    public void addChildToRoot(final Dependency child) {
+    public void addChildToRoot(Dependency child) {
         ensureDependencyExists(child);
         rootDependencies.add(child.getExternalId());
     }
 
     @Override
-    public void addChildrenToRoot(final List<Dependency> children) {
-        for (final Dependency child : children) {
+    public void addChildrenToRoot(List<Dependency> children) {
+        for (Dependency child : children) {
             addChildToRoot(child);
         }
     }
 
     @Override
-    public void addChildrenToRoot(final Set<Dependency> children) {
-        for (final Dependency child : children) {
+    public void addChildrenToRoot(Set<Dependency> children) {
+        for (Dependency child : children) {
             addChildToRoot(child);
         }
     }
 
     @Override
-    public void addChildrenToRoot(final Dependency... children) {
-        for (final Dependency child : children) {
+    public void addChildrenToRoot(Dependency... children) {
+        for (Dependency child : children) {
             addChildToRoot(child);
         }
     }
 
-    private void ensureDependencyExists(final Dependency dependency) {
+    private void ensureDependencyExists(Dependency dependency) {
         if (!isRoot(dependency) && !dependencies.containsKey(dependency.getExternalId())) {
             dependencies.put(dependency.getExternalId(), dependency);
         }
     }
 
-    private void ensureDependencyAndRelationshipExists(final Dependency dependency) {
+    private void ensureDependencyAndRelationshipExists(Dependency dependency) {
         ensureDependencyExists(dependency);
         if (!isRoot(dependency) && !relationships.containsKey(dependency.getExternalId())) {
             relationships.put(dependency.getExternalId(), new HashSet<>());
         }
     }
 
-    private void addRelationship(final Dependency parent, final Dependency child) {
+    private void addRelationship(Dependency parent, Dependency child) {
         if (isRoot(parent)) {
             addChildToRoot(child);
         } else {
@@ -238,9 +248,9 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
         }
     }
 
-    private Set<Dependency> dependenciesFromExternalIds(final Set<ExternalId> ids) {
-        final Set<Dependency> foundDependencies = new HashSet<>();
-        for (final ExternalId id : ids) {
+    private Set<Dependency> dependenciesFromExternalIds(Set<ExternalId> ids) {
+        Set<Dependency> foundDependencies = new HashSet<>();
+        for (ExternalId id : ids) {
             if (dependencies.containsKey(id)) {
                 foundDependencies.add(dependencies.get(id));
             }
@@ -248,7 +258,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
         return foundDependencies;
     }
 
-    private boolean isRoot(final Dependency dependency) {
+    private boolean isRoot(Dependency dependency) {
         return null != rootDependency && rootDependency.equals(dependency);
     }
 
