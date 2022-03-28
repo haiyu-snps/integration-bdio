@@ -8,12 +8,15 @@
 package com.synopsys.integration.bdio.model.dependency;
 
 import com.synopsys.integration.bdio.model.Forge;
+import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 
 public class DependencyFactory {
-    public static final DependencyFactory STATIC = new DependencyFactory(ExternalIdFactory.STATIC);
-
     private final ExternalIdFactory externalIdFactory;
+
+    public DependencyFactory() {
+        this(ExternalId.FACTORY);
+    }
 
     public DependencyFactory(ExternalIdFactory externalIdFactory) {
         this.externalIdFactory = externalIdFactory;

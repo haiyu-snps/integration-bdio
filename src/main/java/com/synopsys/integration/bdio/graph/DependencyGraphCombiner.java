@@ -11,13 +11,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependency.PlaceHolderDependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 
 public class DependencyGraphCombiner {
     public void addGraphAsChildrenToRoot(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
         ProjectDependency rootDependency = sourceGraph.getRootDependency();
-        if (rootDependency.isPlaceholder()) {
+        if (sourceGraph.isRootProjectPlaceholder()) {
             copyRootDependencies(destinationGraph, sourceGraph);
         } else {
             destinationGraph.addChildToRoot(rootDependency);
@@ -43,7 +42,7 @@ public class DependencyGraphCombiner {
 
     public void addGraphAsChildrenToParent(MutableDependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
         ProjectDependency projectDependency = sourceGraph.getRootDependency();
-        if (projectDependency instanceof PlaceHolderDependency) {
+        if (sourceGraph.isRootProjectPlaceholder()) {
             copyRootDependencies(destinationGraph, sourceGraph);
         } else {
             destinationGraph.addParentWithChild(parent, projectDependency);

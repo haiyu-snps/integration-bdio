@@ -37,6 +37,8 @@ import com.synopsys.integration.util.Stringable;
 public class ExternalId extends Stringable {
     public static final Comparator<ExternalId> ARE_SAME = Comparator.comparing(ExternalId::createExternalId);
 
+    public static final ExternalIdFactory FACTORY = new ExternalIdFactory();
+
     private static final int NAME_POSITION = 0;
     private static final int VERSION_POSITION = 1;
 
@@ -47,8 +49,8 @@ public class ExternalId extends Stringable {
 
     public static ExternalId createFromExternalId(Forge forge, String fullExternalId, String name, String version) {
         List<String> unknownPieces = Arrays.stream(StringUtils.split(fullExternalId, forge.getSeparator()))
-                                         .filter(StringUtils::isNotBlank)
-                                         .collect(Collectors.toList());
+            .filter(StringUtils::isNotBlank)
+            .collect(Collectors.toList());
 
         ExternalId externalId = new ExternalId(forge);
         if (unknownPieces.isEmpty()) {

@@ -10,8 +10,6 @@ package com.synopsys.integration.bdio.model.externalid;
 import com.synopsys.integration.bdio.model.Forge;
 
 public class ExternalIdFactory {
-    public static final ExternalIdFactory STATIC = new ExternalIdFactory();
-
     public ExternalId createPathExternalId(Forge forge, String path) {
         ExternalId externalId = new ExternalId(forge);
         externalId.setPath(path);

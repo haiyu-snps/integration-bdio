@@ -15,6 +15,8 @@ import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 // A dependency graph represent a project node in BDIO2
 public interface DependencyGraph {
+    boolean isRootProjectPlaceholder();
+
     ProjectDependency getRootDependency();
 
     Set<Dependency> getRootDependencies();

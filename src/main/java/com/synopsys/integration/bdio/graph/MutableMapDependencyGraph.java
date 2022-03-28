@@ -13,27 +13,39 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependency.PlaceHolderDependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class MutableMapDependencyGraph implements MutableDependencyGraph {
     private final ProjectDependency rootDependency;
+    private final boolean isRootProjectPlaceholder;
     private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
     private final DependencyGraphCombiner dependencyGraphCombiner = new DependencyGraphCombiner();
 
     public MutableMapDependencyGraph() {
-        this(new PlaceHolderDependency());
+        this(Forge.GITHUB);
+    }
+
+    public MutableMapDependencyGraph(Forge forge) {
+        this(new ProjectDependency(ExternalId.FACTORY.createModuleNamesExternalId(forge, UUID.randomUUID().toString())), true);
     }
 
     public MutableMapDependencyGraph(@NotNull ProjectDependency rootDependency) {
+        this(rootDependency, false);
+    }
+
+    public MutableMapDependencyGraph(@NotNull ProjectDependency rootDependency, boolean isRootProjectPlaceholder) {
         this.rootDependency = rootDependency;
+        this.isRootProjectPlaceholder = isRootProjectPlaceholder;
     }
 
     @Override
@@ -57,11 +69,9 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
     }
 
     @Override
+    @Nullable
     public Dependency getDependency(ExternalId dependency) {
-        if (dependencies.containsKey(dependency)) {
-            return dependencies.get(dependency);
-        }
-        return null;
+        return dependencies.getOrDefault(dependency, null);
     }
 
     @Override
@@ -178,6 +188,11 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
         return getRootDependencies().stream()
             .map(Dependency::getExternalId)
             .collect(Collectors.toSet());
+    }
+
+    @Override
+    public boolean isRootProjectPlaceholder() {
+        return isRootProjectPlaceholder;
     }
 
     @Override
