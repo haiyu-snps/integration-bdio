@@ -22,20 +22,20 @@ class DependencyGraphCombinerTest {
 
     @Test
     void testSubProjects() {
-        MutableDependencyGraph parent = new MutableMapDependencyGraph(parentProject);
-        MutableDependencyGraph child1 = new MutableMapDependencyGraph(childProject1);
         MutableDependencyGraph noProjectGraph = new MutableMapDependencyGraph();
-
         noProjectGraph.addChildToRoot(dep3);
 
+        MutableDependencyGraph child1 = new MutableMapDependencyGraph(childProject1);
         child1.addChildToRoot(dep2);
         child1.addGraphAsChildrenToRoot(noProjectGraph);
 
+        MutableDependencyGraph parent = new MutableMapDependencyGraph(parentProject);
         parent.addChildToRoot(dep1);
         parent.addGraphAsChildrenToRoot(child1);
 
-        DependencyGraphTestUtil.assertGraphRootChildren(parent, childProject1, dep1);
+        DependencyGraphTestUtil.assertGraphRootChildren(noProjectGraph, dep3);
         DependencyGraphTestUtil.assertGraphRootChildren(child1, dep2, dep3);
+        DependencyGraphTestUtil.assertGraphRootChildren(parent, childProject1, dep1);
     }
 
     @Test
@@ -47,12 +47,17 @@ class DependencyGraphCombinerTest {
         first.addChildToRoot(dep1);
         first.addChildWithParent(dep2, dep1);
         first.addChildWithParent(dep3, dep2);
+        DependencyGraphTestUtil.assertGraphRootChildren(first, dep1);
         DependencyGraphTestUtil.assertGraphChildren(first, dep1, dep2);
+        DependencyGraphTestUtil.assertGraphChildren(first, dep2, dep3);
 
         second.addChildToRoot(dep4);
         second.addParentWithChild(dep4, dep5);
         second.addParentWithChild(dep5, dep6);
         second.addParentWithChild(dep5, dep7);
+        DependencyGraphTestUtil.assertGraphRootChildren(second, dep4);
+        DependencyGraphTestUtil.assertGraphChildren(second, dep4, dep5);
+        DependencyGraphTestUtil.assertGraphChildren(second, dep5, dep6, dep7);
 
         combined.addGraphAsChildrenToRoot(first);
         combined.addGraphAsChildrenToParent(dep2, second);
