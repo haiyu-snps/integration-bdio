@@ -8,22 +8,21 @@
 package com.synopsys.integration.bdio.graph;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.PlaceHolderDependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 
 public class DependencyGraphCombiner {
     public void addGraphAsChildrenToRoot(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
-        Optional<ProjectDependency> rootDependency = sourceGraph.getRootDependency();
-        if (rootDependency.isPresent()) {
-            destinationGraph.addChildToRoot(rootDependency.get());
-            copyRootDependenciesToParent(destinationGraph, sourceGraph, rootDependency.get());
-        } else {
+        ProjectDependency rootDependency = sourceGraph.getRootDependency();
+        if (rootDependency instanceof PlaceHolderDependency) {
             copyRootDependencies(destinationGraph, sourceGraph);
+        } else {
+            destinationGraph.addChildToRoot(rootDependency);
+            copyRootDependenciesToParent(destinationGraph, sourceGraph, rootDependency);
         }
-
     }
 
     public void copyRootDependenciesToParent(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph, Dependency parent) {
@@ -43,13 +42,14 @@ public class DependencyGraphCombiner {
     }
 
     public void addGraphAsChildrenToParent(MutableDependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
-        Optional<ProjectDependency> projectDependency = sourceGraph.getRootDependency();
-        Dependency actualParent = parent;
-        if (projectDependency.isPresent()) {
-            actualParent = projectDependency.get();
-            destinationGraph.addParentWithChild(parent, actualParent);
+        ProjectDependency projectDependency = sourceGraph.getRootDependency();
+        if (projectDependency instanceof PlaceHolderDependency) {
+            copyRootDependencies(destinationGraph, sourceGraph);
+        } else {
+            destinationGraph.addParentWithChild(parent, projectDependency);
+            copyRootDependenciesToParent(destinationGraph, sourceGraph, projectDependency);
         }
-        copyRootDependenciesToParent(destinationGraph, sourceGraph, actualParent);
+
     }
 
     public void copyDependencyFromGraph(

@@ -7,15 +7,15 @@
  */
 package com.synopsys.integration.bdio.graph;
 
-import java.util.Optional;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
+// A dependency graph represent a project node in BDIO2
 public interface DependencyGraph {
-    Optional<ProjectDependency> getRootDependency();
+    ProjectDependency getRootDependency();
 
     Set<Dependency> getRootDependencies();
 

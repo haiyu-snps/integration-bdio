@@ -57,10 +57,11 @@ class DependencyGraphCombinerTest {
         combined.addGraphAsChildrenToRoot(first);
         combined.addGraphAsChildrenToParent(dep2, second);
 
-        DependencyGraphTestUtil.assertGraphRootChildren(combined, dep1);
-
+        DependencyGraphTestUtil.assertGraphRootChildren(combined, dep1, dep4);
+        // From first graph
         DependencyGraphTestUtil.assertGraphChildren(combined, dep1, dep2);
-        DependencyGraphTestUtil.assertGraphChildren(combined, dep2, dep3, dep4);
+        DependencyGraphTestUtil.assertGraphChildren(combined, dep2, dep3);
+        // From second graph
         DependencyGraphTestUtil.assertGraphChildren(combined, dep4, dep5);
         DependencyGraphTestUtil.assertGraphChildren(combined, dep5, dep6, dep7);
     }

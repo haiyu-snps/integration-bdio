@@ -145,7 +145,7 @@ class MutableMapDependencyGraphTest {
         Set<Dependency> rootDependencies = graph.getRootDependencies();
         assertEquals(2, rootDependencies.size());
 
-        assertEquals(0, graph.getChildrenForParent(parent1).size());
+        assertEquals(2, graph.getChildrenForParent(parent1).size());
         assertEquals(0, graph.getChildrenForParent(child1).size());
         assertEquals(2, graph.getChildrenForParent(child2).size());
         assertEquals(0, graph.getChildrenForParent(child3).size());

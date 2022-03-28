@@ -12,34 +12,28 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.PlaceHolderDependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class MutableMapDependencyGraph implements MutableDependencyGraph {
-    @Nullable
     private final ProjectDependency rootDependency;
-    private final Set<ExternalId> rootDependencies = new HashSet<>();
     private final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     private final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
     private final DependencyGraphCombiner dependencyGraphCombiner = new DependencyGraphCombiner();
 
     public MutableMapDependencyGraph() {
-        this(null);
+        this(new PlaceHolderDependency());
     }
 
-    public MutableMapDependencyGraph(@Nullable ProjectDependency rootDependency) {
+    public MutableMapDependencyGraph(@NotNull ProjectDependency rootDependency) {
         this.rootDependency = rootDependency;
-    }
-
-    @Override
-    public Optional<ProjectDependency> getRootDependency() {
-        return Optional.ofNullable(rootDependency);
     }
 
     @Override
@@ -49,11 +43,7 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public void addGraphAsChildrenToParent(Dependency parent, DependencyGraph sourceGraph) {
-        if (isRoot(parent)) {
-            addGraphAsChildrenToRoot(sourceGraph);
-        } else {
-            dependencyGraphCombiner.addGraphAsChildrenToParent(this, parent, sourceGraph);
-        }
+        dependencyGraphCombiner.addGraphAsChildrenToParent(this, parent, sourceGraph);
     }
 
     @Override
@@ -76,37 +66,32 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public Set<Dependency> getChildrenForParent(ExternalId parent) {
-        Set<ExternalId> childIds = getChildrenExternalIdsForParent(parent);
-        return dependenciesFromExternalIds(childIds);
+        return getChildrenExternalIdsForParent(parent).stream()
+            .map(dependencies::get)
+            .collect(Collectors.toSet());
     }
 
     @Override
     public Set<Dependency> getParentsForChild(ExternalId child) {
-        Set<ExternalId> parentIds = getParentExternalIdsForChild(child);
-        return dependenciesFromExternalIds(parentIds);
+        return getParentExternalIdsForChild(child).stream()
+            .map(dependencies::get)
+            .collect(Collectors.toSet());
     }
 
     @Override
     public Set<ExternalId> getChildrenExternalIdsForParent(ExternalId parent) {
-        Set<ExternalId> children = new HashSet<>();
-        if (relationships.containsKey(parent)) {
-            children.addAll(relationships.get(parent));
-        }
-        return children;
+        return relationships.getOrDefault(parent, new HashSet<>());
     }
 
     @Override
     public Set<ExternalId> getParentExternalIdsForChild(ExternalId child) {
-        Set<ExternalId> parents = new HashSet<>();
-        for (Map.Entry<ExternalId, Set<ExternalId>> externalIdSetEntry : relationships.entrySet()) {
-            ExternalId parentId = externalIdSetEntry.getKey();
-            for (ExternalId childId : externalIdSetEntry.getValue()) {
-                if (childId.equals(child)) {
-                    parents.add(parentId);
-                }
-            }
-        }
-        return parents;
+        return relationships.entrySet().stream()
+            .filter(externalIdSetEntry ->
+                externalIdSetEntry.getValue().stream()
+                    .anyMatch(child::equals)
+            )
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toSet());
     }
 
     @Override
@@ -190,76 +175,60 @@ public class MutableMapDependencyGraph implements MutableDependencyGraph {
 
     @Override
     public Set<ExternalId> getRootDependencyExternalIds() {
-        HashSet<ExternalId> copy = new HashSet<>();
-        copy.addAll(rootDependencies);
-        return copy;
+        return getRootDependencies().stream()
+            .map(Dependency::getExternalId)
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public ProjectDependency getRootDependency() {
+        return rootDependency;
     }
 
     @Override
     public Set<Dependency> getRootDependencies() {
-        return dependenciesFromExternalIds(getRootDependencyExternalIds());
+        return getChildrenForParent(rootDependency);
     }
 
     @Override
     public void addChildToRoot(Dependency child) {
         ensureDependencyExists(child);
-        rootDependencies.add(child.getExternalId());
+        addParentWithChild(rootDependency, child);
     }
 
     @Override
     public void addChildrenToRoot(List<Dependency> children) {
-        for (Dependency child : children) {
-            addChildToRoot(child);
-        }
+        children.forEach(this::addChildToRoot);
     }
 
     @Override
     public void addChildrenToRoot(Set<Dependency> children) {
-        for (Dependency child : children) {
-            addChildToRoot(child);
-        }
+        children.forEach(this::addChildToRoot);
     }
 
     @Override
     public void addChildrenToRoot(Dependency... children) {
-        for (Dependency child : children) {
-            addChildToRoot(child);
-        }
+        Arrays.stream(children).forEach(this::addChildToRoot);
     }
 
     private void ensureDependencyExists(Dependency dependency) {
-        if (!isRoot(dependency) && !dependencies.containsKey(dependency.getExternalId())) {
-            dependencies.put(dependency.getExternalId(), dependency);
+        if (isNotRoot(dependency)) {
+            dependencies.putIfAbsent(dependency.getExternalId(), dependency);
         }
     }
 
     private void ensureDependencyAndRelationshipExists(Dependency dependency) {
         ensureDependencyExists(dependency);
-        if (!isRoot(dependency) && !relationships.containsKey(dependency.getExternalId())) {
-            relationships.put(dependency.getExternalId(), new HashSet<>());
-        }
+        relationships.putIfAbsent(dependency.getExternalId(), new HashSet<>());
     }
 
     private void addRelationship(Dependency parent, Dependency child) {
-        if (isRoot(parent)) {
-            addChildToRoot(child);
-        } else {
-            relationships.get(parent.getExternalId()).add(child.getExternalId());
-        }
+        relationships.get(parent.getExternalId())
+            .add(child.getExternalId());
     }
 
-    private Set<Dependency> dependenciesFromExternalIds(Set<ExternalId> ids) {
-        Set<Dependency> foundDependencies = new HashSet<>();
-        for (ExternalId id : ids) {
-            if (dependencies.containsKey(id)) {
-                foundDependencies.add(dependencies.get(id));
-            }
-        }
-        return foundDependencies;
-    }
-
-    private boolean isRoot(Dependency dependency) {
-        return null != rootDependency && rootDependency.equals(dependency);
+    private boolean isNotRoot(Dependency dependency) {
+        return !rootDependency.equals(dependency);
     }
 
 }
