@@ -17,7 +17,7 @@ import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 public class DependencyGraphCombiner {
     public void addGraphAsChildrenToRoot(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
         ProjectDependency rootDependency = sourceGraph.getRootDependency();
-        if (rootDependency instanceof PlaceHolderDependency) {
+        if (rootDependency.isPlaceholder()) {
             copyRootDependencies(destinationGraph, sourceGraph);
         } else {
             destinationGraph.addChildToRoot(rootDependency);
