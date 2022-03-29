@@ -11,21 +11,23 @@ import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.util.Stringable;
 
 public class Dependency extends Stringable {
+    public static final DependencyFactory FACTORY = new DependencyFactory();
+
     private String name;
     private String version;
     private ExternalId externalId;
 
-    public Dependency(final String name, final String version, final ExternalId externalId) {
+    public Dependency(String name, String version, ExternalId externalId) {
         this.name = name;
         this.version = version;
         this.externalId = externalId;
     }
 
-    public Dependency(final String name, final ExternalId externalId) {
+    public Dependency(String name, ExternalId externalId) {
         this(name, externalId.getVersion(), externalId);
     }
 
-    public Dependency(final ExternalId externalId) {
+    public Dependency(ExternalId externalId) {
         this(externalId.getName(), externalId);
     }
 

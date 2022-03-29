@@ -10,9 +10,15 @@ package com.synopsys.integration.bdio.graph;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
+// A dependency graph represent a project node in BDIO2
 public interface DependencyGraph {
+    boolean isRootProjectPlaceholder();
+
+    ProjectDependency getRootDependency();
+
     Set<Dependency> getRootDependencies();
 
     Set<ExternalId> getRootDependencyExternalIds();
