@@ -31,7 +31,7 @@ public class DependencyFactory {
     }
 
     public Dependency createNameVersionDependency(Forge forge, String name, String version) {
-        return new Dependency(externalIdFactory.createNameVersionExternalId(forge, name, version));
+        return new Dependency(name, version, externalIdFactory.createNameVersionExternalId(forge, name, version));
     }
 
     public Dependency createNameVersionDependency(Forge forge, String name) {

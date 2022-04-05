@@ -28,6 +28,10 @@ public abstract class DependencyGraph {
 
     public abstract Set<Dependency> getRootDependencies();
 
+    public abstract void copyGraphToRoot(BasicDependencyGraph sourceGraph);
+
+    public abstract void copyGraphToRoot(ProjectDependencyGraph sourceGraph);
+
     public boolean hasDependency(ExternalId dependency) {
         return dependencies.containsKey(dependency);
     }

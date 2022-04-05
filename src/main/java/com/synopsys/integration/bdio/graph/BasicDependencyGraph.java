@@ -31,10 +31,12 @@ public class BasicDependencyGraph extends DependencyGraph {
         rootDependencies.add(child.getExternalId());
     }
 
+    @Override
     public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
         DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
     }
 
+    @Override
     public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
         ProjectDependency rootDependency = sourceGraph.getRootDependency();
         addChildToRoot(rootDependency);

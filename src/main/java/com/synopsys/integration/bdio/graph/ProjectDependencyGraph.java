@@ -27,10 +27,12 @@ public class ProjectDependencyGraph extends DependencyGraph {
         return rootDependency;
     }
 
+    @Override
     public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
         DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
     }
 
+    @Override
     public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
         ProjectDependency sourceRootDependency = sourceGraph.getRootDependency();
         addChildToRoot(sourceRootDependency);
