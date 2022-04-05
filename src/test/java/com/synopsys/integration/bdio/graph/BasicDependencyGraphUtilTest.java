@@ -8,7 +8,7 @@ import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
-class BasicDependencyGraphCombinerTest {
+class BasicDependencyGraphUtilTest {
     private final Dependency dep1 = DependencyTestUtil.newMavenDependency("children:first:1.0");
     private final Dependency dep2 = DependencyTestUtil.newMavenDependency("children:second:2.0");
     private final Dependency dep3 = DependencyTestUtil.newMavenDependency("children:third:3.0");

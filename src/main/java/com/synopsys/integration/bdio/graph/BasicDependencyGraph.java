@@ -32,12 +32,12 @@ public class BasicDependencyGraph extends DependencyGraph {
     }
 
     public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
-        DependencyGraphCombiner.copyRootDependencies(this, sourceGraph);
+        DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
     }
 
     public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
         ProjectDependency rootDependency = sourceGraph.getRootDependency();
         addChildToRoot(rootDependency);
-        DependencyGraphCombiner.copyRootDependenciesToParent(this, rootDependency, sourceGraph);
+        DependencyGraphUtil.copyRootDependenciesToParent(this, rootDependency, sourceGraph);
     }
 }

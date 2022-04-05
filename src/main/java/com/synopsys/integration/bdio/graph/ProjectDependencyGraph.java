@@ -21,13 +21,13 @@ public class ProjectDependencyGraph extends DependencyGraph {
     }
 
     public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
-        DependencyGraphCombiner.copyRootDependencies(this, sourceGraph);
+        DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
     }
 
     public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
         ProjectDependency sourceRootDependency = sourceGraph.getRootDependency();
         addChildToRoot(sourceRootDependency);
-        DependencyGraphCombiner.copyRootDependenciesToParent(this, sourceRootDependency, sourceGraph);
+        DependencyGraphUtil.copyRootDependenciesToParent(this, sourceRootDependency, sourceGraph);
     }
 
     @Override

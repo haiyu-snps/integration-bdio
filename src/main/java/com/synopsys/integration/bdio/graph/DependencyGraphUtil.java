@@ -12,8 +12,8 @@ import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 
-public class DependencyGraphCombiner {
-    private DependencyGraphCombiner() {
+public class DependencyGraphUtil {
+    private DependencyGraphUtil() {
         // Hiding constructor
     }
 
