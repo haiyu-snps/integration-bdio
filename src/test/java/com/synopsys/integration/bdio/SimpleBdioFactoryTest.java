@@ -27,18 +27,17 @@ import org.mockito.Mockito;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.synopsys.integration.bdio.graph.DependencyGraphTransformer;
-import com.synopsys.integration.bdio.graph.MutableDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.DependencyFactory;
-import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 import com.synopsys.integration.bdio.utility.JsonTestUtils;
 
-public class SimpleBdioFactoryTest {
+class SimpleBdioFactoryTest {
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
@@ -59,7 +58,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testDependencyInjectionConstructor() {
+    void testDependencyInjectionConstructor() {
         BdioPropertyHelper bdioPropertyHelper = new BdioPropertyHelper();
         BdioNodeFactory bdioNodeFactory = new BdioNodeFactory(bdioPropertyHelper);
         DependencyGraphTransformer dependencyGraphTransformer = new DependencyGraphTransformer(bdioPropertyHelper, bdioNodeFactory);
@@ -79,7 +78,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testConstructingBdioWriters() throws IOException {
+    void testConstructingBdioWriters() throws IOException {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
         Writer writer = new StringWriter();
@@ -93,7 +92,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testTryFinally() throws IOException {
+    void testTryFinally() throws IOException {
         SimpleBdioFactory simpleBdioFactory = Mockito.spy(new SimpleBdioFactory());
         Mockito.doThrow(RuntimeException.class).when(simpleBdioFactory).createBdioWriter(Mockito.any(OutputStream.class));
         SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(simpleBdioFactory);
@@ -105,7 +104,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testTryFinally2() throws IOException {
+    void testTryFinally2() throws IOException {
         SimpleBdioFactory simpleBdioFactory = Mockito.spy(new SimpleBdioFactory());
         Mockito.doThrow(RuntimeException.class).when(simpleBdioFactory).writeSimpleBdioDocument(Mockito.any(BdioWriter.class), Mockito.any(SimpleBdioDocument.class));
         SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(simpleBdioFactory);
@@ -117,7 +116,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testWritingBdioToFile() throws IOException, URISyntaxException, JSONException {
+    void testWritingBdioToFile() throws IOException, URISyntaxException, JSONException {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
 
         SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(simpleBdioFactory);
@@ -141,7 +140,7 @@ public class SimpleBdioFactoryTest {
     }
 
     @Test
-    public void testCreatingProjectWithOnlyNameAndVersion() {
+    void testCreatingProjectWithOnlyNameAndVersion() {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("code location name", "project name", "project version name");
 
@@ -154,22 +153,26 @@ public class SimpleBdioFactoryTest {
     }
 
     private SimpleBdioDocument createSimpleBdioDocument(SimpleBdioFactory simpleBdioFactory) {
-        MutableDependencyGraph mutableDependencyGraph = simpleBdioFactory.createMutableDependencyGraph();
-        ExternalIdFactory externalIdFactory = simpleBdioFactory.getExternalIdFactory();
-        DependencyFactory dependencyFactory = simpleBdioFactory.getDependencyFactory();
+        Dependency bdioTestDependency = Dependency.FACTORY.createMavenDependency("com.blackducksoftware.integration", "bdio-test", "1.1.2");
+        Dependency bdioReaderDependency = Dependency.FACTORY.createMavenDependency("com.blackducksoftware.integration", "bdio-reader", "1.2.0");
+        Dependency commonsLangDependency = Dependency.FACTORY.createMavenDependency("org.apache.commons", "commons-lang3", "3.6");
 
-        Dependency bdioTestDependency = dependencyFactory.createMavenDependency("com.blackducksoftware.integration", "bdio-test", "1.1.2");
-        Dependency bdioReaderDependency = dependencyFactory.createMavenDependency("com.blackducksoftware.integration", "bdio-reader", "1.2.0");
-        Dependency commonsLangDependency = dependencyFactory.createMavenDependency("org.apache.commons", "commons-lang3", "3.6");
+        //        ExternalId projectExternalId = externalIdFactory.createMavenExternalId();
+        ProjectDependencyGraph projectDependencyGraph = new ProjectDependencyGraph(Dependency.FACTORY.createMavenDependency(
+            "com.blackducksoftware.integration",
+            "integration-bdio",
+            "0.0.1"
+        ));
+        projectDependencyGraph.addChildrenToRoot(bdioTestDependency);
+        projectDependencyGraph.addChildrenToRoot(bdioReaderDependency);
+        projectDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
 
-        mutableDependencyGraph.addChildrenToRoot(bdioTestDependency);
-        mutableDependencyGraph.addChildrenToRoot(bdioReaderDependency);
-        mutableDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
-
-        ExternalId projectExternalId = externalIdFactory.createMavenExternalId("com.blackducksoftware.integration", "integration-bdio", "0.0.1");
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("test code location", "integration-bdio", "0.0.1", projectExternalId, mutableDependencyGraph);
-
-        return simpleBdioDocument;
+        return simpleBdioFactory.createSimpleBdioDocument(
+            "test code location",
+            "integration-bdio",
+            "0.0.1",
+            projectDependencyGraph
+        );
     }
 
 }

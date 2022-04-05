@@ -60,6 +60,7 @@ public class DependencyGraphTestUtil {
     }
 
     public static void assertDependencySet(Set<Dependency> actualDependencies, Set<Dependency> expectedDependencies) {
+        assertEquals(expectedDependencies, actualDependencies);
         assertEquals(actualDependencies.size(), expectedDependencies.size(), "Expected graph children size to equal given children size.");
 
         Set<Dependency> missingExpected = new HashSet<>(expectedDependencies);

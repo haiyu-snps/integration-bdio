@@ -18,19 +18,14 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.synopsys.integration.bdio.graph.DependencyGraph;
 import com.synopsys.integration.bdio.graph.DependencyGraphTransformer;
-import com.synopsys.integration.bdio.graph.MutableDependencyGraph;
-import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioBillOfMaterials;
 import com.synopsys.integration.bdio.model.BdioComponent;
-import com.synopsys.integration.bdio.model.BdioExternalIdentifier;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioNode;
 import com.synopsys.integration.bdio.model.BdioProject;
-import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
-import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.DependencyFactory;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
@@ -52,17 +47,20 @@ public class SimpleBdioFactory {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
-    public SimpleBdioFactory(BdioPropertyHelper bdioPropertyHelper, BdioNodeFactory bdioNodeFactory, DependencyGraphTransformer dependencyGraphTransformer, ExternalIdFactory externalIdFactory, DependencyFactory dependencyFactory, Gson gson) {
+    public SimpleBdioFactory(
+        BdioPropertyHelper bdioPropertyHelper,
+        BdioNodeFactory bdioNodeFactory,
+        DependencyGraphTransformer dependencyGraphTransformer,
+        ExternalIdFactory externalIdFactory,
+        DependencyFactory dependencyFactory,
+        Gson gson
+    ) {
         this.bdioPropertyHelper = bdioPropertyHelper;
         this.bdioNodeFactory = bdioNodeFactory;
         this.dependencyGraphTransformer = dependencyGraphTransformer;
         this.externalIdFactory = externalIdFactory;
         this.dependencyFactory = dependencyFactory;
         this.gson = gson;
-    }
-
-    public MutableDependencyGraph createMutableDependencyGraph() {
-        return new MutableMapDependencyGraph();
     }
 
     public BdioWriter createBdioWriter(Writer writer) throws IOException {
@@ -87,8 +85,7 @@ public class SimpleBdioFactory {
         BdioId projectId = projectExternalId.createBdioId();
         BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId);
 
-        BdioExternalIdentifier projectExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
-        project.bdioExternalIdentifier = projectExternalIdentifier;
+        project.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
 
         return createSimpleBdioDocument(codeLocationName, project);
     }
@@ -108,11 +105,16 @@ public class SimpleBdioFactory {
         return simpleBdioDocument;
     }
 
-    public void populateComponents(SimpleBdioDocument simpleBdioDocument, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
+    public void populateComponents(SimpleBdioDocument simpleBdioDocument, ProjectDependencyGraph projectDependencyGraph) {
         Map<ExternalId, BdioNode> existingComponents = new HashMap<>();
-        existingComponents.put(projectExternalId, simpleBdioDocument.getProject());
+        existingComponents.put(projectDependencyGraph.getRootDependency().getExternalId(), simpleBdioDocument.getProject());
 
-        List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(dependencyGraph, simpleBdioDocument.getProject(), dependencyGraph.getRootDependencies(), existingComponents);
+        List<BdioComponent> bdioComponents = dependencyGraphTransformer.transformDependencyGraph(
+            projectDependencyGraph,
+            simpleBdioDocument.getProject(),
+            projectDependencyGraph.getRootDependencies(),
+            existingComponents
+        );
         simpleBdioDocument.setComponents(bdioComponents);
     }
 
@@ -120,18 +122,28 @@ public class SimpleBdioFactory {
         return createSimpleBdioDocument(null, projectName, projectVersionName, projectExternalId);
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
-        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ProjectDependencyGraph projectDependencyGraph) {
+        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectName, projectVersionName, projectDependencyGraph.getRootDependency().getExternalId());
 
-        populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
+        populateComponents(simpleBdioDocument, projectDependencyGraph);
 
         return simpleBdioDocument;
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName, ExternalId projectExternalId, DependencyGraph dependencyGraph) {
-        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(codeLocationName, projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(
+        String codeLocationName,
+        String projectName,
+        String projectVersionName,
+        ProjectDependencyGraph projectDependencyGraph
+    ) {
+        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(
+            codeLocationName,
+            projectName,
+            projectVersionName,
+            projectDependencyGraph.getRootDependency().getExternalId()
+        );
 
-        populateComponents(simpleBdioDocument, projectExternalId, dependencyGraph);
+        populateComponents(simpleBdioDocument, projectDependencyGraph);
 
         return simpleBdioDocument;
     }

@@ -10,27 +10,26 @@ import java.util.HashSet;
 import org.junit.jupiter.api.Test;
 
 import com.synopsys.integration.bdio.SimpleBdioFactory;
-import com.synopsys.integration.bdio.graph.MutableDependencyGraph;
-import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.model.externalid.ExternalIdFactory;
 
-public class DependencyGraphTransformerEdgeCasesTest {
+class BasicDependencyGraphTransformerEdgeCasesTest {
     private final ExternalIdFactory externalIdFactory = new ExternalIdFactory();
 
     private Dependency node(String name, String version, String group) {
         ExternalId projectExternalId = externalIdFactory.createMavenExternalId(group, name, version);
-        Dependency root = new Dependency(name, version, projectExternalId);
-        return root;
+        return new Dependency(name, version, projectExternalId);
     }
 
     @Test
-    public void testTransformingExpensiveRecursiveTree() {
+    void testTransformingExpensiveRecursiveTree() {
         // Here we generate a broad tree - for each new node, it becomes a child of all previous nodes
         // lets do it for [A,B,C,D]
         // after B we have A->B
@@ -49,7 +48,8 @@ public class DependencyGraphTransformerEdgeCasesTest {
         HashSet<Dependency> generated = new HashSet<>();
         HashMap<Dependency, Integer> counts = new HashMap<>();
 
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+        Dependency projectDependency = Dependency.FACTORY.createNameVersionDependency(Forge.ANACONDA, "dumb", "dumbVer");
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(projectDependency));
         for (int i = 0; i < 200; i++) {
             String name = "node" + i;
             Dependency next = node(name, name, name);
@@ -65,8 +65,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         }
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", graph);
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         int found = 0;
@@ -86,8 +85,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingBrokenTree() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    void testTransformingBrokenTree() {
+        Dependency projectDependency = Dependency.FACTORY.createNameVersionDependency(Forge.ANACONDA, "dumb", "dumbVer");
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(projectDependency));
 
         Dependency childOne = node("one", "one", "one");
         Dependency childTwo = node("two", "two", "two");
@@ -107,8 +107,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -122,8 +121,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingBrokenTreeLeftHasNodeRightEmpty() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    void testTransformingBrokenTreeLeftHasNodeRightEmpty() {
+        Dependency projectDependency = Dependency.FACTORY.createNameVersionDependency(Forge.ANACONDA, "dumb", "dumbVer");
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(projectDependency));
 
         Dependency childOne = node("one", "one", "one");
 
@@ -141,8 +141,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -159,8 +158,9 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testTransformingBrokenTreeLeftEmpty() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    void testTransformingBrokenTreeLeftEmpty() {
+        Dependency projectDependency = Dependency.FACTORY.createNameVersionDependency(Forge.ANACONDA, "dumb", "dumbVer");
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(projectDependency));
 
         Dependency childOne = node("one", "one", "one");
 
@@ -178,8 +178,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        ExternalId id = externalIdFactory.createNameVersionExternalId(Forge.ANACONDA, "dumb", "dumbVer");
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", id, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("dumb", "dumbVer", graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -196,13 +195,13 @@ public class DependencyGraphTransformerEdgeCasesTest {
     }
 
     @Test
-    public void testCyclic() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    void testCyclic() {
+        ProjectDependency project = new ProjectDependency(node("project", "project", "project"));
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(project));
 
         Dependency one = node("one", "one", "one");
         Dependency two = node("two", "two", "two");
         Dependency three = node("three", "three", "three");
-        Dependency project = node("project", "project", "project");
 
         graph.addParentWithChild(one, three);
         graph.addParentWithChild(two, one);
@@ -211,18 +210,18 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(one);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), graph);
 
         assertEquals(3, simpleBdioDocumentRecursive.getComponents().size());
     }
 
     @Test
-    public void testProjectAsChild() {
-        MutableDependencyGraph graph = new MutableMapDependencyGraph();
+    void testProjectAsChild() {
+        ProjectDependency project = new ProjectDependency(node("project", "project", "project"));
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(new ProjectDependency(project));
 
         Dependency one = node("one", "one", "one");
         Dependency two = node("two", "two", "two");
-        Dependency project = node("project", "project", "project");
 
         graph.addParentWithChild(one, two);
         graph.addParentWithChild(project, two);
@@ -231,7 +230,7 @@ public class DependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(project);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), project.getExternalId(), graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(project.getName(), project.getVersion(), graph);
 
         assertEquals(2, simpleBdioDocumentRecursive.getComponents().size());
     }

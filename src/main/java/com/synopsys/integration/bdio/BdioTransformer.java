@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.synopsys.integration.bdio.graph.DependencyGraph;
-import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
+import com.synopsys.integration.bdio.graph.BasicDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
@@ -34,8 +31,8 @@ public class BdioTransformer {
         this.forgeMap = forgeMap;
     }
 
-    public DependencyGraph transformToDependencyGraph(BdioProject project, List<BdioComponent> components) {
-        MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
+    public BasicDependencyGraph transformToDependencyGraph(BdioProject project, List<BdioComponent> components) {
+        BasicDependencyGraph basicDependencyGraph = new BasicDependencyGraph();
         Map<BdioId, Dependency> bdioIdToDependencyMap = new HashMap<>();
 
         for (BdioComponent component : components) {
@@ -50,17 +47,17 @@ public class BdioTransformer {
         }
 
         for (BdioRelationship relation : project.relationships) {
-            dependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
+            basicDependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
         }
 
         for (BdioComponent component : components) {
             Dependency dependency = bdioIdToDependencyMap.get(component.id);
             for (BdioRelationship relation : component.relationships) {
-                dependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
+                basicDependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
             }
         }
 
-        return dependencyGraph;
+        return basicDependencyGraph;
     }
 
 }

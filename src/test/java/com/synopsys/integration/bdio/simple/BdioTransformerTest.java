@@ -13,37 +13,39 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.Gson;
 import com.synopsys.integration.bdio.BdioReader;
 import com.synopsys.integration.bdio.BdioTransformer;
 import com.synopsys.integration.bdio.SimpleBdioFactory;
-import com.synopsys.integration.bdio.graph.DependencyGraph;
+import com.synopsys.integration.bdio.graph.BasicDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioRelationship;
 import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
+import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.utility.JsonTestUtils;
 
-public class BdioTransformerTest {
+class BdioTransformerTest {
     private final JsonTestUtils jsonTestUtils = new JsonTestUtils();
 
     @Test
-    public void testTransformingDependencyGraphSample() throws URISyntaxException, IOException, JSONException {
+    void testTransformingDependencyGraphSample() throws URISyntaxException, IOException {
         testTransformingDependencyGraphs("sample.jsonld", true);
     }
 
     @Test
-    public void testTransformingDependencyGraphSampleEdge() throws URISyntaxException, IOException, JSONException {
+    void testTransformingDependencyGraphSampleEdge() throws URISyntaxException, IOException {
         // this is testing re-creating a simple bdio document when the externalIdMetadata fields are not populated
         // in practice, this should not happen with files created with this library, but may happen with older versions, or other bdio files.
         testTransformingDependencyGraphs("sample-edge.jsonld", false);
     }
 
-    public void testTransformingDependencyGraphs(String filename, boolean testEqualityOfMetadata) throws URISyntaxException, IOException {
+    private void testTransformingDependencyGraphs(String filename, boolean testEqualityOfMetadata) throws URISyntaxException, IOException {
         String expectedJson = jsonTestUtils.getExpectedJson(filename);
 
         Reader reader = new StringReader(expectedJson);
@@ -56,17 +58,24 @@ public class BdioTransformerTest {
         forgeMap.put("maven", Forge.MAVEN);
         BdioTransformer transformer = new BdioTransformer(forgeMap);
 
-        DependencyGraph graph = transformer.transformToDependencyGraph(doc.getProject(), doc.getComponents());
-
-        assertEquals(1, graph.getRootDependencies().size());
-
         ExternalId projectId = new ExternalId(Forge.MAVEN);
         projectId.setGroup("com.blackducksoftware.gradle.test");
         projectId.setName("gradleTestProject");
         projectId.setVersion("99.5-SNAPSHOT");
 
+        BasicDependencyGraph basicGraph = transformer.transformToDependencyGraph(doc.getProject(), doc.getComponents());
+        ProjectDependency projectDependency = new ProjectDependency(Dependency.FACTORY.createMavenDependency(
+            "com.blackducksoftware.gradle.test",
+            "gradleTestProject",
+            "99.5-SNAPSHOT"
+        ));
+        ProjectDependencyGraph graph = new ProjectDependencyGraph(projectDependency);
+        graph.copyGraphToRoot(basicGraph);
+
+        assertEquals(1, graph.getRootDependencies().size());
+
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.getProject().name, doc.getProject().version, projectId, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.getProject().name, doc.getProject().version, graph);
 
         simpleBdioDocument.getBillOfMaterials().id = doc.getBillOfMaterials().id;
         simpleBdioDocument.getBillOfMaterials().creationInfo = doc.getBillOfMaterials().creationInfo;

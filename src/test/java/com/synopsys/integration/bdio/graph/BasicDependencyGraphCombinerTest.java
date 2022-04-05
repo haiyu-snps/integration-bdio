@@ -8,7 +8,7 @@ import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.utility.DependencyGraphTestUtil;
 import com.synopsys.integration.bdio.utility.DependencyTestUtil;
 
-class DependencyGraphCombinerTest {
+class BasicDependencyGraphCombinerTest {
     private final Dependency dep1 = DependencyTestUtil.newMavenDependency("children:first:1.0");
     private final Dependency dep2 = DependencyTestUtil.newMavenDependency("children:second:2.0");
     private final Dependency dep3 = DependencyTestUtil.newMavenDependency("children:third:3.0");
@@ -22,16 +22,16 @@ class DependencyGraphCombinerTest {
 
     @Test
     void testSubProjects() {
-        MutableDependencyGraph noProjectGraph = new MutableMapDependencyGraph();
+        BasicDependencyGraph noProjectGraph = new BasicDependencyGraph();
         noProjectGraph.addChildToRoot(dep3);
 
-        MutableDependencyGraph child1 = new MutableMapDependencyGraph(childProject1);
+        ProjectDependencyGraph child1 = new ProjectDependencyGraph(childProject1);
         child1.addChildToRoot(dep2);
-        child1.addGraphAsChildrenToRoot(noProjectGraph);
+        child1.copyGraphToRoot(noProjectGraph);
 
-        MutableDependencyGraph parent = new MutableMapDependencyGraph(parentProject);
+        ProjectDependencyGraph parent = new ProjectDependencyGraph(parentProject);
         parent.addChildToRoot(dep1);
-        parent.addGraphAsChildrenToRoot(child1);
+        parent.copyGraphToRoot(child1);
 
         DependencyGraphTestUtil.assertGraphRootChildren(noProjectGraph, dep3);
         DependencyGraphTestUtil.assertGraphRootChildren(child1, dep2, dep3);
@@ -40,9 +40,9 @@ class DependencyGraphCombinerTest {
 
     @Test
     void testAddChildWithParents() {
-        MutableDependencyGraph first = new MutableMapDependencyGraph();
-        MutableDependencyGraph second = new MutableMapDependencyGraph();
-        MutableDependencyGraph combined = new MutableMapDependencyGraph();
+        BasicDependencyGraph first = new BasicDependencyGraph();
+        BasicDependencyGraph second = new BasicDependencyGraph();
+        BasicDependencyGraph combined = new BasicDependencyGraph();
 
         first.addChildToRoot(dep1);
         first.addChildWithParent(dep2, dep1);
@@ -59,8 +59,8 @@ class DependencyGraphCombinerTest {
         DependencyGraphTestUtil.assertGraphChildren(second, dep4, dep5);
         DependencyGraphTestUtil.assertGraphChildren(second, dep5, dep6, dep7);
 
-        combined.addGraphAsChildrenToRoot(first);
-        combined.addGraphAsChildrenToParent(dep2, second);
+        combined.copyGraphToRoot(first);
+        combined.copyGraphToRoot(second);
 
         DependencyGraphTestUtil.assertGraphRootChildren(combined, dep1, dep4);
         // From first graph
