@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.synopsys.integration.bdio.BdioReader;
 import com.synopsys.integration.bdio.BdioTransformer;
 import com.synopsys.integration.bdio.SimpleBdioFactory;
-import com.synopsys.integration.bdio.graph.BasicDependencyGraph;
 import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioRelationship;
@@ -27,7 +26,6 @@ import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.SimpleBdioDocument;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
-import com.synopsys.integration.bdio.model.externalid.ExternalId;
 import com.synopsys.integration.bdio.utility.JsonTestUtils;
 
 class BdioTransformerTest {
@@ -58,24 +56,17 @@ class BdioTransformerTest {
         forgeMap.put("maven", Forge.MAVEN);
         BdioTransformer transformer = new BdioTransformer(forgeMap);
 
-        ExternalId projectId = new ExternalId(Forge.MAVEN);
-        projectId.setGroup("com.blackducksoftware.gradle.test");
-        projectId.setName("gradleTestProject");
-        projectId.setVersion("99.5-SNAPSHOT");
-
-        BasicDependencyGraph basicGraph = transformer.transformToDependencyGraph(doc.getProject(), doc.getComponents());
         ProjectDependency projectDependency = new ProjectDependency(Dependency.FACTORY.createMavenDependency(
             "com.blackducksoftware.gradle.test",
             "gradleTestProject",
             "99.5-SNAPSHOT"
         ));
-        ProjectDependencyGraph graph = new ProjectDependencyGraph(projectDependency);
-        graph.copyGraphToRoot(basicGraph);
+        ProjectDependencyGraph graph = transformer.transformToDependencyGraph(projectDependency, doc.getProject(), doc.getComponents());
 
         assertEquals(1, graph.getRootDependencies().size());
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(doc.getProject().name, doc.getProject().version, graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
 
         simpleBdioDocument.getBillOfMaterials().id = doc.getBillOfMaterials().id;
         simpleBdioDocument.getBillOfMaterials().creationInfo = doc.getBillOfMaterials().creationInfo;

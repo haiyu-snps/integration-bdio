@@ -35,7 +35,7 @@ class BasicDependencyGraphTransformerTest {
         dependencyGraph.addParentWithChild(child, transitive);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("projectName", "projectVersion", dependencyGraph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(dependencyGraph);
 
         // we are overriding the default value of a new creation info just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().creationInfo = null;

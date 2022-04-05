@@ -11,13 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.synopsys.integration.bdio.graph.BasicDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.BdioRelationship;
 import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class BdioTransformer {
@@ -31,8 +32,8 @@ public class BdioTransformer {
         this.forgeMap = forgeMap;
     }
 
-    public BasicDependencyGraph transformToDependencyGraph(BdioProject project, List<BdioComponent> components) {
-        BasicDependencyGraph basicDependencyGraph = new BasicDependencyGraph();
+    public ProjectDependencyGraph transformToDependencyGraph(ProjectDependency projectDependency, BdioProject project, List<BdioComponent> components) {
+        ProjectDependencyGraph dependencyGraph = new ProjectDependencyGraph(projectDependency);
         Map<BdioId, Dependency> bdioIdToDependencyMap = new HashMap<>();
 
         for (BdioComponent component : components) {
@@ -47,17 +48,17 @@ public class BdioTransformer {
         }
 
         for (BdioRelationship relation : project.relationships) {
-            basicDependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
+            dependencyGraph.addChildrenToRoot(bdioIdToDependencyMap.get(relation.related));
         }
 
         for (BdioComponent component : components) {
             Dependency dependency = bdioIdToDependencyMap.get(component.id);
             for (BdioRelationship relation : component.relationships) {
-                basicDependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
+                dependencyGraph.addParentWithChild(dependency, bdioIdToDependencyMap.get(relation.related));
             }
         }
 
-        return basicDependencyGraph;
+        return dependencyGraph;
     }
 
 }

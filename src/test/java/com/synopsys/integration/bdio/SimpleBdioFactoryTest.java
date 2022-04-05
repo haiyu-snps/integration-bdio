@@ -163,16 +163,12 @@ class SimpleBdioFactoryTest {
             "integration-bdio",
             "0.0.1"
         ));
+
         projectDependencyGraph.addChildrenToRoot(bdioTestDependency);
         projectDependencyGraph.addChildrenToRoot(bdioReaderDependency);
         projectDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
 
-        return simpleBdioFactory.createSimpleBdioDocument(
-            "test code location",
-            "integration-bdio",
-            "0.0.1",
-            projectDependencyGraph
-        );
+        return simpleBdioFactory.createSimpleBdioDocument("test code location", projectDependencyGraph);
     }
 
 }

@@ -81,9 +81,9 @@ public class SimpleBdioFactory {
         }
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName, ExternalId projectExternalId) {
+    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, ExternalId projectExternalId) {
         BdioId projectId = projectExternalId.createBdioId();
-        BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName, projectId);
+        BdioProject project = bdioNodeFactory.createProject(projectExternalId.getName(), projectExternalId.getVersion(), projectId);
 
         project.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
 
@@ -118,12 +118,12 @@ public class SimpleBdioFactory {
         simpleBdioDocument.setComponents(bdioComponents);
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ExternalId projectExternalId) {
-        return createSimpleBdioDocument(null, projectName, projectVersionName, projectExternalId);
+    public SimpleBdioDocument createSimpleBdioDocument(ExternalId projectExternalId) {
+        return createSimpleBdioDocument(null, projectExternalId);
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String projectName, String projectVersionName, ProjectDependencyGraph projectDependencyGraph) {
-        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectName, projectVersionName, projectDependencyGraph.getRootDependency().getExternalId());
+    public SimpleBdioDocument createSimpleBdioDocument(ProjectDependencyGraph projectDependencyGraph) {
+        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectDependencyGraph.getRootDependency().getExternalId());
 
         populateComponents(simpleBdioDocument, projectDependencyGraph);
 
@@ -132,14 +132,10 @@ public class SimpleBdioFactory {
 
     public SimpleBdioDocument createSimpleBdioDocument(
         String codeLocationName,
-        String projectName,
-        String projectVersionName,
         ProjectDependencyGraph projectDependencyGraph
     ) {
         SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(
             codeLocationName,
-            projectName,
-            projectVersionName,
             projectDependencyGraph.getRootDependency().getExternalId()
         );
 
