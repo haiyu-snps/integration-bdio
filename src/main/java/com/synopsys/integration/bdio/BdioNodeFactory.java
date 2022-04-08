@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import com.synopsys.integration.bdio.model.BdioBillOfMaterials;
 import com.synopsys.integration.bdio.model.BdioComponent;
@@ -44,7 +45,7 @@ public class BdioNodeFactory {
         return createBillOfMaterials(codeLocationName, projectName, projectVersion);
     }
 
-    public BdioBillOfMaterials createBillOfMaterials(String codeLocationName, String projectName, String projectVersion) {
+    public BdioBillOfMaterials createBillOfMaterials(@Nullable String codeLocationName, String projectName, String projectVersion) {
         BdioBillOfMaterials billOfMaterials = new BdioBillOfMaterials();
         billOfMaterials.id = BdioId.createFromUUID(UUID.randomUUID().toString());
         if (StringUtils.isNotBlank(codeLocationName)) {

@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.synopsys.integration.bdio.graph.DependencyGraphTransformer;
@@ -81,21 +83,31 @@ public class SimpleBdioFactory {
         }
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, ExternalId projectExternalId) {
+    public SimpleBdioDocument createPopulatedBdioDocument(ProjectDependencyGraph projectDependencyGraph) {
+        return createPopulatedBdioDocument(null, projectDependencyGraph);
+    }
+
+    public SimpleBdioDocument createPopulatedBdioDocument(@Nullable String codeLocationName, ProjectDependencyGraph projectDependencyGraph) {
+        SimpleBdioDocument simpleBdioDocument = createEmptyBdioDocument(codeLocationName, projectDependencyGraph.getRootDependency().getExternalId());
+        populateComponents(simpleBdioDocument, projectDependencyGraph);
+        return simpleBdioDocument;
+    }
+
+    public SimpleBdioDocument createEmptyBdioDocument(@Nullable String codeLocationName, ExternalId projectExternalId) {
         BdioId projectId = projectExternalId.createBdioId();
         BdioProject project = bdioNodeFactory.createProject(projectExternalId.getName(), projectExternalId.getVersion(), projectId);
 
         project.bdioExternalIdentifier = bdioPropertyHelper.createExternalIdentifier(projectExternalId);
 
-        return createSimpleBdioDocument(codeLocationName, project);
+        return createEmptyBdioDocument(codeLocationName, project);
     }
 
-    public SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, String projectName, String projectVersionName) {
+    public SimpleBdioDocument createEmptyBdioDocument(@Nullable String codeLocationName, String projectName, String projectVersionName) {
         BdioProject project = bdioNodeFactory.createProject(projectName, projectVersionName);
-        return createSimpleBdioDocument(codeLocationName, project);
+        return createEmptyBdioDocument(codeLocationName, project);
     }
 
-    private SimpleBdioDocument createSimpleBdioDocument(String codeLocationName, BdioProject project) {
+    private SimpleBdioDocument createEmptyBdioDocument(@Nullable String codeLocationName, BdioProject project) {
         BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, project.name, project.version);
 
         SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
@@ -116,32 +128,6 @@ public class SimpleBdioFactory {
             existingComponents
         );
         simpleBdioDocument.setComponents(bdioComponents);
-    }
-
-    public SimpleBdioDocument createSimpleBdioDocument(ExternalId projectExternalId) {
-        return createSimpleBdioDocument(null, projectExternalId);
-    }
-
-    public SimpleBdioDocument createSimpleBdioDocument(ProjectDependencyGraph projectDependencyGraph) {
-        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(projectDependencyGraph.getRootDependency().getExternalId());
-
-        populateComponents(simpleBdioDocument, projectDependencyGraph);
-
-        return simpleBdioDocument;
-    }
-
-    public SimpleBdioDocument createSimpleBdioDocument(
-        String codeLocationName,
-        ProjectDependencyGraph projectDependencyGraph
-    ) {
-        SimpleBdioDocument simpleBdioDocument = createSimpleBdioDocument(
-            codeLocationName,
-            projectDependencyGraph.getRootDependency().getExternalId()
-        );
-
-        populateComponents(simpleBdioDocument, projectDependencyGraph);
-
-        return simpleBdioDocument;
     }
 
     public BdioPropertyHelper getBdioPropertyHelper() {

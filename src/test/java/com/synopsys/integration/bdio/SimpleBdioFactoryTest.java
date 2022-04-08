@@ -142,7 +142,7 @@ class SimpleBdioFactoryTest {
     @Test
     void testCreatingProjectWithOnlyNameAndVersion() {
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument("code location name", "project name", "project version name");
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createEmptyBdioDocument("code location name", "project name", "project version name");
 
         assertEquals("code location name", simpleBdioDocument.getBillOfMaterials().spdxName);
         assertEquals("project name", simpleBdioDocument.getProject().name);
@@ -168,7 +168,7 @@ class SimpleBdioFactoryTest {
         projectDependencyGraph.addChildrenToRoot(bdioReaderDependency);
         projectDependencyGraph.addChildWithParent(commonsLangDependency, bdioReaderDependency);
 
-        return simpleBdioFactory.createSimpleBdioDocument("test code location", projectDependencyGraph);
+        return simpleBdioFactory.createPopulatedBdioDocument("test code location", projectDependencyGraph);
     }
 
 }

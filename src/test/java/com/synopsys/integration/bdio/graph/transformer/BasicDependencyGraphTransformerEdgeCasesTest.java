@@ -65,7 +65,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         }
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
 
         int found = 0;
@@ -107,7 +107,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -141,7 +141,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -178,7 +178,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(parentLeft, parentRight);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         // we are overriding the default value of a new uuid just to pass the json comparison
         simpleBdioDocument.getBillOfMaterials().id = BdioId.createFromUUID("123");
@@ -210,7 +210,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(one);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         assertEquals(3, simpleBdioDocumentRecursive.getComponents().size());
     }
@@ -230,7 +230,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
         graph.addChildrenToRoot(project);
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocumentRecursive = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         assertEquals(2, simpleBdioDocumentRecursive.getComponents().size());
     }

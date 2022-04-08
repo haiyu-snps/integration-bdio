@@ -66,7 +66,7 @@ class BdioTransformerTest {
         assertEquals(1, graph.getRootDependencies().size());
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
-        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createSimpleBdioDocument(graph);
+        SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);
 
         simpleBdioDocument.getBillOfMaterials().id = doc.getBillOfMaterials().id;
         simpleBdioDocument.getBillOfMaterials().creationInfo = doc.getBillOfMaterials().creationInfo;
