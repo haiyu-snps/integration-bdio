@@ -11,16 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.synopsys.integration.bdio.graph.DependencyGraph;
-import com.synopsys.integration.bdio.graph.MutableMapDependencyGraph;
+import com.synopsys.integration.bdio.graph.ProjectDependencyGraph;
 import com.synopsys.integration.bdio.model.BdioComponent;
 import com.synopsys.integration.bdio.model.BdioId;
 import com.synopsys.integration.bdio.model.BdioProject;
 import com.synopsys.integration.bdio.model.BdioRelationship;
 import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
+import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class BdioTransformer {
@@ -34,8 +32,8 @@ public class BdioTransformer {
         this.forgeMap = forgeMap;
     }
 
-    public DependencyGraph transformToDependencyGraph(BdioProject project, List<BdioComponent> components) {
-        MutableMapDependencyGraph dependencyGraph = new MutableMapDependencyGraph();
+    public ProjectDependencyGraph transformToDependencyGraph(ProjectDependency projectDependency, BdioProject project, List<BdioComponent> components) {
+        ProjectDependencyGraph dependencyGraph = new ProjectDependencyGraph(projectDependency);
         Map<BdioId, Dependency> bdioIdToDependencyMap = new HashMap<>();
 
         for (BdioComponent component : components) {

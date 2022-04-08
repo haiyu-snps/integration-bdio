@@ -11,20 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 
-public class DependencyGraphCombiner {
-    public void addGraphAsChildrenToRoot(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
-        ProjectDependency rootDependency = sourceGraph.getRootDependency();
-        if (sourceGraph.isRootProjectPlaceholder()) {
-            copyRootDependencies(destinationGraph, sourceGraph);
-        } else {
-            destinationGraph.addChildToRoot(rootDependency);
-            copyRootDependenciesToParent(destinationGraph, sourceGraph, rootDependency);
-        }
+public class DependencyGraphUtil {
+    private DependencyGraphUtil() {
+        // Hiding constructor
     }
 
-    public void copyRootDependenciesToParent(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph, Dependency parent) {
+    public static void copyRootDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
         Set<Dependency> encountered = new HashSet<>();
         for (Dependency dependency : sourceGraph.getRootDependencies()) {
             destinationGraph.addChildWithParent(dependency, parent);
@@ -32,7 +25,7 @@ public class DependencyGraphCombiner {
         }
     }
 
-    public void copyRootDependencies(MutableDependencyGraph destinationGraph, DependencyGraph sourceGraph) {
+    public static void copyRootDependencies(DependencyGraph destinationGraph, DependencyGraph sourceGraph) {
         Set<Dependency> encountered = new HashSet<>();
         for (Dependency dependency : sourceGraph.getRootDependencies()) {
             destinationGraph.addChildToRoot(dependency);
@@ -40,19 +33,8 @@ public class DependencyGraphCombiner {
         }
     }
 
-    public void addGraphAsChildrenToParent(MutableDependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
-        ProjectDependency projectDependency = sourceGraph.getRootDependency();
-        if (sourceGraph.isRootProjectPlaceholder()) {
-            copyRootDependencies(destinationGraph, sourceGraph);
-        } else {
-            destinationGraph.addParentWithChild(parent, projectDependency);
-            copyRootDependenciesToParent(destinationGraph, sourceGraph, projectDependency);
-        }
-
-    }
-
-    public void copyDependencyFromGraph(
-        MutableDependencyGraph destinationGraph,
+    private static void copyDependencyFromGraph(
+        DependencyGraph destinationGraph,
         Dependency parentDependency,
         DependencyGraph sourceGraph,
         Set<Dependency> encountered

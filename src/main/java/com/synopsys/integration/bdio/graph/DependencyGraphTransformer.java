@@ -30,7 +30,12 @@ public class DependencyGraphTransformer {
         this.bdioNodeFactory = bdioNodeFactory;
     }
 
-    public List<BdioComponent> transformDependencyGraph(DependencyGraph graph, BdioNode currentNode, Set<Dependency> dependencies, Map<ExternalId, BdioNode> existingComponents) {
+    public List<BdioComponent> transformDependencyGraph(
+        DependencyGraph graph,
+        BdioNode currentNode,
+        Set<Dependency> dependencies,
+        Map<ExternalId, BdioNode> existingComponents
+    ) {
         List<BdioComponent> addedComponents = new ArrayList<>();
         for (Dependency dependency : dependencies) {
             if (!existingComponents.containsKey(dependency.getExternalId())) {
