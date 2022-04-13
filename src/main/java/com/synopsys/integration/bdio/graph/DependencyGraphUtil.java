@@ -42,7 +42,7 @@ public class DependencyGraphUtil {
         }
     }
 
-    private static void copyDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph, Supplier<Set<Dependency>> dependencies) {
+    public static void copyDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph, Supplier<Set<Dependency>> dependencies) {
         Set<Dependency> encountered = new HashSet<>();
         for (Dependency dependency : dependencies.get()) {
             destinationGraph.addChildWithParent(dependency, parent);
