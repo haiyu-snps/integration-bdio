@@ -29,6 +29,7 @@ public class LazyExternalIdDependencyGraphBuilder {
             return children;
         }
 
+        // TODO: Why is this unused? Shouldn't the tests at least be calling this? JM -04/2022
         public void setChildren(Set<LazyId> children) {
             this.children = children;
         }
@@ -112,7 +113,7 @@ public class LazyExternalIdDependencyGraphBuilder {
             }
 
             if (rootLazyIds.contains(lazyId) || rootLazyIds.contains(lazyDependencyInfo.getAliasId())) {
-                mutableDependencyGraph.addChildToRoot(dependency);
+                mutableDependencyGraph.addDirectDependency(dependency);
             }
         }
 
@@ -120,9 +121,7 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     private void ensureDependencyInfoExists(LazyId lazyId) {
-        if (!dependencyInfo.containsKey(lazyId)) {
-            dependencyInfo.put(lazyId, new LazyDependencyInfo());
-        }
+        dependencyInfo.computeIfAbsent(lazyId, key -> new LazyDependencyInfo());
     }
 
     public void setDependencyAsAlias(LazyId realLazyId, LazyId fakeLazyId) {

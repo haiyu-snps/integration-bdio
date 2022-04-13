@@ -12,8 +12,17 @@ import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class DependencyGraphTestUtil {
+
+    /**
+     * @deprecated (use assertGraphDirectDependencies instead)
+     */
+    @Deprecated
     public static void assertGraphRootChildren(DependencyGraph graph, Dependency... dependencies) {
-        assertDependencySet(graph.getRootDependencies(), dependencies);
+        assertGraphDirectDependencies(graph, dependencies);
+    }
+
+    public static void assertGraphDirectDependencies(DependencyGraph graph, Dependency... dependencies) {
+        assertDependencySet(graph.getDirectDependencies(), dependencies);
     }
 
     public static void assertGraphChildren(DependencyGraph graph, Dependency node, Dependency... dependencies) {

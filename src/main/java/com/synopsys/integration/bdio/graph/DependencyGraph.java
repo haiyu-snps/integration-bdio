@@ -24,13 +24,24 @@ public abstract class DependencyGraph {
     protected final Map<ExternalId, Dependency> dependencies = new HashMap<>();
     protected final Map<ExternalId, Set<ExternalId>> relationships = new HashMap<>();
 
-    public abstract void addChildToRoot(Dependency child);
+    /**
+     * @deprecated (use addDirectDependency instead)
+     */
+    @Deprecated
+    public void addChildToRoot(Dependency child) {
+        addDirectDependency(child);
+    }
 
+    public abstract void addDirectDependency(Dependency child);
+
+    public abstract Set<Dependency> getDirectDependencies();
+
+    // Includes the "root" ProjectDependency node if the implementing graph contains one
     public abstract Set<Dependency> getRootDependencies();
 
-    public abstract void copyGraphToRoot(BasicDependencyGraph sourceGraph);
-
-    public abstract void copyGraphToRoot(ProjectDependencyGraph sourceGraph);
+    public void copyGraphToRoot(DependencyGraph sourceGraph) {
+        DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
+    }
 
     public boolean hasDependency(ExternalId dependency) {
         return dependencies.containsKey(dependency);
@@ -139,15 +150,15 @@ public abstract class DependencyGraph {
     }
 
     public void addChildrenToRoot(List<Dependency> children) {
-        children.forEach(this::addChildToRoot);
+        children.forEach(this::addDirectDependency);
     }
 
     public void addChildrenToRoot(Set<Dependency> children) {
-        children.forEach(this::addChildToRoot);
+        children.forEach(this::addDirectDependency);
     }
 
     public void addChildrenToRoot(Dependency... children) {
-        Arrays.stream(children).forEach(this::addChildToRoot);
+        Arrays.stream(children).forEach(this::addDirectDependency);
     }
 
     protected void ensureDependencyExists(Dependency dependency) {

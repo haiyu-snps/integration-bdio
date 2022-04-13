@@ -51,7 +51,7 @@ class BasicDependencyGraphTest {
     void testRootAdd() {
         BasicDependencyGraph graph = new BasicDependencyGraph();
 
-        graph.addChildToRoot(parent1);
+        graph.addDirectDependency(parent1);
         graph.addChildrenToRoot(parent2, parent3);
         graph.addChildrenToRoot(DependencyTestUtil.asSet(child1, child2));
         graph.addChildrenToRoot(DependencyTestUtil.asList(child3, child4));
@@ -111,10 +111,10 @@ class BasicDependencyGraphTest {
     void testCopyingFromProjectDependencyGraph() {
         Dependency projectDependency = Dependency.FACTORY.createNameVersionDependency(Forge.GITHUB, "synopsys-detect", "1.0");
         ProjectDependencyGraph projectGraph = new ProjectDependencyGraph(projectDependency);
-        projectGraph.addChildToRoot(child1);
+        projectGraph.addDirectDependency(child1);
 
         BasicDependencyGraph basicGraph = new BasicDependencyGraph();
-        basicGraph.addChildToRoot(child2);
+        basicGraph.addDirectDependency(child2);
         basicGraph.copyGraphToRoot(projectGraph);
 
         DependencyGraphTestUtil.assertGraphRootChildren(basicGraph, child2, projectDependency);

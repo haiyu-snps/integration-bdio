@@ -9,43 +9,38 @@ package com.synopsys.integration.bdio.graph;
 
 import java.util.Set;
 
+import org.apache.commons.collections4.SetUtils;
+
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 
 public class ProjectDependencyGraph extends DependencyGraph {
-    private final ProjectDependency rootDependency;
+    private final ProjectDependency projectDependency;
 
-    public ProjectDependencyGraph(Dependency rootDependency) {
-        this.rootDependency = new ProjectDependency(rootDependency);
+    public ProjectDependencyGraph(Dependency projectDependency) {
+        this.projectDependency = new ProjectDependency(projectDependency);
     }
 
-    public ProjectDependencyGraph(ProjectDependency rootDependency) {
-        this.rootDependency = rootDependency;
+    public ProjectDependencyGraph(ProjectDependency projectDependency) {
+        this.projectDependency = projectDependency;
     }
 
-    public ProjectDependency getRootDependency() {
-        return rootDependency;
-    }
-
-    @Override
-    public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
-        DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
+    public ProjectDependency getProjectDependency() {
+        return projectDependency;
     }
 
     @Override
-    public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
-        ProjectDependency sourceRootDependency = sourceGraph.getRootDependency();
-        addChildToRoot(sourceRootDependency);
-        DependencyGraphUtil.copyRootDependenciesToParent(this, sourceRootDependency, sourceGraph);
+    public void addDirectDependency(Dependency child) {
+        addParentWithChild(projectDependency, child);
     }
 
     @Override
-    public void addChildToRoot(Dependency child) {
-        addParentWithChild(rootDependency, child);
+    public Set<Dependency> getDirectDependencies() {
+        return getChildrenForParent(projectDependency);
     }
 
     @Override
     public Set<Dependency> getRootDependencies() {
-        return getChildrenForParent(getRootDependency());
+        return SetUtils.hashSet(projectDependency);
     }
 }

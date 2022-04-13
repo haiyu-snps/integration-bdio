@@ -12,34 +12,26 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
-import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
 import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class BasicDependencyGraph extends DependencyGraph {
-    private final Set<ExternalId> rootDependencies = new HashSet<>();
+    private final Set<ExternalId> directDependencies = new HashSet<>();
 
     @Override
-    public Set<Dependency> getRootDependencies() {
-        return rootDependencies.stream()
+    public Set<Dependency> getDirectDependencies() {
+        return directDependencies.stream()
             .map(dependencies::get)
             .collect(Collectors.toSet());
     }
 
     @Override
-    public void addChildToRoot(Dependency child) {
+    public Set<Dependency> getRootDependencies() {
+        return getDirectDependencies();
+    }
+
+    @Override
+    public void addDirectDependency(Dependency child) {
         ensureDependencyExists(child);
-        rootDependencies.add(child.getExternalId());
-    }
-
-    @Override
-    public void copyGraphToRoot(BasicDependencyGraph sourceGraph) {
-        DependencyGraphUtil.copyRootDependencies(this, sourceGraph);
-    }
-
-    @Override
-    public void copyGraphToRoot(ProjectDependencyGraph sourceGraph) {
-        ProjectDependency rootDependency = sourceGraph.getRootDependency();
-        addChildToRoot(rootDependency);
-        DependencyGraphUtil.copyRootDependenciesToParent(this, rootDependency, sourceGraph);
+        directDependencies.add(child.getExternalId());
     }
 }

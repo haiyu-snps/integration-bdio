@@ -23,14 +23,14 @@ class BasicDependencyGraphUtilTest {
     @Test
     void testSubProjects() {
         BasicDependencyGraph noProjectGraph = new BasicDependencyGraph();
-        noProjectGraph.addChildToRoot(dep3);
+        noProjectGraph.addDirectDependency(dep3);
 
         ProjectDependencyGraph child1 = new ProjectDependencyGraph(childProject1);
-        child1.addChildToRoot(dep2);
+        child1.addDirectDependency(dep2);
         child1.copyGraphToRoot(noProjectGraph);
 
         ProjectDependencyGraph parent = new ProjectDependencyGraph(parentProject);
-        parent.addChildToRoot(dep1);
+        parent.addDirectDependency(dep1);
         parent.copyGraphToRoot(child1);
 
         DependencyGraphTestUtil.assertGraphRootChildren(noProjectGraph, dep3);
@@ -44,14 +44,14 @@ class BasicDependencyGraphUtilTest {
         BasicDependencyGraph second = new BasicDependencyGraph();
         BasicDependencyGraph combined = new BasicDependencyGraph();
 
-        first.addChildToRoot(dep1);
+        first.addDirectDependency(dep1);
         first.addChildWithParent(dep2, dep1);
         first.addChildWithParent(dep3, dep2);
         DependencyGraphTestUtil.assertGraphRootChildren(first, dep1);
         DependencyGraphTestUtil.assertGraphChildren(first, dep1, dep2);
         DependencyGraphTestUtil.assertGraphChildren(first, dep2, dep3);
 
-        second.addChildToRoot(dep4);
+        second.addDirectDependency(dep4);
         second.addParentWithChild(dep4, dep5);
         second.addParentWithChild(dep5, dep6);
         second.addParentWithChild(dep5, dep7);

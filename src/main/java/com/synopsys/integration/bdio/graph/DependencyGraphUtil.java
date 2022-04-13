@@ -9,6 +9,7 @@ package com.synopsys.integration.bdio.graph;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 
@@ -17,23 +18,39 @@ public class DependencyGraphUtil {
         // Hiding constructor
     }
 
-    public static void copyRootDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
-        Set<Dependency> encountered = new HashSet<>();
-        for (Dependency dependency : sourceGraph.getRootDependencies()) {
-            destinationGraph.addChildWithParent(dependency, parent);
-            copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
-        }
+    public static void copyDirectDependencies(DependencyGraph destinationGraph, DependencyGraph sourceGraph) {
+        copyDependencies(destinationGraph, sourceGraph, sourceGraph::getDirectDependencies);
+    }
+
+    public static void copyDirectDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
+        copyDependenciesToParent(destinationGraph, parent, sourceGraph, sourceGraph::getDirectDependencies);
     }
 
     public static void copyRootDependencies(DependencyGraph destinationGraph, DependencyGraph sourceGraph) {
+        copyDependencies(destinationGraph, sourceGraph, sourceGraph::getRootDependencies);
+    }
+
+    public static void copyRootDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph) {
+        copyDependenciesToParent(destinationGraph, parent, sourceGraph, sourceGraph::getRootDependencies);
+    }
+
+    public static void copyDependencies(DependencyGraph destinationGraph, DependencyGraph sourceGraph, Supplier<Set<Dependency>> dependencies) {
         Set<Dependency> encountered = new HashSet<>();
-        for (Dependency dependency : sourceGraph.getRootDependencies()) {
-            destinationGraph.addChildToRoot(dependency);
-            copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
+        for (Dependency dependency : dependencies.get()) {
+            destinationGraph.addDirectDependency(dependency);
+            copyDependencyTreeFromGraph(destinationGraph, dependency, sourceGraph, encountered);
         }
     }
 
-    private static void copyDependencyFromGraph(
+    private static void copyDependenciesToParent(DependencyGraph destinationGraph, Dependency parent, DependencyGraph sourceGraph, Supplier<Set<Dependency>> dependencies) {
+        Set<Dependency> encountered = new HashSet<>();
+        for (Dependency dependency : dependencies.get()) {
+            destinationGraph.addChildWithParent(dependency, parent);
+            copyDependencyTreeFromGraph(destinationGraph, dependency, sourceGraph, encountered);
+        }
+    }
+
+    private static void copyDependencyTreeFromGraph(
         DependencyGraph destinationGraph,
         Dependency parentDependency,
         DependencyGraph sourceGraph,
@@ -42,8 +59,7 @@ public class DependencyGraphUtil {
         for (Dependency dependency : sourceGraph.getChildrenForParent(parentDependency)) {
             if (!encountered.contains(dependency)) {
                 encountered.add(dependency);
-
-                copyDependencyFromGraph(destinationGraph, dependency, sourceGraph, encountered);
+                copyDependencyTreeFromGraph(destinationGraph, dependency, sourceGraph, encountered);
             }
             destinationGraph.addChildWithParent(dependency, parentDependency);
         }

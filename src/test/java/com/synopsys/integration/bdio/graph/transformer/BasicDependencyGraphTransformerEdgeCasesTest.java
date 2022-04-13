@@ -60,7 +60,7 @@ class BasicDependencyGraphTransformerEdgeCasesTest {
             generated.add(next);
             counts.put(next, 0);
             if (i == 0) {
-                graph.addChildToRoot(next);
+                graph.addDirectDependency(next);
             }
         }
 

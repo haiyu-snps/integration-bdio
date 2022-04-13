@@ -63,7 +63,7 @@ class BdioTransformerTest {
         ));
         ProjectDependencyGraph graph = transformer.transformToDependencyGraph(projectDependency, doc.getProject(), doc.getComponents());
 
-        assertEquals(1, graph.getRootDependencies().size());
+        assertEquals(1, graph.getDirectDependencies().size());
 
         SimpleBdioFactory simpleBdioFactory = new SimpleBdioFactory();
         SimpleBdioDocument simpleBdioDocument = simpleBdioFactory.createPopulatedBdioDocument(graph);

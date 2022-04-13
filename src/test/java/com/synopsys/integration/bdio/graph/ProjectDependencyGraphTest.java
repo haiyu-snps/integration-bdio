@@ -31,13 +31,13 @@ class ProjectDependencyGraphTest {
     @Test
     void testProjectNodes() {
         ProjectDependencyGraph graph = new ProjectDependencyGraph(rootDependency);
-        graph.addChildToRoot(child1);
+        graph.addDirectDependency(child1);
 
         ProjectDependencyGraph subProjectGraph = new ProjectDependencyGraph(subProjectDependency);
-        subProjectGraph.addChildToRoot(grandchild1);
+        subProjectGraph.addDirectDependency(grandchild1);
 
         ProjectDependencyGraph anotherSubProjectGraph = new ProjectDependencyGraph(anotherSubProjectDependency);
-        anotherSubProjectGraph.addChildToRoot(grandchild2);
+        anotherSubProjectGraph.addDirectDependency(grandchild2);
 
         // The order in which the subprojects are copied matters!
         subProjectGraph.copyGraphToRoot(anotherSubProjectGraph);
@@ -56,7 +56,7 @@ class ProjectDependencyGraphTest {
         graph.addParentWithChild(child2, child3);
         graph.addParentWithChild(child2, child4);
 
-        Set<Dependency> rootDependencies = graph.getRootDependencies();
+        Set<Dependency> rootDependencies = graph.getDirectDependencies();
         assertEquals(2, rootDependencies.size());
 
         assertEquals(2, graph.getChildrenForParent(parent1).size());
