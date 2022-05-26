@@ -11,8 +11,10 @@ import java.util.Set;
 
 import org.apache.commons.collections4.SetUtils;
 
+import com.synopsys.integration.bdio.model.Forge;
 import com.synopsys.integration.bdio.model.dependency.Dependency;
 import com.synopsys.integration.bdio.model.dependency.ProjectDependency;
+import com.synopsys.integration.bdio.model.externalid.ExternalId;
 
 public class ProjectDependencyGraph extends DependencyGraph {
     private final ProjectDependency projectDependency;
@@ -23,6 +25,10 @@ public class ProjectDependencyGraph extends DependencyGraph {
 
     public ProjectDependencyGraph(ProjectDependency projectDependency) {
         this.projectDependency = projectDependency;
+    }
+
+    public ProjectDependencyGraph(Forge forge, String relativePath) {
+        this(new ProjectDependency(ExternalId.FACTORY.createPathExternalId(forge, relativePath)));
     }
 
     public ProjectDependency getProjectDependency() {

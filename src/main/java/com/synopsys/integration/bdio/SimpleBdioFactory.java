@@ -107,7 +107,7 @@ public class SimpleBdioFactory {
         return createEmptyBdioDocument(codeLocationName, project);
     }
 
-    private SimpleBdioDocument createEmptyBdioDocument(@Nullable String codeLocationName, BdioProject project) {
+    public SimpleBdioDocument createEmptyBdioDocument(@Nullable String codeLocationName, BdioProject project) {
         BdioBillOfMaterials billOfMaterials = bdioNodeFactory.createBillOfMaterials(codeLocationName, project.name, project.version);
 
         SimpleBdioDocument simpleBdioDocument = new SimpleBdioDocument();
