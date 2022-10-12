@@ -20,9 +20,13 @@ import com.synopsys.integration.bdio.model.externalid.ExternalId;
 public class LazyExternalIdDependencyGraphBuilder {
     public static class LazyDependencyInfo {
         private Set<LazyId> children = new HashSet<>();
+
         private LazyId aliasId;
+
         private ExternalId externalId;
+
         private String name;
+
         private String version;
 
         public Set<LazyId> getChildren() {
@@ -68,6 +72,7 @@ public class LazyExternalIdDependencyGraphBuilder {
     }
 
     private final Set<LazyId> rootLazyIds = new HashSet<>();
+
     private final Map<LazyId, LazyDependencyInfo> dependencyInfo = new HashMap<>();
 
     private LazyDependencyInfo infoForId(LazyId id) {
@@ -105,11 +110,12 @@ public class LazyExternalIdDependencyGraphBuilder {
 
         for (LazyId lazyId : dependencyInfo.keySet()) {
             LazyDependencyInfo lazyDependencyInfo = infoForId(lazyId);
-            Dependency dependency = new Dependency(lazyDependencyInfo.getName(), lazyDependencyInfo.getVersion(), lazyDependencyInfo.getExternalId());
+            Dependency dependency = new Dependency(lazyDependencyInfo.getName(), lazyDependencyInfo.getVersion(), lazyDependencyInfo.getExternalId(), null);
 
             for (LazyId child : lazyDependencyInfo.getChildren()) {
                 LazyDependencyInfo childInfo = infoForId(child);
-                mutableDependencyGraph.addParentWithChild(dependency, new Dependency(childInfo.getName(), childInfo.getVersion(), childInfo.getExternalId()));
+                mutableDependencyGraph.addParentWithChild(dependency,
+                        new Dependency(childInfo.getName(), childInfo.getVersion(), childInfo.getExternalId(), null));
             }
 
             if (rootLazyIds.contains(lazyId) || rootLazyIds.contains(lazyDependencyInfo.getAliasId())) {

@@ -14,19 +14,48 @@ public class Dependency extends Stringable {
     public static final DependencyFactory FACTORY = new DependencyFactory();
 
     private String name;
+
     private String version;
+
     private ExternalId externalId;
 
-    public Dependency(String name, String version, ExternalId externalId) {
+    private String scope;
+
+    public Dependency(String name, String version, ExternalId externalId, String scope) {
         this.name = name;
         this.version = version;
         this.externalId = externalId;
+        this.scope = scope;
     }
 
+    public Dependency(String name, ExternalId externalId, String scope) {
+        this(name, externalId.getVersion(), externalId, scope);
+    }
+
+    public Dependency(ExternalId externalId, String scope) {
+        this(externalId.getName(), externalId.getVersion(), externalId, scope);
+    }
+
+    /**
+     * @deprecated Use {@link #Dependency(String, String, ExternalId, String)} instead
+     */
+    @Deprecated
+    public Dependency(String name, String version, ExternalId externalId) {
+        this(name, version, externalId, null);
+    }
+
+    /**
+     * @deprecated Use {@link #Dependency(String, ExternalId, String)} instead
+     */
+    @Deprecated
     public Dependency(String name, ExternalId externalId) {
-        this(name, externalId.getVersion(), externalId);
+        this(name, externalId.getVersion(), externalId, null);
     }
 
+    /**
+     * @deprecated Use {@link #Dependency(ExternalId, String)} instead
+     */
+    @Deprecated
     public Dependency(ExternalId externalId) {
         this(externalId.getName(), externalId);
     }
@@ -53,5 +82,13 @@ public class Dependency extends Stringable {
 
     public void setExternalId(ExternalId externalId) {
         this.externalId = externalId;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }
