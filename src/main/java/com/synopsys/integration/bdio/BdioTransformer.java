@@ -43,7 +43,7 @@ public class BdioTransformer {
                 Forge forge = forgeMap.get(component.bdioExternalIdentifier.forge);
                 externalId = ExternalId.createFromExternalId(forge, component.bdioExternalIdentifier.externalId, component.name, component.version);
             }
-            Dependency dependency = new Dependency(component.name, component.version, externalId);
+            Dependency dependency = new Dependency(component.name, component.version, externalId, null);
             bdioIdToDependencyMap.put(component.id, dependency);
         }
 
